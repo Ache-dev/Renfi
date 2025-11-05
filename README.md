@@ -1,8 +1,3 @@
-Excelente observación 👏
-Tienes razón: en el README que te di, la parte de **“Instalar dependencias”** y **“Configurar el entorno”** quedó visualmente un poco fuera de la estructura del paso anterior.
-Aquí te dejo la **versión corregida y perfectamente ordenada** del README.md para tu proyecto **Renfi**, con esos pasos bien integrados y la estructura final lista para copiar directamente 👇
-
----
 
 ````markdown
 # 🏡 Renfi
