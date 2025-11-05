@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* ==== Fondo Administrador Moderno ==== */
+:host {
+	display: block;
+	min-height: 100vh;
+	font-family: 'Montserrat', 'Segoe UI', sans-serif;
+	background: 
+		var(--pattern-dots),
+		radial-gradient(circle at 10% 20%, rgba(234, 42, 51, 0.04), transparent 60%),
+		radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.05), transparent 60%),
+		linear-gradient(135deg, var(--color-surface-light) 0%, #eef2ff 45%, var(--color-surface-base) 100%);
+}
+
+.admin-layout {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.admin-layout.sidebar-colapsado .admin-sidebar {
+	width: 0;
+	min-width: 0;
+	max-width: 0;
+	opacity: 0;
+	pointer-events: none;
+	padding: 0;
+	overflow: hidden;
+}
+
+/* Reglas de sidebar colapsado ya no son necesarias - el sidebar se oculta completamente */
+
+.admin-cuerpo {
+	flex: 1;
+	display: flex;
+	min-height: 0;
+	min-width: 0;
+	align-items: stretch;
+	gap: clamp(18px, 3vw, 32px);
+	overflow: hidden;
+}
+
+/* ==== Sidebar Mejorado con Patrones ==== */
+.admin-sidebar {
+	width: 280px;
+	min-width: 280px;
+	max-width: 280px;
+	background: 
+		var(--pattern-waves),
+		radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%),
+		var(--gradient-hero);
+	color: var(--color-surface-light);
+	display: flex;
+	flex-direction: column;
+	transition: all var(--transition-slow);
+	box-shadow: var(--shadow-xl), 4px 0 16px rgba(15, 23, 42, 0.1);
+	overflow: hidden;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(59, 130, 246, 0.7) rgba(15, 23, 42, 0.65);
+	flex-shrink: 0;
+	position: relative;
+}
+
+.admin-sidebar::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: var(--pattern-grid);
+	opacity: 0.1;
+	pointer-events: none;
+}
+
+.sidebar-encabezado {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1.4rem 1.6rem;
+	border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.sidebar-logo {
+	font-weight: 700;
+	font-size: 1.05rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.sidebar-nav {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-auto-rows: 116px;
+	gap: 0.8rem;
+	padding: 1.4rem 1.2rem 1.8rem;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(59, 130, 246, 0.7) rgba(15, 23, 42, 0.65);
+	flex: 1;
+}
+
+/* ==== Links del Sidebar Mejorados ==== */
+.sidebar-link {
+	position: relative;
+	display: grid;
+	grid-template-columns: 56px minmax(0, 1fr);
+	align-items: center;
+	column-gap: 1rem;
+	row-gap: 0.4rem;
+	padding: 1.35rem 1.55rem;
+	border-radius: var(--radius-xl);
+	color: var(--color-surface-light);
+	text-decoration: none;
+	background: 
+		var(--pattern-dots),
+		linear-gradient(150deg, rgba(13, 23, 41, 0.96), rgba(25, 35, 55, 0.98));
+	border: 1px solid rgba(148, 163, 184, 0.15);
+	box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+	transition: all var(--transition-base);
+	height: 116px;
+	min-height: 116px;
+	max-height: 116px;
+	overflow: hidden;
+}
+
+.sidebar-link::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: var(--pattern-waves);
+	opacity: 0;
+	transition: opacity var(--transition-base);
+	pointer-events: none;
+}
+
+.sidebar-link::after {
+	content: '';
+	position: absolute;
+	inset: 1px;
+	border-radius: calc(var(--radius-xl) - 2px);
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+	opacity: 0;
+	transition: opacity var(--transition-base);
+	pointer-events: none;
+}
+
+.sidebar-link:hover,
+.sidebar-link:focus-visible {
+	background: 
+		var(--pattern-dots),
+		var(--gradient-secondary);
+	border-color: rgba(147, 197, 253, 0.4);
+	box-shadow: var(--shadow-glow-secondary), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+	transform: translateY(-4px) scale(1.02);
+}
+
+.sidebar-link:hover::before,
+.sidebar-link:focus-visible::before {
+	opacity: 0.1;
+}
+
+.sidebar-link:hover::after,
+.sidebar-link:focus-visible::after {
+	opacity: 1;
+}
+
+.sidebar-link:hover::after,
+.sidebar-link:focus-visible::after {
+	opacity: 1;
+}
+
+.sidebar-link:focus-visible {
+	outline: none;
+}
+
+.sidebar-link.activo {
+	background: linear-gradient(150deg, rgba(37, 99, 235, 0.92), rgba(14, 116, 246, 0.94));
+	border-color: rgba(191, 219, 254, 0.72);
+	box-shadow: 0 28px 56px rgba(37, 99, 235, 0.38);
+	transform: translateY(-5px);
+}
+
+.sidebar-link.activo::after {
+	opacity: 0.65;
+	background: linear-gradient(135deg, rgba(191, 219, 254, 0.32), rgba(59, 130, 246, 0.24));
+}
+
+.sidebar-icon {
+	position: relative;
+	z-index: 1;
+	width: 52px;
+	min-width: 52px;
+	max-width: 52px;
+	height: 52px;
+	min-height: 52px;
+	max-height: 52px;
+	border-radius: 18px;
+	background: linear-gradient(145deg, rgba(37, 99, 235, 0.35), rgba(59, 130, 246, 0.5));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.7rem;
+	color: #eff6ff;
+	box-shadow: 0 18px 36px rgba(37, 99, 235, 0.28);
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+	flex-shrink: 0;
+}
+
+/* Estilos de sidebar-icon colapsado eliminados - sidebar se oculta completamente */
+
+.sidebar-text {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	min-width: 0;
+	width: 100%;
+	overflow: hidden;
+	height: 52px;
+	justify-content: center;
+}
+
+.sidebar-text strong {
+	font-size: 1.08rem;
+	font-weight: 600;
+	color: #f8fafc;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.3;
+}
+
+.sidebar-text small {
+	font-size: 0.84rem;
+	color: rgba(226, 232, 240, 0.78);
+	line-height: 1.3;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.sidebar-link:hover .sidebar-icon,
+.sidebar-link:focus-visible .sidebar-icon,
+.sidebar-link.activo .sidebar-icon {
+	transform: translateY(-2px) scale(1.06);
+	box-shadow: 0 24px 48px rgba(37, 99, 235, 0.34);
+}
+
+.sidebar-nav::-webkit-scrollbar {
+	height: 10px;
+	width: 8px;
+}
+
+.admin-sidebar::-webkit-scrollbar {
+	height: 10px;
+	width: 10px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+	background: rgba(15, 23, 42, 0.45);
+	border-radius: 999px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+	background: linear-gradient(135deg, rgba(30, 64, 175, 0.88), rgba(37, 99, 235, 0.8));
+	border-radius: 999px;
+	border: 2px solid rgba(15, 23, 42, 0.55);
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(96, 165, 250, 0.9));
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+	background: rgba(15, 23, 42, 0.4);
+	border-radius: 999px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+	background: linear-gradient(135deg, rgba(37, 99, 235, 0.85), rgba(59, 130, 246, 0.75));
+	border-radius: 999px;
+	border: 2px solid rgba(15, 23, 42, 0.45);
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.92), rgba(96, 165, 250, 0.88));
+}
+
+.admin-contenido {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	padding: clamp(24px, 4vw, 48px);
+	gap: clamp(18px, 3vw, 32px);
+	overflow: auto;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(148, 163, 184, 0.6) rgba(226, 232, 240, 0.4);
+	scrollbar-gutter: stable both-edges;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(248, 250, 252, 0.92) 40%, rgba(238, 242, 255, 0.92) 100%);
+}
+
+.admin-contenido::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+.admin-contenido::-webkit-scrollbar-track {
+	background: rgba(226, 232, 240, 0.45);
+	border-radius: 999px;
+}
+
+.admin-contenido::-webkit-scrollbar-thumb {
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(37, 99, 235, 0.7));
+	border-radius: 999px;
+	border: 2px solid rgba(226, 232, 240, 0.6);
+}
+
+.admin-contenido::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.75), rgba(37, 99, 235, 0.82));
+}
+
+.admin-contenido__inner {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: clamp(24px, 4vw, 36px);
+	max-width: min(1280px, 100%);
+	width: 100%;
+	margin: 0 auto;
+}
+
+.admin-sidebar.is-dragging {
+	cursor: grabbing;
+}
+
+.sidebar-overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 45;
+	background: rgba(15, 23, 42, 0.35);
+	backdrop-filter: blur(3px);
+	border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.sidebar-overlay:focus-visible {
+	outline: 2px solid rgba(147, 197, 253, 0.9);
+	outline-offset: 4px;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+@media (max-width: 1024px) {
+	.admin-cuerpo {
+		flex-direction: column;
+		position: relative;
+	}
+
+	.admin-sidebar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: min(320px, 82vw);
+		max-width: 360px;
+		transform: translateX(-110%);
+		opacity: 0;
+		pointer-events: none;
+		flex-direction: column;
+		overflow-y: auto;
+		overflow-x: hidden;
+		box-shadow: 28px 0 48px rgba(15, 23, 42, 0.35);
+		border-radius: 0 28px 28px 0;
+		cursor: grab;
+		padding-bottom: clamp(32px, 9vh, 56px);
+		z-index: 60;
+		transition: transform 0.3s ease, opacity 0.3s ease;
+	}
+
+	.admin-layout:not(.sidebar-colapsado) .admin-sidebar {
+		transform: translateX(0);
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.admin-layout.sidebar-colapsado .admin-sidebar {
+		width: min(320px, 82vw);
+		min-width: auto;
+		box-shadow: none;
+	}
+
+	.admin-layout.sidebar-colapsado .sidebar-encabezado,
+	.admin-layout.sidebar-colapsado .sidebar-nav,
+	.admin-layout.sidebar-colapsado .sidebar-link,
+	.admin-layout.sidebar-colapsado .sidebar-text {
+		opacity: 1;
+		position: static;
+		clip: auto;
+		clip-path: none;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+
+	.admin-layout.sidebar-colapsado .sidebar-encabezado {
+		display: flex;
+	}
+
+	.admin-layout.sidebar-colapsado .sidebar-text {
+		display: flex;
+	}
+
+	.admin-layout.sidebar-colapsado .sidebar-link::before {
+		display: none;
+	}
+
+	.sidebar-encabezado {
+		padding-top: clamp(88px, 15vh, 112px);
+	}
+
+	.sidebar-nav {
+		grid-auto-flow: row;
+		grid-auto-columns: unset;
+		gap: 0.85rem;
+		padding: clamp(18px, 5vw, 28px);
+		overflow: visible;
+	}
+
+	.sidebar-link {
+		min-height: 112px;
+		padding: 1.15rem 1.25rem;
+	}
+
+	.sidebar-text {
+		align-items: flex-start;
+	}
+
+	.sidebar-text small {
+		display: block;
+	}
+
+	.sidebar-overlay {
+		display: block;
+	}
+
+	.admin-contenido {
+		padding: clamp(20px, 6vw, 32px);
+		min-height: calc(100vh - 72px);
+	}
+
+	.admin-contenido__inner {
+		max-width: 100%;
+		gap: clamp(20px, 7vw, 32px);
+	}
+}

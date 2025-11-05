@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <h2>Lista de Usuarios</h2>
+  <div *ngIf="loading" class="alert alert-info">Cargando...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <table *ngIf="!loading && !error" class="table table-bordered table-striped mt-3">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.IdUsuario }}</td>
+        <td>{{ usuario.NombreUsuario }}</td>
+        <td>{{ usuario.ApellidoUsuario }}</td>
+        <td>{{ usuario.Telefono }}</td>
+        <td>{{ usuario.Correo }}</td>
+        <td>{{ usuario.Rol }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

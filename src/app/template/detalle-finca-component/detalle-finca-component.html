@@ -1,0 +1,258 @@
+<ng-container *ngIf="!cargando && finca as detalle; else estado">
+	<section class="detalle-page">
+		<div class="detalle-container">
+			<button type="button" class="volver-btn" (click)="volverAlInicio()">
+				← Volver
+			</button>
+
+			<div class="detalle-header">
+				<div class="detalle-imagen" [class.detalle-imagen--multiple]="hayCarrusel()">
+					<div class="detalle-imagen__principal">
+						<button
+							type="button"
+							class="detalle-imagen__control detalle-imagen__control--prev"
+							*ngIf="hayCarrusel()"
+							(click)="cambiarImagen(-1)"
+							aria-label="Imagen anterior"
+						>
+							‹
+						</button>
+						<img [src]="imagenActualUrl" [alt]="detalle.nombre" (error)="manejarErrorImagen()" loading="lazy" />
+						<button
+							type="button"
+							class="detalle-imagen__control detalle-imagen__control--next"
+							*ngIf="hayCarrusel()"
+							(click)="cambiarImagen(1)"
+							aria-label="Imagen siguiente"
+						>
+							›
+						</button>
+						<div class="detalle-imagen__contador" *ngIf="hayCarrusel()">
+							{{ indiceImagenActiva + 1 }} / {{ galeriaImagenes.length }}
+						</div>
+						<div class="estado-badge" [class]="detalle['Estado']?.toLowerCase().replace(' ', '-')">
+							{{ detalle['Estado'] || 'Estado desconocido' }}
+						</div>
+					</div>
+					<div class="detalle-miniaturas" *ngIf="hayCarrusel()">
+						<button
+							type="button"
+							class="detalle-miniaturas__item"
+							*ngFor="let imagen of galeriaImagenes; let i = index"
+							[class.activa]="i === indiceImagenActiva"
+							(click)="irAImagen(i)"
+							[attr.aria-label]="'Ver imagen ' + (i + 1)"
+						>
+							<img
+								[src]="imagen"
+								[alt]="detalle.nombre + ' miniatura ' + (i + 1)"
+								(error)="manejarErrorMiniatura(i)"
+								loading="lazy"
+							/>
+						</button>
+					</div>
+				</div>
+				<div class="detalle-resumen">
+					<div class="titulo-calificacion">
+						<h1>{{ detalle.nombre }}</h1>
+						<div class="calificacion" *ngIf="detalle['Calificacion']">
+							<span class="estrellas">
+								<span *ngFor="let estrella of [1,2,3,4,5]; let i = index" [class.activa]="i < detalle['Calificacion']">⭐</span>
+							</span>
+							<span class="puntuacion">{{ detalle['Calificacion'] }}/5</span>
+						</div>
+					</div>
+
+					<p class="detalle-ubicacion" *ngIf="detalle['Direccion'] || detalle['NombreMunicipio']">
+						📍 {{ detalle['Direccion'] || 'Dirección no disponible' }}
+						<span *ngIf="detalle['NombreMunicipio']"> - {{ detalle['NombreMunicipio'] }}</span>
+					</p>
+
+					<p class="detalle-descripcion" *ngIf="detalle['InformacionAdicional']">
+						{{ detalle['InformacionAdicional'] }}
+					</p>
+
+					<div class="detalle-datos-principales">
+						<div class="dato-principal" *ngIf="detalle['Precio'] !== null && detalle['Precio'] !== undefined">
+							<span class="icono">💰</span>
+							<span class="dato-titulo">Precio/noche</span>
+							<span class="dato-valor">{{ detalle['Precio'] | currency:'COP':'symbol':'1.0-0' }}</span>
+						</div>
+						<div class="dato-principal" *ngIf="detalle['Capacidad'] !== null && detalle['Capacidad'] !== undefined">
+							<span class="icono">👥</span>
+							<span class="dato-titulo">Capacidad</span>
+							<span class="dato-valor">{{ detalle['Capacidad'] }} huéspedes</span>
+						</div>
+						<div class="dato-principal" *ngIf="(detalle['NumeroHabitaciones'] !== null && detalle['NumeroHabitaciones'] !== undefined) || detalle.habitaciones !== null">
+							<span class="icono">🛏️</span>
+							<span class="dato-titulo">Habitaciones</span>
+							<span class="dato-valor">{{ detalle['NumeroHabitaciones'] || detalle.habitaciones }}</span>
+						</div>
+						<div class="dato-principal" *ngIf="(detalle['NumeroBanos'] !== null && detalle['NumeroBanos'] !== undefined) || detalle.banos !== null">
+							<span class="icono">🚿</span>
+							<span class="dato-titulo">Baños</span>
+							<span class="dato-valor">{{ detalle['NumeroBanos'] || detalle.banos }}</span>
+						</div>
+						<div class="dato-principal" *ngIf="detalle['MetrosCuadrados']">
+							<span class="icono">📐</span>
+							<span class="dato-titulo">Área total</span>
+							<span class="dato-valor">{{ detalle['MetrosCuadrados'] }} m²</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<section class="detalle-informacion">
+				<article class="detalle-card" *ngIf="detalle['InformacionAdicional']">
+					<h2>Características</h2>
+					<p>{{ detalle['InformacionAdicional'] }}</p>
+				</article>
+
+			<article class="detalle-card" *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario'] || detalle['TelefonoPropietario'] || detalle['CorreoPropietario']">
+				<h2>Información del responsable de la finca</h2>
+				<ul>
+					<li *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario']">
+						👤 {{ detalle['NombrePropietario'] || '' }} {{ detalle['ApellidoPropietario'] || '' }}
+					</li>
+					<li *ngIf="detalle['TelefonoPropietario']">📞 {{ detalle['TelefonoPropietario'] }}</li>
+					<li *ngIf="detalle['CorreoPropietario']">✉️ {{ detalle['CorreoPropietario'] }}</li>
+				</ul>
+			</article>				<article class="detalle-card">
+					<h2>Información General</h2>
+					<ul>
+						<li *ngIf="detalle['IdFinca']">🏠 ID de la finca: {{ detalle['IdFinca'] }}</li>
+						<li *ngIf="detalle['NombreMunicipio']">📍 Municipio: {{ detalle['NombreMunicipio'] }}</li>
+						<li *ngIf="detalle['Estado']">📊 Estado: {{ detalle['Estado'] }}</li>
+						<li *ngIf="detalle['TipoFinca']">🏡 Tipo de finca: {{ detalle['TipoFinca'] }}</li>
+						<li *ngIf="detalle['FechaRegistro']">🗓️ Fecha de registro: {{ detalle['FechaRegistro'] | date:'longDate' }}</li>
+						<li *ngIf="detalle.reservas !== null && detalle.reservas !== undefined; else sinReservas">
+							📅 Reservas realizadas: {{ detalle.reservas }}
+						</li>
+						<ng-template #sinReservas>
+							<li>📅 Todavía no hay registros de reservas para esta finca.</li>
+						</ng-template>
+					</ul>
+				</article>
+			</section>
+
+			<section class="detalle-reserva" aria-label="Reserva tu estadía">
+				<h2>Reserva tu estadía</h2>
+				<p class="detalle-reserva__intro">Selecciona tu fecha de llegada y te llevaremos a la pasarela de pago para completar la reserva.</p>
+
+				<ng-container *ngIf="puedeReservar(); else solicitarLogin">
+					<form [formGroup]="reservaForm" (ngSubmit)="realizarReserva()" novalidate>
+						<div class="detalle-calendario" role="group" aria-label="Selecciona la fecha de llegada">
+							<div class="calendario-header">
+								<button type="button" class="calendario-nav" (click)="cambiarMes(-1)" aria-label="Mes anterior">←</button>
+								<span class="calendario-mes">{{ nombreMesActual }}</span>
+								<button type="button" class="calendario-nav" (click)="cambiarMes(1)" aria-label="Mes siguiente">→</button>
+							</div>
+
+							<div class="calendario-grid" aria-live="polite">
+								<span class="calendario-dia calendario-dia--encabezado" *ngFor="let diaNombre of obtenerDiasSemana()">{{ diaNombre }}</span>
+								<ng-container *ngFor="let semana of calendarioSemanas">
+									<button
+										type="button"
+										class="calendario-dia"
+										[class.calendario-dia--fuera]="!dia.esDelMes"
+										[class.calendario-dia--ocupado]="dia.estado === 'ocupado'"
+										[class.calendario-dia--bloqueado]="dia.estado === 'bloqueado'"
+										[class.calendario-dia--seleccionado]="dia.esSeleccionado"
+										[class.calendario-dia--hoy]="dia.esHoy"
+										[attr.aria-pressed]="dia.esSeleccionado"
+										[attr.aria-disabled]="dia.estado !== 'disponible' || !dia.esDelMes || !puedeReservar()"
+										(click)="seleccionarDia(dia)"
+										*ngFor="let dia of semana"
+									>
+										{{ dia.numero }}
+									</button>
+								</ng-container>
+							</div>
+
+							<div class="calendario-leyenda">
+								<span><span class="leyenda-bullet disponible"></span> Disponible</span>
+								<span><span class="leyenda-bullet ocupado"></span> Reservado</span>
+								<span><span class="leyenda-bullet bloqueado"></span> No disponible</span>
+							</div>
+
+							<input type="hidden" formControlName="fechaInicio" />
+							<small class="detalle-reserva__campo-error" *ngIf="campoReservaInvalido('fechaInicio')">Selecciona un día disponible para continuar.</small>
+						</div>
+
+						<div class="detalle-reserva__grid">
+							<label class="detalle-reserva__field">
+								<span>Noches</span>
+								<input type="number" min="1" formControlName="noches" />
+								<small *ngIf="campoReservaInvalido('noches')">Indica al menos una noche de reserva.</small>
+							</label>
+							<label class="detalle-reserva__field">
+								<span>Huéspedes</span>
+								<input type="number" min="1" formControlName="huespedes" />
+								<small *ngIf="campoReservaInvalido('huespedes')">Debes registrar menos huéspedes.</small>
+							</label>
+						</div>
+
+						<!-- Resumen de fechas -->
+						<div class="detalle-reserva__resumen-fechas" *ngIf="fechaEntradaSeleccionada">
+							<div class="fecha-item">
+								<span class="fecha-label">Entrada</span>
+								<span class="fecha-valor">{{ fechaEntradaSeleccionada | date: 'mediumDate' }}</span>
+							</div>
+							<div class="fecha-separador">
+								<span class="icono-noches">🌙 {{ nochesSeleccionadas }} {{ nochesSeleccionadas === 1 ? 'noche' : 'noches' }}</span>
+							</div>
+							<div class="fecha-item">
+								<span class="fecha-label">Salida</span>
+								<span class="fecha-valor" *ngIf="fechaSalidaCalculada">{{ fechaSalidaCalculada | date: 'mediumDate' }}</span>
+								<span class="fecha-valor fecha-pendiente" *ngIf="!fechaSalidaCalculada">-</span>
+							</div>
+						</div>
+
+						<div class="detalle-reserva__alerta" *ngIf="fechaEntradaSeleccionada && fechaSalidaCalculada && fechaSalidaCalculada <= fechaEntradaSeleccionada">
+							⚠️ La fecha de salida debe ser posterior a la de entrada. Verifica el número de noches.
+						</div>
+
+						<div class="detalle-reserva__total">
+							<span>Total estimado</span>
+							<strong>{{ totalEstimadoReserva | currency:'COP':'symbol':'1.0-0' }}</strong>
+						</div>
+						<p class="detalle-reserva__nota">El monto puede variar si el propietario modifica el precio antes de confirmar.</p>
+
+						<div class="detalle-reserva__feedback" *ngIf="mensajeReserva || errorReserva">
+							<p class="detalle-reserva__success" *ngIf="mensajeReserva" aria-live="polite">{{ mensajeReserva }}</p>
+							<p class="detalle-reserva__error" *ngIf="errorReserva" aria-live="assertive">{{ errorReserva }}</p>
+						</div>
+
+						<button type="submit" class="detalle-reserva__submit" [disabled]="reservaForm.invalid || reservando">
+							<span *ngIf="!reservando">Ir al pago seguro</span>
+							<span *ngIf="reservando" class="detalle-reserva__spinner">Preparando pasarela...</span>
+						</button>
+					</form>
+				</ng-container>
+
+				<ng-template #solicitarLogin>
+					<div class="detalle-reserva__login">
+						<p>Inicia sesión para reservar esta finca y administrar tus estancias.</p>
+						<button type="button" class="detalle-reserva__cta" (click)="irALogin()">Iniciar sesión</button>
+					</div>
+				</ng-template>
+			</section>
+
+			<div class="detalle-acciones">
+				<button type="button" class="accion-primary" (click)="volverAlInicio()">Regresar al inicio</button>
+			</div>
+		</div>
+	</section>
+</ng-container>
+
+<ng-template #estado>
+	<section class="detalle-page">
+		<div class="detalle-estado">
+			<div class="detalle-spinner" *ngIf="cargando"></div>
+			<p *ngIf="cargando">Cargando información de la finca...</p>
+			<p *ngIf="!cargando && error">{{ error }}</p>
+			<p *ngIf="!cargando && !error">No se encontró la finca seleccionada.</p>
+			<button type="button" class="accion-secondary" (click)="volverAlInicio()">Regresar al inicio</button>
+		</div>
+	</section>
+</ng-template>

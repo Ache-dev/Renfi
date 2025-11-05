@@ -1,0 +1,28 @@
+<header class="admin-header" role="banner">
+	<div class="header-identidad">
+			<button type="button" class="menu-toggle" (click)="alternar()" [attr.aria-pressed]="sidebarColapsado">
+			<span aria-hidden="true">☰</span>
+			<span class="sr-only">Alternar menú lateral</span>
+		</button>
+		<div class="header-textos">
+			<span class="header-kicker pad-">Panel administrador</span>
+			<h1>{{ titulo }}</h1>
+			<p *ngIf="descripcion">{{ descripcion }}</p>
+		</div>
+	</div>
+
+	<div class="header-acciones">
+		<div class="header-usuario" *ngIf="usuario$ | async as usuario; else invitado">
+			<div class="usuario-avatar" aria-hidden="true">{{ (usuario.NombreUsuario || usuario.Correo || 'A')[0] | uppercase }}</div>
+			<div class="usuario-detalle">
+				<span class="usuario-nombre">{{ usuario.NombreUsuario || 'Administrador' }}</span>
+				<small>{{ usuario.Correo || 'admin@renfi.com' }}</small>
+			</div>
+		</div>
+		<ng-template #invitado>
+			<span class="header-invitado">Invitado</span>
+		</ng-template>
+
+		<a routerLink="/inicio" class="header-link" aria-label="Ir al inicio del sitio">Ver sitio</a>
+	</div>
+</header>

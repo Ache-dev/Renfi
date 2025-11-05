@@ -1,0 +1,51 @@
+<div class="admin-layout" [class.sidebar-colapsado]="sidebarColapsado">
+	<app-header-administrador
+		[titulo]="tituloActual"
+		[descripcion]="descripcionActual"
+		[sidebarColapsado]="sidebarColapsado"
+		(menuToggle)="alternarSidebar()"
+	></app-header-administrador>
+
+	<div class="admin-cuerpo">
+		<aside
+			class="admin-sidebar"
+			#sidebarContainer
+			appDragScroll
+		>
+			<div class="sidebar-encabezado">
+				<span class="sidebar-logo">Renfi Admin</span>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegación del administrador">
+				<a
+					*ngFor="let link of navLinks"
+					[routerLink]="link.route"
+					routerLinkActive="activo"
+					class="sidebar-link"
+					[attr.aria-label]="link.label"
+					[attr.data-label]="link.label"
+				>
+					<span class="sidebar-icon" aria-hidden="true">{{ link.icon }}</span>
+					<span class="sidebar-text">
+						<strong>{{ link.label }}</strong>
+						<small>{{ link.description }}</small>
+					</span>
+				</a>
+			</nav>
+		</aside>
+
+		<button
+			type="button"
+			class="sidebar-overlay"
+			*ngIf="!sidebarColapsado"
+			(click)="alternarSidebar()"
+			aria-label="Ocultar menú lateral"
+		></button>
+
+		<main class="admin-contenido" aria-live="polite">
+			<div class="admin-contenido__inner">
+				<router-outlet></router-outlet>
+			</div>
+		</main>
+	</div>
+</div>

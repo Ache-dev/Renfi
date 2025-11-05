@@ -1,0 +1,309 @@
+<section class="crud-panel" *ngIf="config as cfg">
+  <header class="crud-panel__header">
+    <div class="crud-panel__heading">
+      <span class="crud-panel__kicker">Gestión de {{ cfg.title }}</span>
+      <h2>{{ cfg.title }}</h2>
+      <p *ngIf="cfg.description">{{ cfg.description }}</p>
+      <small class="crud-panel__meta" *ngIf="registros.length">{{ registros.length }} registros encontrados</small>
+    </div>
+    <div class="crud-panel__actions">
+      <button type="button" class="btn-secondary" (click)="recargar()">↻ Actualizar</button>
+      <button type="button" class="btn-primary" (click)="abrirCrear()">＋ Nuevo registro</button>
+    </div>
+  </header>
+
+  <div *ngIf="error" class="crud-alert crud-alert--error" role="alert">{{ error }}</div>
+
+  <div *ngIf="cargando" class="crud-loader" role="status">
+    <span class="crud-spinner"></span>
+    <span>Cargando información...</span>
+  </div>
+
+  <div class="crud-tabla" *ngIf="!cargando">
+    <ng-container *ngIf="registros.length; else estadoVacio">
+      <div class="crud-vista-toggle" role="tablist" aria-label="Cambiar vista de los registros">
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="modoVisualizacion === 'tabla'"
+          class="crud-vista-toggle__boton"
+          [class.crud-vista-toggle__boton--activo]="modoVisualizacion === 'tabla'"
+          (click)="cambiarModo('tabla')"
+        >
+          Tabla
+        </button>
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="modoVisualizacion === 'tarjetas'"
+          class="crud-vista-toggle__boton"
+          [class.crud-vista-toggle__boton--activo]="modoVisualizacion === 'tarjetas'"
+          (click)="cambiarModo('tarjetas')"
+        >
+          Tarjetas
+        </button>
+      </div>
+
+      <div *ngIf="modoVisualizacion === 'tabla'" class="crud-tabla__hint">
+        <span class="crud-tabla__hint-icon">💡</span>
+        <span class="crud-tabla__hint-text">
+          Usa la <strong>rueda del ratón</strong> para desplazarte horizontalmente. 
+          Mantén <kbd>Shift</kbd> para scroll rápido.
+        </span>
+      </div>
+
+      <div
+        *ngIf="modoVisualizacion === 'tabla'"
+        class="crud-tabla__wrapper"
+        appDragScroll
+      >
+        <table>
+          <thead>
+            <tr>
+              <th *ngFor="let columna of columnas">{{ obtenerEtiquetaCampo(columna) }}</th>
+              <th class="crud-tabla__acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registro of registros; trackBy: trackById">
+              <td *ngFor="let columna of columnas">
+                <span
+                  class="crud-tabla__dato"
+                  [title]="presentarValor(obtenerValorCampo(registro, columna))"
+                >
+                  {{ presentarValor(obtenerValorCampo(registro, columna)) }}
+                </span>
+              </td>
+              <td class="crud-tabla__acciones">
+                <button type="button" class="btn-link" (click)="abrirEditar(registro)">Editar</button>
+                <button type="button" class="btn-link btn-link--danger" (click)="eliminarRegistro(registro)">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="modoVisualizacion === 'tarjetas'" class="crud-tarjetas">
+        <article class="crud-tarjeta" *ngFor="let registro of registros; let i = index; trackBy: trackById">
+          <header class="crud-tarjeta__header">
+            <h4>Registro {{ i + 1 }}</h4>
+            <ng-container *ngIf="cfg.idField as idCampo">
+              <span class="crud-tarjeta__subtitulo" *ngIf="registro?.[idCampo] !== undefined && registro?.[idCampo] !== null">
+                {{ obtenerEtiquetaCampo(idCampo) }}: {{ presentarValor(registro?.[idCampo]) }}
+              </span>
+            </ng-container>
+          </header>
+          <dl class="crud-tarjeta__lista">
+            <div class="crud-tarjeta__campo" *ngFor="let campo of obtenerCamposTarjeta(registro)">
+              <dt>{{ campo.etiqueta }}</dt>
+              <dd [title]="presentarValor(campo.valor)">{{ presentarValor(campo.valor) || '—' }}</dd>
+            </div>
+          </dl>
+          <footer class="crud-tarjeta__acciones">
+            <button type="button" class="btn-secondary" (click)="abrirEditar(registro)">Editar</button>
+            <button type="button" class="btn-link btn-link--danger" (click)="eliminarRegistro(registro)">Eliminar</button>
+          </footer>
+        </article>
+      </div>
+    </ng-container>
+  </div>
+
+  <ng-template #estadoVacio>
+    <div class="crud-estado-vacio">
+      <h3>No se encontraron registros</h3>
+      <p>Comienza creando un nuevo registro o verifica los filtros disponibles.</p>
+    </div>
+  </ng-template>
+
+  <section class="crud-reportes" *ngIf="cfg.reports?.length">
+    <h3>Reportes relacionados</h3>
+    <div class="crud-reportes__grid">
+      <article class="crud-reporte" *ngFor="let reporte of cfg.reports">
+        <header>
+          <h4>{{ reporte.label }}</h4>
+          <p *ngIf="reporte.description">{{ reporte.description }}</p>
+        </header>
+
+        <ng-container *ngIf="obtenerReporte(reporte) as estado">
+          <div class="crud-loader" *ngIf="estado.cargando">
+            <span class="crud-spinner"></span>
+            <span>Cargando...</span>
+          </div>
+
+          <div class="crud-alert crud-alert--error" *ngIf="estado.error && !estado.cargando">{{ estado.error }}</div>
+
+          <div class="crud-reporte__contenido" *ngIf="!estado.cargando && !estado.error">
+            <ng-container *ngIf="esColeccion(estado.datos); else reporteJson">
+              <div
+                class="crud-reporte__scroll"
+                appDragScroll
+              >
+                <table>
+                  <thead>
+                    <tr>
+                      <th *ngFor="let columna of obtenerColumnasReporte(estado.datos, reporte)">{{ columna }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let fila of estado.datos">
+                      <td *ngFor="let columna of obtenerColumnasReporte(estado.datos, reporte)">{{ presentarValor(fila[columna]) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-container>
+            <ng-template #reporteJson>
+              <pre>{{ presentarJson(estado.datos) }}</pre>
+            </ng-template>
+          </div>
+        </ng-container>
+      </article>
+    </div>
+  </section>
+
+  <div class="crud-dialog__backdrop" *ngIf="formularioVisible">
+    <div class="crud-dialog" role="dialog" aria-modal="true">
+      <header class="crud-dialog__header">
+        <div>
+          <h3>{{ modoFormulario === 'crear' ? 'Crear nuevo registro' : 'Editar registro' }}</h3>
+          <p *ngIf="usaFormularioEstructurado; else crudJsonHint">
+            Completa los campos principales para este recurso. Puedes añadir propiedades extra desde los campos avanzados.
+          </p>
+        </div>
+        <button type="button" class="crud-dialog__close" (click)="cerrarFormulario()" aria-label="Cerrar">✕</button>
+      </header>
+
+      <ng-template #crudJsonHint>
+        <p>Utiliza el JSON para registrar todos los campos requeridos por la API.</p>
+      </ng-template>
+
+      <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="crud-dialog__form">
+        <ng-container *ngIf="usaFormularioEstructurado; else crudJsonFormulario">
+          <div class="crud-form__summary" *ngIf="camposFormulario.length">
+            <span>Campos requeridos marcados con *</span>
+          </div>
+
+          <div class="crud-form__grid">
+            <div class="crud-form__field" *ngFor="let campo of camposFormulario">
+              <label [attr.for]="campo.key">
+                {{ campo.label || campo.key }}
+                <span class="crud-form__required" *ngIf="campo.required" aria-hidden="true">*</span>
+              </label>
+
+              <ng-container [ngSwitch]="campo.type">
+                <textarea
+                  *ngSwitchCase="'textarea'"
+                  class="crud-form__control crud-form__control--textarea"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                  rows="5"
+                ></textarea>
+                <input
+                  *ngSwitchCase="'number'"
+                  class="crud-form__control"
+                  type="number"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                />
+                <input
+                  *ngSwitchCase="'email'"
+                  class="crud-form__control"
+                  type="email"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                />
+                <input
+                  *ngSwitchCase="'date'"
+                  class="crud-form__control"
+                  type="date"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                />
+                <input
+                  *ngSwitchCase="'password'"
+                  class="crud-form__control"
+                  type="password"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                  autocomplete="new-password"
+                />
+                <select
+                  *ngSwitchCase="'select'"
+                  class="crud-form__control"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                >
+                  <option value="">Seleccionar...</option>
+                  <option *ngFor="let opcion of obtenerOpcionesSelect(campo)" [value]="opcion.value">
+                    {{ opcion.label }}
+                  </option>
+                </select>
+                <input
+                  *ngSwitchDefault
+                  class="crud-form__control"
+                  type="text"
+                  [id]="campo.key"
+                  [formControlName]="campo.key"
+                />
+              </ng-container>
+
+              <small class="crud-form__hint" *ngIf="campo.type === 'number'">Ingresa solo valores numéricos.</small>
+              <small class="crud-form__hint" *ngIf="campo.type === 'email'">Se recomienda un correo válido.</small>
+              <small class="crud-form__hint" *ngIf="campo.type === 'password'">La contraseña será encriptada con SHA-512.</small>
+              <small class="crud-form__hint" *ngIf="campo.type === 'select' && cargandoOpcionesSelect">Cargando opciones...</small>
+
+              <div class="crud-form__error" *ngIf="formulario.get(campo.key)?.invalid && formulario.get(campo.key)?.touched">
+                <span *ngIf="formulario.get(campo.key)?.errors?.['required']">Este campo es obligatorio.</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #crudJsonFormulario>
+          <label for="payload">Contenido JSON</label>
+          <textarea
+            id="payload"
+            formControlName="payload"
+            spellcheck="false"
+            rows="16"
+            placeholder="{ 'campo': 'valor' }"
+          ></textarea>
+          <p class="crud-dialog__hint">
+            Pista: Puedes incluir campos adicionales según la estructura que maneje el servicio REST.
+          </p>
+        </ng-template>
+
+        <div *ngIf="errorFormulario" class="crud-alert crud-alert--error" role="alert">{{ errorFormulario }}</div>
+
+        <footer class="crud-dialog__acciones">
+          <button type="submit" class="btn-primary" [disabled]="formulario.invalid">Guardar</button>
+          <button type="button" class="btn-secondary" (click)="cerrarFormulario()">Cancelar</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de Confirmación de Eliminación -->
+<section class="modal-eliminacion" *ngIf="mostrarModalEliminacion" (click)="cancelarEliminacion()">
+  <div class="modal-eliminacion__contenido" (click)="$event.stopPropagation()">
+    <div class="modal-eliminacion__icono">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    
+    <h3 class="modal-eliminacion__titulo">¿Eliminar el registro {{ idRegistroAEliminar }}?</h3>
+    <p class="modal-eliminacion__texto">Esta acción no se puede deshacer. El registro será eliminado permanentemente de la base de datos.</p>
+    
+    <div class="modal-eliminacion__acciones">
+      <button type="button" class="modal-btn modal-btn--eliminar" (click)="confirmarEliminacion()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Eliminar
+      </button>
+      <button type="button" class="modal-btn modal-btn--cancelar" (click)="cancelarEliminacion()">Cancelar</button>
+    </div>
+  </div>
+</section>

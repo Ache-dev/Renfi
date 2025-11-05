@@ -1,0 +1,68 @@
+
+<header class="sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
+    <div class="container-fluid ps-2 ps-lg-4 pe-2 pe-lg-4">
+      <button class="navbar-brand cta-logo btn btn-link p-0" (click)="goToHome()" tabindex="0">
+        <span class="cta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 11.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1v-9.5a1 1 0 0 0-.293-.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 11.5zm2 0L12 4.5l7 7v8.5h-3v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H5v-8.5z"></path>
+          </svg>
+        </span>
+        <span class="cta-copy">
+          <span class="cta-title">Renfi</span>
+          <span class="cta-subtitle">Reserva tu próxima finca</span>
+        </span>
+      </button>
+
+      <button 
+        class="navbar-toggler border-0 ps-0" 
+        type="button" 
+        data-bs-toggle="collapse" 
+        data-bs-target="#mainNavbar" 
+        aria-controls="mainNavbar" 
+        aria-expanded="false" 
+        aria-label="Abrir navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <div class="navbar-nav-container">
+          <ul class="navbar-nav primary-nav me-lg-4 mb-3 mb-lg-0">
+            <li class="nav-item">
+              <button class="nav-link btn btn-link p-10" (click)="goToAbout()">Sobre nosotros</button>
+            </li>
+          </ul>
+
+          <div class="nav-separator d-lg-none"></div>
+
+          <ng-container *ngIf="usuario$ | async as usuario; else authLinks">
+            <ul class="navbar-nav auth-nav ms-lg-auto mb-0">
+              <li class="nav-item">
+                <span class="nav-link auth-link auth-link--label">¡Hola, {{ getNombreCorto(usuario) }}!</span>
+              </li>
+              <li class="nav-item" *ngIf="esAdmin$ | async">
+                <button class="nav-link auth-link btn btn-link p-10" (click)="goToAdmin()">Panel admin</button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link auth-link btn btn-link p-10" (click)="goToAccount()">Mi cuenta</button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link auth-link auth-link--highlight btn btn-link p-10" (click)="logout()">Cerrar sesión</button>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #authLinks>
+            <ul class="navbar-nav auth-nav ms-lg-auto mb-0">
+              <li class="nav-item">
+                <button class="nav-link auth-link btn btn-link p-10" (click)="goToLogin()">Iniciar sesión</button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link auth-link auth-link--highlight btn btn-link p-10" (click)="goToRegister()">Registrarse</button>
+              </li>
+            </ul>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

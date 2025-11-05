@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:host {
+  display: block;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 60%, #fff 100%);
+  min-height: 100vh;
+}
+
+.about-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(48px, 8vw, 96px) clamp(20px, 6vw, 72px);
+}
+
+.about-shell {
+  width: min(900px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 6vw, 48px);
+}
+
+.about-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #0f172a;
+}
+
+.about-kicker {
+  align-self: flex-start;
+  padding: 0.4rem 1.2rem;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #4338ca;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.about-intro h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.about-intro p {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  color: #475569;
+  line-height: 1.6;
+  max-width: 620px;
+}
+
+.about-values {
+  padding: 0;
+}
+
+.about-benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(14px, 4vw, 20px);
+}
+
+.about-benefits li {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+  padding: clamp(16px, 4vw, 22px);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.benefit-icon {
+  font-size: 1.4rem;
+}
+
+.benefit-text {
+  font-size: 0.95rem;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.about-team {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-team h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: #4338ca;
+  margin: 0;
+}
+
+.about-team p {
+  margin: 0;
+  color: #475569;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .about-shell {
+    gap: clamp(20px, 7vw, 28px);
+  }
+  .about-benefits {
+    grid-template-columns: 1fr;
+  }
+}

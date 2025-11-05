@@ -1,0 +1,478 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:host {
+	display: block;
+	min-height: 100vh;
+	font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+	background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #ffffff 100%);
+}
+
+.cuenta-page {
+	min-height: calc(100vh - 120px);
+	display: flex;
+	justify-content: center;
+	padding: clamp(48px, 8vw, 96px) clamp(20px, 6vw, 72px);
+}
+
+.cuenta-page--guest {
+	align-items: center;
+}
+
+.cuenta-shell {
+	width: min(1100px, 100%);
+	display: flex;
+	flex-direction: column;
+	gap: clamp(24px, 6vw, 40px);
+}
+
+.cuenta-header {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(18px, 4vw, 24px);
+	justify-content: space-between;
+	background: rgba(255, 255, 255, 0.96);
+	border-radius: clamp(22px, 4vw, 28px);
+	box-shadow: 0 24px 48px rgba(15, 23, 42, 0.1);
+	border: 1px solid rgba(226, 232, 240, 0.8);
+	padding: clamp(24px, 4vw, 36px);
+}
+
+.cuenta-identidad {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: #0f172a;
+}
+
+.cuenta-kicker {
+	align-self: flex-start;
+	padding: 0.4rem 1.2rem;
+	border-radius: 999px;
+	background: rgba(59, 130, 246, 0.08);
+	border: 1px solid rgba(59, 130, 246, 0.2);
+	color: #2563eb;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.cuenta-identidad h1 {
+	margin: 0;
+	font-size: clamp(2.2rem, 5vw, 3rem);
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.cuenta-identidad p {
+	margin: 0;
+	color: #475569;
+	font-size: clamp(1rem, 2.5vw, 1.15rem);
+}
+
+.cuenta-badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.cuenta-badge {
+	padding: 0.45rem 1.2rem;
+	border-radius: 999px;
+	font-weight: 600;
+	font-size: 0.85rem;
+	letter-spacing: 0.05em;
+}
+
+.estado-activo {
+	background: linear-gradient(135deg, #10b981, #059669);
+	color: #ffffff;
+	box-shadow: 0 12px 26px rgba(16, 185, 129, 0.25);
+}
+
+.cuenta-rol {
+	background: rgba(37, 99, 235, 0.1);
+	color: #1d4ed8;
+	border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+.cuenta-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(20px, 5vw, 30px);
+}
+
+@media (min-width: 992px) {
+	.cuenta-grid {
+		grid-template-columns: 1.2fr 0.8fr;
+	}
+
+	.cuenta-header {
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+.cuenta-card {
+	background: rgba(255, 255, 255, 0.97);
+	border-radius: clamp(20px, 4vw, 26px);
+	box-shadow: 0 22px 44px rgba(15, 23, 42, 0.12);
+	border: 1px solid rgba(226, 232, 240, 0.75);
+	padding: clamp(24px, 4vw, 36px);
+	display: flex;
+	flex-direction: column;
+	gap: clamp(16px, 4vw, 24px);
+}
+
+.cuenta-card h2 {
+	margin: 0;
+	font-size: clamp(1.25rem, 3vw, 1.5rem);
+	font-weight: 700;
+	color: #0f172a;
+}
+
+.cuenta-subtitle {
+	margin: 0;
+	color: #475569;
+	font-size: 0.95rem;
+}
+
+.cuenta-form-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: clamp(14px, 4vw, 20px);
+}
+
+.cuenta-field {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: #1f2937;
+}
+
+.cuenta-field span {
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+.cuenta-field input {
+	border-radius: 14px;
+	border: 1px solid rgba(148, 163, 184, 0.45);
+	padding: 0.7rem 0.9rem;
+	font-size: 0.95rem;
+	background: #ffffff;
+	color: #0f172a;
+	font-weight: 500;
+	caret-color: #0f172a;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cuenta-field input:focus {
+	border-color: rgba(37, 99, 235, 0.6);
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+	outline: none;
+}
+
+.cuenta-field input[disabled],
+.cuenta-field input[readonly] {
+	background: #f8fafc;
+	border-style: dashed;
+	color: #334155;
+	cursor: default;
+}
+
+.cuenta-field small {
+	color: #dc2626;
+	font-size: 0.78rem;
+}
+
+.cuenta-feedback {
+	display: grid;
+	gap: 8px;
+}
+
+.cuenta-feedback--error,
+.cuenta-feedback--success {
+	margin: 0;
+	padding: 10px 14px;
+	border-radius: 12px;
+	font-size: 0.9rem;
+}
+
+.cuenta-feedback--error {
+	color: #dc2626;
+	background: rgba(254, 226, 226, 0.92);
+	border: 1px solid rgba(254, 202, 202, 0.92);
+}
+
+.cuenta-feedback--success {
+	color: #166534;
+	background: rgba(220, 252, 231, 0.92);
+	border: 1px solid rgba(187, 247, 208, 0.92);
+}
+
+.cuenta-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.cuenta-submit,
+.cuenta-secondary {
+	border: none;
+	border-radius: 999px;
+	padding: 0.85rem 1.6rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+	cursor: pointer;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cuenta-submit {
+	background: linear-gradient(135deg, #2563eb, #1d4ed8, #3b82f6);
+	color: #ffffff;
+	box-shadow: 0 20px 40px rgba(37, 99, 235, 0.32);
+}
+
+.cuenta-submit:hover:enabled,
+.cuenta-submit:focus-visible:enabled {
+	transform: translateY(-2px);
+	box-shadow: 0 28px 52px rgba(37, 99, 235, 0.42);
+}
+
+.cuenta-submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.cuenta-secondary {
+	background: rgba(248, 250, 252, 0.94);
+	color: #1f2937;
+	border: 1px solid rgba(148, 163, 184, 0.45);
+	box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+}
+
+.cuenta-secondary:hover:enabled,
+.cuenta-secondary:focus-visible:enabled {
+	transform: translateY(-2px);
+	box-shadow: 0 24px 48px rgba(148, 163, 184, 0.2);
+}
+
+.cuenta-spinner {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.cuenta-reservas__header h2 {
+	margin: 0;
+	font-size: clamp(1.2rem, 3vw, 1.4rem);
+	font-weight: 700;
+}
+
+.cuenta-reservas__header p {
+	margin: 0;
+	color: #475569;
+	font-size: 0.9rem;
+}
+
+.cuenta-reservas__feedback {
+	display: grid;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+
+.cuenta-reservas__loader {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+	border-radius: 14px;
+	background: rgba(219, 234, 254, 0.85);
+	border: 1px solid rgba(191, 219, 254, 0.9);
+	color: #1d4ed8;
+	font-weight: 600;
+	font-size: 0.9rem;
+	margin-bottom: 18px;
+}
+
+.cuenta-reservas__spinner {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 3px solid rgba(37, 99, 235, 0.2);
+	border-top-color: #2563eb;
+	animation: cuenta-reservas-spin 0.75s linear infinite;
+}
+
+@keyframes cuenta-reservas-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.reserva-lista {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.reserva-lista li {
+	border: 1px solid rgba(226, 232, 240, 0.8);
+	border-radius: 16px;
+	padding: 16px;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9));
+	box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.reserva-titulo {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 6px;
+}
+
+.reserva-nombre {
+	font-weight: 600;
+	color: #0f172a;
+}
+
+.reserva-id {
+	font-size: 0.78rem;
+	color: #64748b;
+}
+
+.reserva-detalle {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	font-size: 0.88rem;
+	color: #475569;
+}
+
+.reserva-acciones {
+	margin-top: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.reserva-creada {
+	font-size: 0.82rem;
+	color: #64748b;
+}
+
+.reserva-cancelar {
+	border: none;
+	border-radius: 999px;
+	padding: 0.55rem 1.4rem;
+	font-weight: 600;
+	font-size: 0.88rem;
+	cursor: pointer;
+	background: linear-gradient(135deg, #ef4444, #dc2626);
+	color: #ffffff;
+	box-shadow: 0 14px 28px rgba(220, 38, 38, 0.28);
+	transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.reserva-cancelar:hover:enabled,
+.reserva-cancelar:focus-visible:enabled {
+	transform: translateY(-2px);
+	box-shadow: 0 20px 38px rgba(220, 38, 38, 0.36);
+}
+
+.reserva-cancelar:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.reserva-cancelar__spinner {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.reserva-empty {
+	margin: 0;
+	color: #6b7280;
+	font-size: 0.92rem;
+}
+
+.cuenta-guest {
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: clamp(22px, 5vw, 30px);
+	box-shadow: 0 24px 52px rgba(15, 23, 42, 0.14);
+	border: 1px solid rgba(226, 232, 240, 0.8);
+	padding: clamp(36px, 6vw, 48px);
+	display: grid;
+	gap: clamp(18px, 4vw, 24px);
+	text-align: center;
+}
+
+.cuenta-guest h1 {
+	margin: 0;
+	font-size: clamp(2rem, 5vw, 2.6rem);
+	color: #0f172a;
+}
+
+.cuenta-guest p {
+	margin: 0;
+	color: #475569;
+	font-size: 1rem;
+}
+
+.cuenta-loading {
+	min-height: 60vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	color: #475569;
+	font-size: 1rem;
+}
+
+.cuenta-loading .cuenta-spinner {
+	display: inline-block;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	border: 4px solid rgba(226, 232, 240, 0.7);
+	border-top-color: #2563eb;
+	animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@media (max-width: 640px) {
+	.cuenta-actions {
+		flex-direction: column;
+	}
+
+	.cuenta-actions button {
+		width: 100%;
+	}
+
+	.cuenta-reservas__header {
+		text-align: center;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}

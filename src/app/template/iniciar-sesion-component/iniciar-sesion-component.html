@@ -1,0 +1,78 @@
+<section class="login-page">
+	<div class="login-shell">
+		<div class="login-intro">
+			<span class="login-kicker">Bienvenido de vuelta</span>
+			<h1>Iniciar sesión</h1>
+			<p>Ingresa tus credenciales para continuar con la administración de tus inversiones en Renfi.</p>
+		</div>
+
+		<div class="login-switch" role="tablist" aria-label="Accesos a la plataforma">
+			<button type="button" class="login-switch__btn is-active" aria-selected="true">Iniciar sesión</button>
+			<button type="button" class="login-switch__btn" (click)="goToRegister()" aria-selected="false">Crear cuenta</button>
+		</div>
+
+		<div class="login-card">
+			<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+				<p class="login-subtitle">Completa tu correo y contraseña para acceder a tu panel personalizado.</p>
+
+				<label class="login-field">
+					<span>Correo electrónico</span>
+					<input type="email" formControlName="correo" autocomplete="email" placeholder="tucorreo@renfi.com" />
+					<small *ngIf="campoInvalido('correo')">Ingresa un correo válido.</small>
+				</label>
+
+				<label class="login-field">
+					<span>Contraseña</span>
+					<input type="password" formControlName="password" autocomplete="current-password" placeholder="Tu contraseña" />
+					<small *ngIf="campoInvalido('password')">Ingresa tu contraseña (mínimo 6 caracteres).</small>
+				</label>
+
+				<div class="login-options">
+					<label class="login-remember">
+						<input type="checkbox" formControlName="recordarme" />
+						<span>Recordarme</span>
+					</label>
+					<a class="login-link" href="#" (click)="onForgotPassword($event)">¿Olvidaste tu contraseña?</a>
+				</div>
+
+				<div class="login-feedback" *ngIf="mensajeError || mensajeExito">
+					<p class="login-feedback--error" *ngIf="mensajeError" aria-live="assertive">{{ mensajeError }}</p>
+					<p class="login-feedback--success" *ngIf="mensajeExito" aria-live="polite">{{ mensajeExito }}</p>
+				</div>
+
+				<button type="submit" class="login-submit" [disabled]="loginForm.invalid || autenticando">
+					<span *ngIf="!autenticando">Ingresar</span>
+					<span *ngIf="autenticando" class="login-spinner" aria-live="polite">Validando credenciales...</span>
+				</button>
+
+				<p class="login-register-link">
+					¿Aún no tienes cuenta? <a href="#" (click)="goToRegister(); $event.preventDefault()">Regístrate aquí</a>
+				</p>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal de recuperación de contraseña -->
+	<div class="modal-overlay" *ngIf="mostrarModalRecuperacion" (click)="cerrarModal()">
+		<div class="modal-card" (click)="$event.stopPropagation()">
+			<div class="modal-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<circle cx="12" cy="12" r="10"></circle>
+					<line x1="12" y1="16" x2="12" y2="12"></line>
+					<line x1="12" y1="8" x2="12.01" y2="8"></line>
+				</svg>
+			</div>
+			<h3 class="modal-title">Recuperación de contraseña</h3>
+			<p class="modal-text">Serás redirigido al contacto con el soporte para realizar el cambio de contraseña.</p>
+			<p class="modal-subtext">Nuestro equipo te ayudará a restablecer tu acceso de manera segura.</p>
+			<div class="modal-actions">
+				<button type="button" class="modal-btn modal-btn--secondary" (click)="cerrarModal()">
+					Cancelar
+				</button>
+				<button type="button" class="modal-btn modal-btn--primary" (click)="confirmarRecuperacion()">
+					Continuar
+				</button>
+			</div>
+		</div>
+	</div>
+</section>

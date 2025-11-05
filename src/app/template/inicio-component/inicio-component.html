@@ -1,0 +1,261 @@
+<div class="inicio-landing">
+  <section class="hero">
+    <div class="hero-background" aria-hidden="true"></div>
+    <div class="hero-container">
+      <div class="hero-content" role="presentation">
+        <span class="hero-pill">Inversión inmobiliaria inteligente</span>
+        <h1 class="hero-title">Impulsa tu patrimonio con fincas rentables en toda Colombia</h1>
+        <p class="hero-subtitle">Accede a oportunidades curadas, con retorno proyectado, ocupación verificada y acompañamiento experto para invertir con confianza.</p>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" (click)="openSearch()" aria-haspopup="dialog" [attr.aria-expanded]="searchOpen">Explorar oportunidades</button>
+          <button type="button" class="btn btn-secondary" (click)="scrollToSection('procesos')">Conoce nuestro proceso</button>
+        </div>
+        <ul class="hero-stats" aria-label="Indicadores de confianza Renfi">
+          <li class="hero-stat" *ngFor="let stat of heroHighlights">
+            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="hero-showcase" aria-label="Oportunidad destacada">
+        <div class="hero-card" *ngIf="displayedFincas[0] as destacada; else heroPlaceholder">
+          <div class="hero-card-image" aria-hidden="true">
+            <img [src]="destacada.imagenUrl" [alt]="destacada.nombre" loading="lazy" />
+          </div>
+          <div class="hero-card-body">
+            <span class="hero-card-tag">Oportunidad destacada</span>
+            <h3>{{ destacada.nombre }}</h3>
+            <p>{{ destacada['InformacionAdicional'] || destacada.descripcion || 'Rentabilidad estable con alto potencial turístico.' }}</p>
+            <div class="hero-card-meta">
+              <span>📍 {{ destacada['NombreMunicipio'] || destacada.ubicacion || 'Ubicación reservada' }}</span>
+              <span>👥 {{ destacada.capacidad || destacada['Capacidad'] || '—' }} huéspedes</span>
+              <span>💰 {{ (destacada.precioNoche || destacada['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+          <button type="button" class="hero-card-cta" (click)="seleccionarFinca(destacada)">Ver detalle de la finca</button>
+        </div>
+        <ng-template #heroPlaceholder>
+          <div class="hero-card hero-card-placeholder">
+            <div class="hero-card-body">
+              <span class="hero-card-tag">Modelo Renfi</span>
+              <h3>Proyectos de finca con retorno proyectado</h3>
+              <p>Explora portafolios de inversión con estudios de ocupación, valorización y planes operativos listos para implementar.</p>
+              <div class="hero-card-meta">
+                <span>📍 Antioquia · Eje cafetero</span>
+                <span>📊 ROI proyectado 12% anual</span>
+                <span>🤝 Administración aliada</span>
+              </div>
+            </div>
+            <button type="button" class="hero-card-cta" (click)="openSearch()">Conocer portafolio</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngIf="searchOpen">
+    <div class="busqueda-overlay" role="dialog" aria-modal="true" aria-label="Buscador avanzado de fincas" (click)="closeSearch()">
+      <div class="busqueda-panel" (click)="$event.stopPropagation()">
+        <header class="busqueda-header">
+          <div>
+            <h2>Encuentra tu finca perfecta</h2>
+            <p>Filtra por municipio, capacidad, precio, estado y más.</p>
+          </div>
+          <button type="button" class="busqueda-close" (click)="closeSearch()" aria-label="Cerrar búsqueda">✕</button>
+        </header>
+
+        <form [formGroup]="searchForm" class="busqueda-form" (ngSubmit)="submitSearch()">
+          <div class="busqueda-grid">
+            <label class="busqueda-field busqueda-field-query">
+              <span>¿Qué estás buscando?</span>
+              <div class="busqueda-input-wrapper">
+                <span class="busqueda-icon" aria-hidden="true">🔎</span>
+                <input #queryInput id="search-query" type="search" formControlName="query" placeholder="Nombre, dirección o amenidades" autocomplete="off" />
+              </div>
+            </label>
+
+            <label class="busqueda-field">
+              <span>Municipio</span>
+              <select formControlName="municipio">
+                <option value="">Todos</option>
+                <option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</option>
+              </select>
+            </label>
+
+            <label class="busqueda-field">
+              <span>Estado</span>
+              <select formControlName="estado">
+                <option value="">Todos</option>
+                <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+              </select>
+            </label>
+
+            <label class="busqueda-field">
+              <span>Capacidad mínima</span>
+              <input type="number" min="0" [max]="maxCapacidad" formControlName="capacidad" placeholder="Ej. 6" />
+            </label>
+
+            <div class="busqueda-field busqueda-field-precio">
+              <span>Rango de precio (COP)</span>
+              <div class="busqueda-precio-group">
+                <input type="number" min="0" formControlName="precioMin" placeholder="Desde" />
+                <span class="busqueda-precio-separador">—</span>
+                <input type="number" min="0" [max]="maxPrecio" formControlName="precioMax" placeholder="Hasta" />
+              </div>
+            </div>
+
+            <div class="busqueda-field busqueda-field-calificacion">
+              <span>Calificación mínima: {{ searchForm.value.calificacion || 0 }}/5</span>
+              <input type="range" min="0" max="5" step="0.5" formControlName="calificacion" />
+            </div>
+
+            <label class="busqueda-field">
+              <span>Ordenar por</span>
+              <select formControlName="ordenarPor">
+                <option value="relevancia">Mejor coincidencia</option>
+                <option value="precio-menor">Precio más bajo</option>
+                <option value="precio-mayor">Precio más alto</option>
+                <option value="capacidad">Mayor capacidad</option>
+                <option value="municipio">Municipio (A-Z)</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="busqueda-actions">
+            <button type="button" class="btn-reset" (click)="resetFiltros()">Restablecer filtros</button>
+            <button type="submit" class="btn-apply">Aplicar filtros</button>
+          </div>
+        </form>
+
+        <section class="busqueda-resultados" aria-live="polite">
+          <div class="busqueda-resultados-header">
+            <span *ngIf="!loadingSearch">{{ totalResultados }} {{ totalResultados === 1 ? 'resultado' : 'resultados' }}</span>
+            <span *ngIf="loadingSearch">Buscando fincas disponibles...</span>
+            <button *ngIf="!mostrarTodosResultados && totalResultados > displayedFincas.length" type="button" class="btn-show-more" (click)="mostrarMasResultados()">
+              Ver todos los resultados
+            </button>
+          </div>
+
+          <ng-container *ngIf="!loadingSearch; else estadoBusqueda">
+            <div class="busqueda-cards" *ngIf="displayedFincas.length; else sinCoincidencias">
+              <article class="busqueda-card" *ngFor="let finca of displayedFincas" (click)="seleccionarFinca(finca)">
+                <div class="busqueda-card-imagen" aria-hidden="true">
+                  <img [src]="finca.imagenUrl" [alt]="finca.nombre" loading="lazy" />
+                </div>
+                <div class="busqueda-card-body">
+                  <div class="busqueda-card-header">
+                    <h3>{{ finca.nombre }}</h3>
+                    <span class="busqueda-card-estado" *ngIf="finca['Estado']">{{ finca['Estado'] }}</span>
+                  </div>
+                  <p class="busqueda-card-lugar">
+                    {{ finca['Direccion'] || finca.ubicacion || 'Ubicación sin especificar' }}
+                    <span *ngIf="finca['NombreMunicipio']"> · {{ finca['NombreMunicipio'] }}</span>
+                  </p>
+                  <p class="busqueda-card-descripcion" *ngIf="finca['InformacionAdicional']">{{ finca['InformacionAdicional'] }}</p>
+                  <div class="busqueda-card-meta">
+                    <span>👥 {{ finca.capacidad || finca['Capacidad'] || '—' }} huéspedes</span>
+                    <span>💰 {{ (finca.precioNoche || finca['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}</span>
+                    <span>⭐ {{ finca['Calificacion'] || 'Sin calificar' }}</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </ng-container>
+
+          <ng-template #estadoBusqueda>
+            <div class="busqueda-loading">
+              <span class="busqueda-spinner" aria-hidden="true"></span>
+              <p>Cargando fincas disponibles...</p>
+            </div>
+          </ng-template>
+
+          <ng-template #sinCoincidencias>
+            <div class="busqueda-empty">
+              <h3>No encontramos resultados para tu búsqueda</h3>
+              <p>Prueba usando menos filtros o amplía el rango de precios y capacidad.</p>
+              <button type="button" class="btn-reset" (click)="resetFiltros()">Limpiar filtros</button>
+            </div>
+          </ng-template>
+        </section>
+      </div>
+    </div>
+  </ng-container>
+
+  <main class="inicio-main">
+    <section class="section benefits" id="ventajas">
+      <div class="section-header">
+        <span class="section-kicker">¿POR QUÉ RENFI?</span>
+        <h2>Invertir en fincas nunca fue tan accesible</h2>
+        <p>Combinamos análisis de datos, gestión operativa y acompañamiento experto para que tu inversión genere ingresos desde el día uno.</p>
+      </div>
+      <div class="benefits-grid">
+        <article class="benefit-card" *ngFor="let benefit of beneficios">
+          <div class="benefit-icon" aria-hidden="true">{{ benefit.icon }}</div>
+          <h3>{{ benefit.title }}</h3>
+          <p>{{ benefit.description }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section portfolio" id="portafolio">
+      <div class="section-header">
+        <span class="section-kicker">Portafolio vivo</span>
+        <h2>Oportunidades disponibles y en operación</h2>
+        <p>Explora fincas con flujo de caja probado y alojamientos listos para recibir huéspedes corporativos y vacacionales.</p>
+      </div>
+      <div class="portfolio-content">
+        <app-fincas-relevantes-component></app-fincas-relevantes-component>
+      </div>
+    </section>
+
+    <section class="section process" id="procesos">
+      <div class="section-header">
+        <span class="section-kicker">Metodología Renfi</span>
+        <h2>Así convertimos propiedades rurales en activos rentables</h2>
+        <p>Nos encargamos de todo el ciclo: desde la búsqueda y evaluación hasta la operación y reportes de desempeño.</p>
+      </div>
+      <div class="process-timeline" role="list">
+        <article class="process-step" role="listitem" *ngFor="let step of pasosInversion; index as i">
+          <div class="step-number">0{{ i + 1 }}</div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+          <ul class="step-highlights">
+            <li *ngFor="let highlight of step.highlights">{{ highlight }}</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section testimonials" id="testimonios">
+      <div class="section-header">
+        <span class="section-kicker">Historias reales</span>
+        <h2>Inversionistas que ya están multiplicando su patrimonio</h2>
+        <p>Rentabilidad, transparencia y acompañamiento que generan tranquilidad.</p>
+      </div>
+      <div class="testimonials-grid">
+        <figure class="testimonial-card" *ngFor="let testimonial of testimonios">
+          <blockquote>“{{ testimonial.quote }}”</blockquote>
+          <figcaption>
+            <span class="testimonial-name">{{ testimonial.name }}</span>
+            <span class="testimonial-role">{{ testimonial.role }}</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section cta-final" id="asesoria">
+      <div class="cta-card">
+        <div class="cta-content">
+          <span class="cta-pill">Acompañamiento personalizado</span>
+          <h2>Agenda una asesoría y proyecta tu próxima inversión</h2>
+          <p>Revisa escenarios financieros, indicadores clave y cómo Renfi gestiona la operación de tu finca para maximizar su rendimiento.</p>
+        </div>
+        <div class="cta-actions">
+          <button type="button" class="btn btn-primary" (click)="openSearch()">Explorar portafolio</button>
+          <button type="button" class="btn btn-secondary" (click)="openWhatsapp()">Escríbenos</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<app-footer-component></app-footer-component>

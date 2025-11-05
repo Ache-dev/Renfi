@@ -1,0 +1,112 @@
+<section class="comprobante" *ngIf="resultado as data; else sinRecibo">
+	<header class="comprobante__encabezado">
+		<div class="icono-exito" aria-hidden="true">✓</div>
+		<div>
+			<h1>¡Reserva confirmada!</h1>
+			<p>Hemos registrado tu pago y recibido la reserva. Te enviamos una copia a tu correo electrónico.</p>
+		</div>
+	</header>
+
+	<div class="comprobante__grid">
+		<article class="tarjeta tarjeta--principal">
+			<h2>Detalles de la reserva</h2>
+			<dl>
+				<div>
+					<dt>Finca</dt>
+					<dd>{{ data.reserva.fincaNombre }}</dd>
+				</div>
+				<div *ngIf="data.reserva.municipio">
+					<dt>Municipio</dt>
+					<dd>{{ data.reserva.municipio }}</dd>
+				</div>
+				<div>
+					<dt>Check-in</dt>
+					<dd>{{ data.reserva.fechaEntrada | date: 'fullDate' }}</dd>
+				</div>
+				<div>
+					<dt>Check-out</dt>
+					<dd>{{ data.reserva.fechaSalida | date: 'fullDate' }}</dd>
+				</div>
+				<div *ngIf="data.reserva.noches">
+					<dt>Noches</dt>
+					<dd>{{ data.reserva.noches }}</dd>
+				</div>
+				<div *ngIf="data.reserva.huespedes">
+					<dt>Huéspedes</dt>
+					<dd>{{ data.reserva.huespedes }}</dd>
+				</div>
+				<div *ngIf="data.reserva.usuarioNombre">
+					<dt>A nombre de</dt>
+					<dd>{{ data.reserva.usuarioNombre }}</dd>
+				</div>
+			</dl>
+		</article>
+
+		<article class="tarjeta">
+			<h2>Resumen del pago</h2>
+			<dl>
+				<div>
+					<dt>Método</dt>
+					<dd>{{ data.pago.metodoNombre }}</dd>
+				</div>
+				<div>
+					<dt>Monto pagado</dt>
+					<dd>{{ formatoMoneda(data.pago.monto) }}</dd>
+				</div>
+				<div>
+					<dt>Referencia</dt>
+					<dd>{{ data.pago.referencia || '—' }}</dd>
+				</div>
+				<div>
+					<dt>Fecha de pago</dt>
+					<dd>{{ data.pago.fechaPago | date: 'short' }}</dd>
+				</div>
+						<div *ngIf="data.pago.estado">
+							<dt>Estado</dt>
+							<dd class="badge" [class.badge--exito]="esPagoExitoso()">
+								{{ data.pago.estado }}
+							</dd>
+				</div>
+			</dl>
+		</article>
+
+		<article class="tarjeta" *ngIf="factura">
+			<h2>Factura</h2>
+			<dl>
+				<div *ngIf="factura.id">
+					<dt>Número de factura</dt>
+					<dd>{{ factura.id }}</dd>
+				</div>
+				<div>
+					<dt>Fecha de emisión</dt>
+					<dd>{{ factura.fechaFactura | date: 'medium' }}</dd>
+				</div>
+				<div>
+					<dt>Total facturado</dt>
+					<dd>{{ formatoMoneda(factura.total) }}</dd>
+				</div>
+				<div *ngIf="factura.estadoReserva">
+					<dt>Estado</dt>
+					<dd>{{ factura.estadoReserva }}</dd>
+				</div>
+			</dl>
+		</article>
+	</div>
+
+	<footer class="comprobante__acciones">
+		<button type="button" class="btn btn--texto" (click)="imprimir()">Imprimir</button>
+		<button type="button" class="btn btn--primario" (click)="irAMisReservas()">Ver mis reservas</button>
+	</footer>
+
+	<p class="comprobante__nota">
+		Guardamos tu comprobante con fecha {{ fechaGeneracion | date: 'fullDate' }}. Puedes consultar y gestionar tu reserva desde el panel de "Mi cuenta".
+	</p>
+</section>
+
+<ng-template #sinRecibo>
+	<section class="comprobante comprobante--sin-datos">
+		<h1>No encontramos una reserva reciente</h1>
+		<p>Si realizaste un pago hace unos minutos, vuelve a intentar desde la finca seleccionada.</p>
+		<button type="button" class="btn btn--primario" (click)="irAMisReservas()">Ir a Mi cuenta</button>
+	</section>
+</ng-template>

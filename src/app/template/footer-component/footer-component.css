@@ -1,0 +1,87 @@
+/* ==== Footer Rediseñado con Patrones y Gradientes ==== */
+footer {
+  margin-top: auto;
+  background: linear-gradient(180deg, var(--color-surface-light) 0%, var(--color-surface-medium) 100%);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    var(--pattern-grid),
+    radial-gradient(circle at 80% 20%, rgba(234, 42, 51, 0.03), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.03), transparent 50%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+footer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(234, 42, 51, 0.2) 25%, 
+    rgba(59, 130, 246, 0.2) 75%, 
+    transparent 100%);
+}
+
+footer a {
+  transition: all var(--transition-base);
+  position: relative;
+  display: inline-block;
+}
+
+footer a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: width var(--transition-base);
+}
+
+footer a:hover {
+  color: var(--color-primary) !important;
+  transform: translateY(-1px);
+}
+
+footer a:hover::after {
+  width: 100%;
+}
+
+footer a:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==== Texto de Copyright Más Oscuro ==== */
+footer p,
+footer .text-muted,
+footer .text-center,
+footer small {
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  footer a {
+    transition: none;
+  }
+  
+  footer a:hover {
+    transform: none;
+  }
+}

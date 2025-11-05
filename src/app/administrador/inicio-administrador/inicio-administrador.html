@@ -1,0 +1,69 @@
+<section class="dashboard">
+	<header class="dashboard__hero">
+		<div>
+			<h1>Panel de administración Renfi</h1>
+			<p>Visualiza de un vistazo todos los indicadores clave y accede rápidamente a los módulos de gestión.</p>
+		</div>
+		<button type="button" class="btn-hero" (click)="refrescar()">Actualizar datos</button>
+	</header>
+
+	<section class="dashboard__indicadores">
+		<article
+			class="indicador"
+			*ngFor="let indicador of indicadores"
+			[class.indicador--error]="indicador.error"
+			(click)="navegar(indicador.ruta)"
+			tabindex="0"
+		>
+			<div class="indicador__icono" aria-hidden="true">{{ indicador.icono }}</div>
+			<div class="indicador__contenido">
+				<span class="indicador__titulo">{{ indicador.titulo }}</span>
+				<p class="indicador__descripcion">{{ indicador.descripcion }}</p>
+			</div>
+			<div class="indicador__valor" *ngIf="!indicador.cargando && !indicador.error">{{ indicador.total ?? '—' }}</div>
+			<div class="indicador__valor indicador__valor--loading" *ngIf="indicador.cargando">⋯</div>
+			<div class="indicador__valor indicador__valor--error" *ngIf="indicador.error">!</div>
+		</article>
+	</section>
+
+	<section class="dashboard__reportes" *ngIf="reportes.length">
+		<header>
+			<h2>Reportes destacados</h2>
+			<p>Monitorea tendencias y estados relevantes para tomar decisiones informadas.</p>
+		</header>
+
+		<div class="reportes-grid">
+			<article class="reporte" *ngFor="let reporte of reportes">
+				<h3>{{ reporte.titulo }}</h3>
+				<p>{{ reporte.descripcion }}</p>
+
+				<div class="reporte__estado" *ngIf="reporte.cargando">
+					<span class="spinner"></span>
+					<span>Cargando información...</span>
+				</div>
+
+				<div class="reporte__estado reporte__estado--error" *ngIf="reporte.error && !reporte.cargando">{{ reporte.error }}</div>
+
+				<div class="reporte__tabla" *ngIf="!reporte.cargando && !reporte.error" appDragScroll>
+					<ng-container *ngIf="reporte.filas.length; else reporteVacio">
+						<table>
+							<thead>
+								<tr>
+									<th *ngFor="let columna of reporte.columnas">{{ columna.label }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let fila of reporte.filas">
+									<td *ngFor="let columna of reporte.columnas">{{ formatearValor(fila[columna.key]) }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</ng-container>
+					<ng-template #reporteVacio>
+						<p class="reporte__vacio">Sin datos para mostrar en este momento.</p>
+					</ng-template>
+				</div>
+			</article>
+		</div>
+	</section>
+</section>

@@ -1,0 +1,80 @@
+<section class="registro-page">
+	<div class="registro-shell">
+		<div class="registro-intro">
+			<span class="registro-kicker">Únete a Renfi</span>
+			<h1>Crear cuenta</h1>
+			<p>Completa tu registro para invertir en fincas rentables y acceder al panel exclusivo de inversionistas.</p>
+		</div>
+
+		<div class="registro-switch" role="tablist" aria-label="Opciones de acceso">
+			<button type="button" class="registro-switch__btn" (click)="goToLogin()" aria-selected="false">Iniciar sesión</button>
+			<button type="button" class="registro-switch__btn is-active" aria-selected="true">Crear cuenta</button>
+		</div>
+
+		<div class="registro-card">
+			<form [formGroup]="registroForm" (ngSubmit)="onSubmit()" novalidate>
+				<p class="registro-subtitle">Cuéntanos sobre ti y define tu rol para activar tu acceso.</p>
+
+				<div class="registro-grid">
+					<label class="registro-field">
+						<span>Nombre</span>
+						<input type="text" formControlName="nombre" autocomplete="given-name" placeholder="Ej. Valeria" />
+						<small *ngIf="campoInvalido('nombre')">Ingresa tu nombre.</small>
+					</label>
+
+					<label class="registro-field">
+						<span>Apellido</span>
+						<input type="text" formControlName="apellido" autocomplete="family-name" placeholder="Ej. Gómez" />
+						<small *ngIf="campoInvalido('apellido')">Ingresa tu apellido.</small>
+					</label>
+
+					<label class="registro-field">
+						<span>Correo electrónico</span>
+						<input type="email" formControlName="correo" autocomplete="email" placeholder="tucorreo@ejemplo.com" />
+						<small *ngIf="campoInvalido('correo')">Ingresa un correo válido.</small>
+					</label>
+
+					<label class="registro-field">
+						<span>Teléfono</span>
+						<input type="tel" formControlName="telefono" autocomplete="tel" placeholder="Ej. 3001234567" />
+						<small *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (mínimo 10 dígitos).</small>
+					</label>
+
+					<label class="registro-field">
+						<span>Contraseña</span>
+						<input type="password" formControlName="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+						<small *ngIf="campoInvalido('password')">Ingresa una contraseña de al menos 8 caracteres.</small>
+					</label>
+
+					<label class="registro-field">
+						<span>Confirmar contraseña</span>
+						<input type="password" formControlName="confirmPassword" autocomplete="new-password" placeholder="Repite tu contraseña" />
+						<small *ngIf="registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched">
+							Las contraseñas no coinciden.
+						</small>
+					</label>
+				</div>
+
+				<label class="registro-checkbox">
+					<input type="checkbox" formControlName="terminos" />
+					<span>Acepto los términos, condiciones y el tratamiento de datos personales.</span>
+				</label>
+				<small class="registro-error" *ngIf="campoInvalido('terminos')">Debes aceptar los términos para continuar.</small>
+
+				<div class="registro-feedback" *ngIf="mensajeError || mensajeExito">
+					<p class="registro-feedback--error" *ngIf="mensajeError" aria-live="assertive">{{ mensajeError }}</p>
+					<p class="registro-feedback--success" *ngIf="mensajeExito" aria-live="polite">{{ mensajeExito }}</p>
+				</div>
+
+				<button type="submit" class="registro-submit" [disabled]="registroForm.invalid || enviando">
+					<span *ngIf="!enviando">Crear cuenta</span>
+					<span *ngIf="enviando" class="registro-spinner" aria-live="polite">Registrando usuario...</span>
+				</button>
+
+				<p class="registro-login-link">
+					¿Ya tienes cuenta? <a href="#" (click)="goToLogin(); $event.preventDefault()">Inicia sesión aquí</a>
+				</p>
+			</form>
+		</div>
+	</div>
+</section>

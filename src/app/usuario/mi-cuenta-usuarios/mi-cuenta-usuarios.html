@@ -1,0 +1,147 @@
+<ng-container *ngIf="!cargando; else cargandoEstado">
+		<section class="cuenta-page" *ngIf="usuarioActual as user; else sinSesion">
+		<div class="cuenta-shell">
+			<header class="cuenta-header">
+				<div class="cuenta-identidad">
+					<span class="cuenta-kicker">Mi cuenta</span>
+						<h1>{{ user.NombreUsuario }} {{ user.ApellidoUsuario }}</h1>
+						<p>{{ user.Correo }}</p>
+				</div>
+				<div class="cuenta-badges">
+						<span class="cuenta-badge estado-activo">{{ user.Estado || 'Activo' }}</span>
+						<span class="cuenta-badge cuenta-rol">{{ user.Rol || 'Cliente' }}</span>
+				</div>
+			</header>
+
+			<div class="cuenta-grid">
+				<form class="cuenta-card" [formGroup]="cuentaForm" (ngSubmit)="onSubmit()" novalidate>
+					<h2>Datos personales</h2>
+					<p class="cuenta-subtitle">Actualiza tu información para mantener tu perfil al día.</p>
+
+					<div class="cuenta-form-grid">
+						<label class="cuenta-field">
+							<span>Nombre</span>
+							<input type="text" formControlName="nombre" placeholder="Tu nombre" autocomplete="given-name" />
+							<small *ngIf="campoInvalido('nombre')">Ingresa un nombre válido (mínimo 2 caracteres).</small>
+						</label>
+
+						<label class="cuenta-field">
+							<span>Apellido</span>
+							<input type="text" formControlName="apellido" placeholder="Tu apellido" autocomplete="family-name" />
+							<small *ngIf="campoInvalido('apellido')">Ingresa un apellido válido.</small>
+						</label>
+
+						<label class="cuenta-field">
+							<span>Correo electrónico</span>
+										<input type="email" formControlName="correo" [readonly]="true" />
+							<small>El correo es tu identificador y no puede modificarse.</small>
+						</label>
+
+						<label class="cuenta-field">
+							<span>Teléfono</span>
+							<input type="tel" formControlName="telefono" placeholder="3001234567" autocomplete="tel" />
+							<small *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (mínimo 7 dígitos).</small>
+						</label>
+
+						<label class="cuenta-field">
+							<span>Estado</span>
+										<input type="text" formControlName="estado" [readonly]="true" />
+							<small>Estado asignado según tu relación con Renfi.</small>
+						</label>
+
+						<label class="cuenta-field">
+							<span>Rol</span>
+										<input type="text" formControlName="rol" [readonly]="true" />
+							<small>Rol activo dentro de la plataforma.</small>
+						</label>
+					</div>
+
+					<div class="cuenta-feedback" *ngIf="mensajeError || mensajeExito">
+						<p class="cuenta-feedback--error" *ngIf="mensajeError" aria-live="assertive">{{ mensajeError }}</p>
+						<p class="cuenta-feedback--success" *ngIf="mensajeExito" aria-live="polite">{{ mensajeExito }}</p>
+					</div>
+
+					<div class="cuenta-actions">
+						<button type="submit" class="cuenta-submit" [disabled]="guardando || cuentaForm.invalid">
+							<span *ngIf="!guardando">Guardar cambios</span>
+							<span *ngIf="guardando" class="cuenta-spinner">Guardando...</span>
+						</button>
+						<button
+							type="button"
+							class="cuenta-secondary"
+							(click)="refrescarReservas()"
+							[disabled]="guardando || reservasCargando"
+						>
+							Actualizar reservas
+						</button>
+					</div>
+				</form>
+
+				<aside class="cuenta-card cuenta-reservas">
+					<div class="cuenta-reservas__header">
+						<h2>Reservas recientes</h2>
+						<p>Consulta las reservas asociadas a tu cuenta.</p>
+					</div>
+					<div class="cuenta-reservas__feedback" *ngIf="mensajeReservas || errorReservas">
+						<p class="cuenta-feedback--success" *ngIf="mensajeReservas" aria-live="polite">{{ mensajeReservas }}</p>
+						<p class="cuenta-feedback--error" *ngIf="errorReservas" aria-live="assertive">{{ errorReservas }}</p>
+					</div>
+					<div class="cuenta-reservas__loader" *ngIf="reservasCargando">
+						<span class="cuenta-reservas__spinner" aria-hidden="true"></span>
+						<span>Sincronizando tus reservas...</span>
+					</div>
+					<ng-container *ngIf="!reservasCargando && reservas.length > 0; else sinReservas">
+						<ul class="reserva-lista" aria-live="polite">
+							<li *ngFor="let reserva of reservas">
+								<div class="reserva-titulo">
+									<span class="reserva-nombre">{{ reserva.fincaNombre }}</span>
+									<span class="reserva-id">#{{ reserva.id }}</span>
+								</div>
+								<div class="reserva-detalle">
+									<span>{{ reserva.fechaEntrada | date: 'mediumDate' }} · {{ reserva.noches || 0 }} noches</span>
+									<span>{{ reserva.huespedes }} huéspedes</span>
+								</div>
+								<div class="reserva-acciones">
+									<span class="reserva-creada">Creada el {{ reserva.creadoEn | date: 'short' }}</span>
+									<button
+										type="button"
+										class="reserva-cancelar"
+										(click)="cancelarReserva(reserva)"
+										[disabled]="cancelandoReservaId === reserva.id || reservasCargando"
+									>
+										<span *ngIf="cancelandoReservaId !== reserva.id">Cancelar reserva</span>
+										<span *ngIf="cancelandoReservaId === reserva.id" class="reserva-cancelar__spinner">Cancelando...</span>
+									</button>
+								</div>
+							</li>
+						</ul>
+					</ng-container>
+					<ng-template #sinReservas>
+						<ng-container *ngIf="!reservasCargando">
+							<p class="reserva-empty">Aún no tienes reservas registradas. Explora las fincas disponibles y realiza tu primera reserva.</p>
+						</ng-container>
+					</ng-template>
+				</aside>
+			</div>
+		</div>
+	</section>
+</ng-container>
+
+<ng-template #sinSesion>
+	<section class="cuenta-page cuenta-page--guest">
+		<div class="cuenta-shell">
+			<div class="cuenta-guest">
+				<h1>Tu cuenta Renfi</h1>
+				<p>Inicia sesión para ver y actualizar la información de tu perfil, además de gestionar tus reservas.</p>
+				<button class="cuenta-submit" routerLink="/iniciar-sesion">Ir al inicio de sesión</button>
+			</div>
+		</div>
+	</section>
+</ng-template>
+
+<ng-template #cargandoEstado>
+	<div class="cuenta-loading">
+		<div class="cuenta-spinner"></div>
+		<p>Cargando tu información...</p>
+	</div>
+</ng-template>

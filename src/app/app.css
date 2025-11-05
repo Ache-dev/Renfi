@@ -1,0 +1,30 @@
+/* Application Root Styles */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Main layout container */
+main {
+  flex: 1;
+  width: 100%;
+}
+
+/* Router outlet styling */
+router-outlet + * {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Smooth transitions between routes */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

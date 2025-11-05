@@ -1,0 +1,102 @@
+<div class="container-fluid px-2 px-md-4 py-4 py-md-5">
+  <div class="mb-4 mb-md-5">
+    <h2 class="carousel-title mb-4">Fincas Relevantes</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn carousel-btn-prev" (click)="prevSlide()" *ngIf="fincas.length > 0" aria-label="Anterior">
+        <span aria-hidden="true">&#8592;</span>
+      </button>
+      <div class="carousel-wrapper" #carouselWrapper>
+        <div *ngIf="cargando" class="fincas-spinner-wrapper">
+          <div class="fincas-spinner">
+            <div class="fincas-spinner-circle"></div>
+            <div class="fincas-spinner-text">Cargando fincas...</div>
+          </div>
+        </div>
+        <div *ngIf="!cargando && errorApi" class="fincas-empty-message">
+          <div class="fincas-empty-icon">
+            <svg width="56" height="56" fill="#ea2a33" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 11.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1v-9.5a1 1 0 0 0-.293-.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 11.5zm2 0L12 4.5l7 7v8.5h-3v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H5v-8.5z"></path>
+            </svg>
+          </div>
+          <h3 class="fincas-empty-title">¡Ups! No pudimos conectar con la API</h3>
+          <p class="fincas-empty-text">Hubo un problema al cargar las fincas. Por favor revisa tu conexión o vuelve a intentarlo más tarde.</p>
+        </div>
+        <div *ngIf="!cargando && !errorApi && fincas.length === 0" class="fincas-empty-message">
+          <div class="fincas-empty-icon">
+            <svg width="56" height="56" fill="#ea2a33" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 11.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1v-9.5a1 1 0 0 0-.293-.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 11.5zm2 0L12 4.5l7 7v8.5h-3v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H5v-8.5z"></path>
+            </svg>
+          </div>
+          <h3 class="fincas-empty-title">¡Ups! No encontramos fincas disponibles</h3>
+          <p class="fincas-empty-text">Por ahora no hay fincas publicadas. Vuelve pronto o publica la tuya para ayudar a otros estudiantes a encontrar su lugar ideal.</p>
+          <a routerLink="/publicar" class="btn btn-danger">Publicar mi finca</a>
+        </div>
+        <div class="carousel-track" #carouselTrack *ngIf="!cargando && !errorApi && fincas.length > 0" [style.transform]="'translateX(' + translateX + 'px)'"
+       (wheel)="onWheel($event)"
+             (mousedown)="onDragStart($event)"
+             (mousemove)="onDragMove($event)"
+             (mouseup)="onDragEnd($event)"
+             (mouseleave)="onDragEnd($event)"
+             (touchstart)="onTouchStart($event)"
+             (touchmove)="onTouchMove($event)"
+             (touchend)="onTouchEnd($event)">
+          <div #carouselCard *ngFor="let finca of fincas; let i = index" class="carousel-card" [attr.data-index]="i" (click)="verDetalle(finca)" (keyup.enter)="verDetalle(finca)" (keyup.space)="$event.preventDefault(); verDetalle(finca)" role="button" tabindex="0">
+            <div class="carousel-card-image">
+              <img [src]="finca.imagenUrl" [alt]="finca['NombreFinca']" (error)="finca.imagenUrl = 'https://via.placeholder.com/280x200?text=Sin+Imagen'" loading="lazy" />
+              <div class="carousel-card-badge" *ngIf="finca['Estado']">
+                <span [ngClass]="{'badge-disponible': finca['Estado']==='Disponible', 'badge-ocupado': finca['Estado']!=='Disponible'}">
+                  {{ finca['Estado'] }}
+                </span>
+              </div>
+            </div>
+            <div class="carousel-card-body">
+              <h5 class="carousel-card-title">{{ finca['NombreFinca'] || finca.nombre }}</h5>
+              
+              <div class="carousel-rating-price">
+                <div class="carousel-rating" *ngIf="finca['Calificacion']">
+                  <span class="star-icon">★</span>
+                  <span class="rating-value">{{ finca['Calificacion'] }}/5</span>
+                </div>
+                <div class="carousel-price" *ngIf="finca['Precio'] !== null && finca['Precio'] !== undefined">
+                  <span class="price-value">{{ finca['Precio'] | currency:'COP':'symbol':'1.0-0' }}</span>
+                  <span class="price-label">/noche</span>
+                </div>
+              </div>
+
+              <div class="carousel-card-details">
+                <div class="detail-item location-highlight" *ngIf="finca['NombreMunicipio'] || finca['Direccion']">
+                  <span class="detail-icon">📍</span>
+                  <span class="detail-text">
+                    <strong>{{ finca['NombreMunicipio'] }}</strong>
+                    <span *ngIf="finca['Direccion']" class="address-detail">{{ finca['Direccion'] }}</span>
+                  </span>
+                </div>
+
+                <div class="detail-grid">
+                  <div class="detail-item-mini" *ngIf="finca['Capacidad']">
+                    <span class="mini-icon">👥</span>
+                    <span class="mini-text"><strong>{{ finca['Capacidad'] }}</strong> huéspedes</span>
+                  </div>
+                  
+                  <div class="detail-item-mini services-mini" *ngIf="finca['InformacionAdicional']">
+                    <span class="mini-icon">🛎️</span>
+                    <span class="mini-text mini-services">{{ finca['InformacionAdicional'] }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="carousel-card-actions">
+                <button type="button" class="detalle-btn" (click)="$event.stopPropagation(); verDetalle(finca)">
+                  Ver detalle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-btn-next" (click)="nextSlide()" *ngIf="fincas.length > 0" aria-label="Siguiente">
+        <span aria-hidden="true">&#8594;</span>
+      </button>
+    </div>
+  </div>
+</div>

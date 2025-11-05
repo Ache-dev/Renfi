@@ -1,0 +1,290 @@
+/* ==== Logo CTA Moderno con Glassmorphism ==== */
+.cta-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 2vw, 16px);
+  padding: clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  color: var(--color-text-inverse);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-glow-primary), 0 4px 16px rgba(234, 42, 51, 0.15);
+  position: relative;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  overflow: hidden;
+}
+
+.cta-logo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--pattern-dots);
+  opacity: 0.15;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.cta-logo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent 50%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.cta-logo:hover,
+.cta-logo:focus-visible {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-glow-primary), 0 8px 32px rgba(234, 42, 51, 0.3);
+}
+
+.cta-logo:hover::after,
+.cta-logo:focus-visible::after {
+  opacity: 1;
+}
+
+.cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  width: clamp(36px, 8vw, 48px);
+  height: clamp(36px, 8vw, 48px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.cta-icon svg {
+  width: clamp(22px, 5vw, 28px);
+  height: clamp(22px, 5vw, 28px);
+  fill: #fff;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+}
+
+.cta-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  width: 250px;
+}
+
+.navbar-nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.cta-title {
+  font-weight: 700;
+  font-size: clamp(1.1rem, 4vw, 1.6rem);
+  letter-spacing: 0.02em;
+}
+
+.cta-subtitle {
+  font-size: clamp(0.75rem, 3vw, 0.95rem);
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+
+.navbar-nav-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 3vw, 16px);
+  width: 100%;
+}
+
+.primary-nav {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2vw, 12px);
+}
+
+/* ==== Navegación Principal con Efectos Modernos ==== */
+.primary-nav .nav-link {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  padding: 0.55rem 1.1rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: inset 0 1px 0 var(--glass-border), var(--shadow-sm);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.primary-nav .nav-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--pattern-waves);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.primary-nav .nav-link.active,
+.primary-nav .nav-link:hover,
+.primary-nav .nav-link:focus-visible {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--color-accent), #fb923c);
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: var(--color-text-inverse);
+  border-color: transparent;
+}
+
+.primary-nav .nav-link:hover::before,
+.primary-nav .nav-link.active::before {
+  opacity: 0.1;
+}
+
+.nav-separator {
+  height: 1px;
+  background: rgba(148, 163, 184, 0.35);
+}
+
+.auth-nav {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2vw, 12px);
+  align-items: stretch;
+}
+
+/* ==== Botones de Autenticación con Glassmorphism ==== */
+.auth-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  padding: 0.6rem 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  color: var(--color-text-primary);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), var(--shadow-md);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.auth-link:hover,
+.auth-link:focus-visible,
+.auth-link.active {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.1));
+  color: var(--color-secondary-dark);
+  box-shadow: var(--shadow-glow-secondary), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.auth-link:hover::before,
+.auth-link.active::before {
+  opacity: 1;
+}
+
+/* ==== Botón Destacado con Gradiente ==== */
+.auth-link--highlight {
+  background: var(--gradient-secondary);
+  color: var(--color-text-inverse);
+  border: none;
+  box-shadow: var(--shadow-glow-secondary), 0 4px 16px rgba(59, 130, 246, 0.2);
+}
+
+.auth-link--highlight::before {
+  background: var(--pattern-dots);
+  opacity: 0.15;
+}
+
+.auth-link--highlight:hover,
+.auth-link--highlight:focus-visible,
+.auth-link--highlight.active {
+  color: var(--color-text-inverse);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-glow-secondary), 0 8px 32px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, var(--color-secondary-dark), var(--color-secondary));
+}
+
+.auth-link--label {
+  background: rgba(248, 250, 252, 0.9);
+  border-style: dashed;
+  cursor: default;
+  color: #1f2937;
+}
+
+.auth-link--label:hover,
+.auth-link--label:focus-visible {
+  transform: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: rgba(248, 250, 252, 0.96);
+  color: #1f2937;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 576px) {
+  .cta-logo {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .auth-link {
+    text-align: center;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-nav-container {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .primary-nav {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+  }
+
+  .auth-nav {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .auth-link {
+    text-align: left;
+  }
+
+  .nav-separator {
+    display: none;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .cta-logo {
+    transition: none;
+    transform: none !important;
+  }
+
+  .auth-actions .btn {
+    transition: none;
+    transform: none !important;
+  }
+}
