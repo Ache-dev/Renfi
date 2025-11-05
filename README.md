@@ -1,59 +1,33 @@
-# MiPrimerApp
+# 🏡 Renfi
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4.
+API REST para la plataforma **Renfi**, un sistema de gestión de reservas de fincas que permite administrar usuarios, roles, fincas, reservas, pagos, municipios y otros recursos relacionados.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Características principales
 
-```bash
-ng serve
-```
+- Autenticación y autorización mediante JSON Web Tokens (JWT).  
+- CRUD completo para entidades clave: usuarios, roles, fincas, reservas, métodos de pago, municipios.  
+- Uso de base de datos con SQL Server (o la que corresponda) para persistencia.  
+- Validación de datos, manejo centralizado de errores y estructura modular.  
+- APIs documentadas y listas para integrarse con frontend, aplicaciones móviles o servicios externos.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🧰 Tecnologías utilizadas
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Node.js**  
+- **Express.js** (o framework que uses)  
+- **SQL Server** como base de datos  
+- **JWT** para autenticación  
+- **dotenv** para configuración de variables de entorno  
+- Otras librerías comunes: validación de datos, logging, etc.
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## ⚙️ Instalación y configuración
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/Ache-dev/Renfi.git
+   cd Renfi
