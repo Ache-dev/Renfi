@@ -3,7 +3,7 @@
 		<div class="cuenta-shell">
 			<header class="cuenta-header">
 				<div class="cuenta-identidad">
-					<span class="cuenta-kicker">Mi cuenta</span>
+					<span class="cuenta-kicker">¡Hola, {{ user.NombreUsuario }}!</span>
 						<h1>{{ user.NombreUsuario }} {{ user.ApellidoUsuario }}</h1>
 						<p>{{ user.Correo }}</p>
 				</div>
@@ -41,18 +41,6 @@
 							<span>Teléfono</span>
 							<input type="tel" formControlName="telefono" placeholder="3001234567" autocomplete="tel" />
 							<small *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (mínimo 7 dígitos).</small>
-						</label>
-
-						<label class="cuenta-field">
-							<span>Estado</span>
-										<input type="text" formControlName="estado" [readonly]="true" />
-							<small>Estado asignado según tu relación con Renfi.</small>
-						</label>
-
-						<label class="cuenta-field">
-							<span>Rol</span>
-										<input type="text" formControlName="rol" [readonly]="true" />
-							<small>Rol activo dentro de la plataforma.</small>
 						</label>
 					</div>
 
@@ -94,15 +82,23 @@
 						<ul class="reserva-lista" aria-live="polite">
 							<li *ngFor="let reserva of reservas">
 								<div class="reserva-titulo">
-									<span class="reserva-nombre">{{ reserva.fincaNombre }}</span>
+									<span class="reserva-nombre">{{ reserva.fincaNombre || 'Finca sin nombre' }}</span>
 									<span class="reserva-id">#{{ reserva.id }}</span>
 								</div>
 								<div class="reserva-detalle">
-									<span>{{ reserva.fechaEntrada | date: 'mediumDate' }} · {{ reserva.noches || 0 }} noches</span>
-									<span>{{ reserva.huespedes }} huéspedes</span>
+									<span>
+										<strong>Entrada:</strong> {{ reserva.fechaEntrada ? (reserva.fechaEntrada | date: 'dd/MM/yyyy') : 'Fecha no disponible' }}
+										· 
+										{{ reserva.noches || 'N/A' }} {{ (reserva.noches || 0) === 1 ? 'noche' : 'noches' }}
+									</span>
+								</div>
+								<div class="reserva-detalle" *ngIf="reserva.fechaSalida">
+									<span>
+										<strong>Salida:</strong> {{ reserva.fechaSalida | date: 'dd/MM/yyyy' }}
+									</span>
 								</div>
 								<div class="reserva-acciones">
-									<span class="reserva-creada">Creada el {{ reserva.creadoEn | date: 'short' }}</span>
+									<span class="reserva-creada">Creada el {{ reserva.creadoEn ? (reserva.creadoEn | date: 'dd/MM/yyyy') : (reserva.fechaReserva ? (reserva.fechaReserva | date: 'dd/MM/yyyy') : 'Fecha no disponible') }}</span>
 									<button
 										type="button"
 										class="reserva-cancelar"
@@ -145,3 +141,24 @@
 		<p>Cargando tu información...</p>
 	</div>
 </ng-template>
+
+<!-- Modal de confirmación para cancelar reserva -->
+<div class="modal-overlay" *ngIf="mostrarModalCancelacion" (click)="cerrarModal()">
+	<div class="modal-container" (click)="$event.stopPropagation()">
+		<div class="modal-header">
+			<h3>Cancelar Reserva</h3>
+		</div>
+		<div class="modal-body">
+			<p>¿Estás seguro de que deseas cancelar la reserva <strong>#{{ reservaACancelar?.id }}</strong> de <strong>"{{ reservaACancelar?.fincaNombre || 'esta finca' }}"</strong>?</p>
+			<p class="modal-warning">Esta acción no se puede deshacer.</p>
+		</div>
+		<div class="modal-actions">
+			<button type="button" class="modal-btn modal-btn--cancel" (click)="cerrarModal()">
+				Cancelar
+			</button>
+			<button type="button" class="modal-btn modal-btn--confirm" (click)="confirmarCancelacion()">
+				Aceptar
+			</button>
+		</div>
+	</div>
+</div>

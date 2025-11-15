@@ -1,9 +1,10 @@
 ﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, switchMap, takeUntil, of } from 'rxjs';
 import { AuthStateService } from '../../template/services/auth-state.service';
 import { AuthService, UsuarioNormalizado } from '../../template/services/auth.service';
 import { Reserva, ReservaService } from '../../template/services/reserva.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-mi-cuenta-usuarios',
@@ -24,6 +25,9 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
   errorReservas = '';
   cancelandoReservaId: string | null = null;
 
+  mostrarModalCancelacion = false;
+  reservaACancelar: Reserva | null = null;
+
   private readonly destroy$ = new Subject<void>();
   private recordarSesion = false;
 
@@ -31,15 +35,14 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly authState: AuthStateService,
     private readonly authService: AuthService,
-    private readonly reservaService: ReservaService
+    private readonly reservaService: ReservaService,
+    private readonly http: HttpClient
   ) {
     this.cuentaForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       correo: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{7,}$/)]],
-      estado: [{ value: 'Activo', disabled: true }],
-      rol: [{ value: 'Cliente', disabled: true }]
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{7,}$/)]]
     });
   }
 
@@ -63,9 +66,7 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
             nombre: '',
             apellido: '',
             telefono: '',
-            correo: { value: '', disabled: true },
-            estado: { value: 'Activo', disabled: true },
-            rol: { value: 'Cliente', disabled: true }
+            correo: { value: '', disabled: true }
           });
           this.reservas = [];
         }
@@ -149,7 +150,25 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
       return;
     }
 
+    this.reservaACancelar = reserva;
+    this.mostrarModalCancelacion = true;
+  }
+
+  cerrarModal(): void {
+    this.mostrarModalCancelacion = false;
+    this.reservaACancelar = null;
+  }
+
+  confirmarCancelacion(): void {
+    if (!this.reservaACancelar || !this.usuarioActual) {
+      return;
+    }
+
+    const reserva = this.reservaACancelar;
+    this.cerrarModal();
+
     this.errorReservas = '';
+    this.mensajeReservas = '';
     this.cancelandoReservaId = reserva.id;
 
     this.reservaService
@@ -162,14 +181,19 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (exito) => {
-          if (exito && this.usuarioActual) {
-            this.cargarReservas(this.usuarioActual, { mensajeExito: 'La reserva se canceló correctamente.' });
+          if (exito) {
+
+            this.reservas = this.reservas.filter(r => r.id !== reserva.id);
+            this.mensajeReservas = 'La reserva se canceló correctamente.';
+
+            setTimeout(() => {
+              this.mensajeReservas = '';
+            }, 5000);
           } else {
             this.errorReservas = 'No fue posible cancelar la reserva. Intenta nuevamente.';
           }
         },
         error: (error: unknown) => {
-
           this.errorReservas = 'No fue posible cancelar la reserva. Intenta nuevamente.';
         }
       });
@@ -200,9 +224,7 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
       nombre: usuario.NombreUsuario ?? '',
       apellido: usuario.ApellidoUsuario ?? '',
       telefono: usuario.Telefono ?? '',
-      correo: usuario.Correo ?? '',
-      estado: usuario.Estado ?? 'Activo',
-      rol: usuario.Rol ?? 'Cliente'
+      correo: usuario.Correo ?? ''
     }, { emitEvent: false });
   }
 
@@ -214,7 +236,12 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
     const correo = usuario.Correo?.trim() ?? null;
     const idUsuario = usuario.IdUsuario ?? null;
 
-    if (!correo && !idUsuario) {
+    let documento = (usuario as any).NumeroDocumento ?? 
+                    (usuario as any).Documento ?? 
+                    (usuario as any).numeroDocumento ?? 
+                    null;
+
+    if (!correo && !idUsuario && !documento) {
       this.reservas = [];
       this.errorReservas = 'No pudimos identificar tu usuario para obtener las reservas.';
       return;
@@ -226,9 +253,20 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
     this.errorReservas = '';
     this.reservasCargando = true;
 
-    this.reservaService
-      .obtenerReservasPorUsuario(correo, null, idUsuario)
+    const obtenerDocumento$ = !documento && correo ? 
+      this.http.get<any[]>('http://localhost:3000/api/usuario').pipe(
+        switchMap(usuarios => {
+          const usuarioCompleto = usuarios.find(u => 
+            u.Correo?.toLowerCase() === correo?.toLowerCase()
+          );
+          documento = usuarioCompleto?.NumeroDocumento ?? usuarioCompleto?.IdUsuario ?? null;
+          return of(documento);
+        })
+      ) : of(documento);
+
+    obtenerDocumento$
       .pipe(
+        switchMap(() => this.reservaService.obtenerReservasPorUsuario(correo, documento, idUsuario)),
         takeUntil(this.destroy$),
         finalize(() => {
           this.reservasCargando = false;
@@ -236,7 +274,13 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (reservas) => {
-          this.reservas = [...reservas].sort((a, b) => {
+
+          const reservasActivas = reservas.filter(r => {
+            const estado = (r.estado || '').toLowerCase();
+            return estado !== 'cancelada' && estado !== 'cancelado';
+          });
+
+          this.reservas = [...reservasActivas].sort((a, b) => {
             const fechaA = a.creadoEn ? new Date(a.creadoEn).getTime() : 0;
             const fechaB = b.creadoEn ? new Date(b.creadoEn).getTime() : 0;
             return fechaB - fechaA;
@@ -251,7 +295,6 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
           }
         },
         error: (error: unknown) => {
-
           this.errorReservas = 'No fue posible cargar tus reservas. Intenta nuevamente en unos minutos.';
         }
       });

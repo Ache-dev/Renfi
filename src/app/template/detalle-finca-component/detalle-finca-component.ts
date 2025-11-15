@@ -62,14 +62,13 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
     private readonly reservaCheckout: ReservaCheckoutService,
     private readonly reservaService: ReservaService
   ) {
-    // Crear el formulario PRIMERO, antes de cargar la finca
+
     this.reservaForm = this.fb.group({
       fechaInicio: ['', [Validators.required]],
       noches: [1, [Validators.required, Validators.min(1)]],
       huespedes: [1, [Validators.required, Validators.min(1)]]
     });
 
-    // Ahora sí, cargar la finca (que usará el formulario)
     this.subscripcionRuta = this.ruta.paramMap.subscribe(paramMap => {
       const id = paramMap.get('id');
       this.cargarFinca(id);
@@ -155,6 +154,7 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
 
     if (this.reservaForm.invalid || !this.finca) {
       this.reservaForm.markAllAsTouched();
+      this.errorReserva = 'Por favor completa todos los campos requeridos correctamente.';
       return;
     }
 
@@ -164,16 +164,6 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
     const fechaEntrada = (fechaInicio ?? '').toString().trim();
     const fechaSalida = this.calcularFechaSalida(fechaEntrada, nochesNumero);
 
-    console.log('🗓️ Cálculo de fechas:', {
-      fechaInicio,
-      fechaEntrada,
-      noches: nochesNumero,
-      fechaSalida,
-      diferencia: fechaSalida && fechaEntrada ? 
-        `${Math.ceil((new Date(fechaSalida).getTime() - new Date(fechaEntrada).getTime()) / (1000 * 60 * 60 * 24))} días` : 
-        'N/A'
-    });
-
     if (!fechaEntrada || !fechaSalida) {
       this.errorReserva = 'Selecciona una fecha de entrada válida.';
       return;
@@ -181,6 +171,17 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
 
     if (fechaSalida <= fechaEntrada) {
       this.errorReserva = 'La fecha de salida debe ser posterior a la de entrada. Verifica el número de noches.';
+      return;
+    }
+
+    const capacidadFinca = this.finca['Capacidad'] || this.finca['capacidad'] || 0;
+    if (capacidadFinca > 0 && huespedesNumero > capacidadFinca) {
+      this.errorReserva = `Esta finca tiene capacidad para máximo ${capacidadFinca} huéspedes.`;
+      return;
+    }
+
+    if (nochesNumero < 1 || nochesNumero > 365) {
+      this.errorReserva = 'El número de noches debe estar entre 1 y 365.';
       return;
     }
 
@@ -234,28 +235,15 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
   private calcularFechaSalida(fechaEntrada: string, noches: number): string {
     const base = this.normalizarFecha(fechaEntrada);
     if (!base) {
-
       return '';
     }
 
-    const salida = new Date(base);
     const totalNoches = Math.max(1, Math.floor(Number.isFinite(noches) ? noches : 1));
-    
-    console.log('📅 Calculando fecha salida:', {
-      entrada: fechaEntrada,
-      baseNormalizada: base.toISOString(),
-      noches: totalNoches,
-      salidaAntes: this.formatearFecha(salida)
-    });
-    
+
+    const salida = new Date(base.getFullYear(), base.getMonth(), base.getDate());
     salida.setDate(salida.getDate() + totalNoches);
     
     const fechaSalidaFormateada = this.formatearFecha(salida);
-    
-    console.log('📅 Fecha salida calculada:', {
-      salidaDespues: fechaSalidaFormateada,
-      salidaISO: salida.toISOString()
-    });
     
     return fechaSalidaFormateada;
   }
@@ -344,7 +332,6 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
 
     const fincaSeleccionada = this.fincaSeleccionada.getSnapshot();
 
-    // Si ya tenemos la finca en memoria, úsala inmediatamente
     if (fincaSeleccionada && (!id || fincaSeleccionada.id === id || id === 'sin-id')) {
       this.finca = fincaSeleccionada;
       this.sincronizarGaleria(fincaSeleccionada);
@@ -356,7 +343,6 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Cargar todas las fincas y buscar la específica
     this.cargarTodasLasFincas(id);
   }
 
@@ -384,10 +370,8 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
             return;
           }
 
-          // Mapear todas las fincas SIN imágenes primero (rápido)
           const fincasMapeadas = fincasRaw.map((raw, index) => mapearFinca(raw, index));
-          
-          // Buscar la finca específica
+
           const encontrada = fincasMapeadas.find((f) => f.id === id) ?? fincasMapeadas[0] ?? null;
 
           if (!encontrada) {
@@ -399,13 +383,23 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
 
           const tiempoTotal = Date.now() - tiempoInicio;
 
-          // Mostrar la finca INMEDIATAMENTE (sin imágenes todavía)
           this.finca = encontrada;
           this.sincronizarGaleria(encontrada);
           this.cargando = false;
+
+          const capacidadFinca = encontrada['Capacidad'] || encontrada['capacidad'] || 999;
+          const huespedesControl = this.reservaForm.get('huespedes');
+          if (huespedesControl) {
+            huespedesControl.setValidators([
+              Validators.required,
+              Validators.min(1),
+              Validators.max(capacidadFinca)
+            ]);
+            huespedesControl.updateValueAndValidity();
+          }
+          
           this.cargarDisponibilidad();
 
-          // Cargar imágenes en SEGUNDO PLANO (no bloqueante)
           const fincaRaw = fincasRaw.find((raw) => {
             const detalleTemp = mapearFinca(raw, 0);
             return detalleTemp.id === id;
@@ -540,7 +534,7 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
   private generarCalendario(): void {
     const semanas: DiaCalendario[][] = [];
     const fechaBase = new Date(this.anioActual, this.mesActual, 1);
-    const primerDiaSemana = (fechaBase.getDay() + 6) % 7; // Semana empieza lunes
+    const primerDiaSemana = (fechaBase.getDay() + 6) % 7;
     const diasEnMes = new Date(this.anioActual, this.mesActual + 1, 0).getDate();
     const totalCeldas = Math.ceil((primerDiaSemana + diasEnMes) / 7) * 7;
     const hoy = new Date();
@@ -589,6 +583,20 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
   private normalizarFecha(valor: string | null | undefined): Date | null {
     if (!valor) {
       return null;
+    }
+
+    const partes = valor.trim().split('-');
+    if (partes.length === 3) {
+      const year = parseInt(partes[0], 10);
+      const month = parseInt(partes[1], 10) - 1;
+      const day = parseInt(partes[2], 10);
+      
+      if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+        const fecha = new Date(year, month, day, 0, 0, 0, 0);
+        if (!isNaN(fecha.getTime())) {
+          return fecha;
+        }
+      }
     }
 
     const directa = new Date(valor);
@@ -692,7 +700,6 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
     this.indiceImagenActiva = 0;
     this.imagenActualUrl = this.galeriaImagenes[0];
 
-    // Actualizar validador de huéspedes con la capacidad máxima de la finca
     const capacidadMaxima = finca.capacidad || 1;
     this.reservaForm.get('huespedes')?.setValidators([
       Validators.required,

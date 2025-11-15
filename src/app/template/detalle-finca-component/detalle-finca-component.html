@@ -188,7 +188,12 @@
 							<label class="detalle-reserva__field">
 								<span>Huéspedes</span>
 								<input type="number" min="1" formControlName="huespedes" />
-								<small *ngIf="campoReservaInvalido('huespedes')">Debes registrar menos huéspedes.</small>
+								<small *ngIf="campoReservaInvalido('huespedes')">
+									<ng-container *ngIf="detalle['Capacidad']; else generico">
+										Capacidad máxima: {{ detalle['Capacidad'] }} huéspedes
+									</ng-container>
+									<ng-template #generico>Ingresa un número válido de huéspedes</ng-template>
+								</small>
 							</label>
 						</div>
 

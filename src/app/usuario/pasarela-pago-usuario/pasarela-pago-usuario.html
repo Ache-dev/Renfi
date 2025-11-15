@@ -1,0 +1,132 @@
+<section class="pasarela-pago">
+  <div class="pasarela-container">
+    <button type="button" class="volver-btn" (click)="volver()">
+      ← Volver
+    </button>
+
+    <h1 class="pasarela-titulo">Pasarela de Pago Seguro</h1>
+
+    <!-- Mensaje de error -->
+    <div class="pasarela-alerta pasarela-alerta--error" *ngIf="error && !exito">
+      <span class="alerta-icono">⚠️</span>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Mensaje de éxito -->
+    <div class="pasarela-alerta pasarela-alerta--exito" *ngIf="exito">
+      <span class="alerta-icono">✅</span>
+      <p>¡Reserva creada exitosamente! Serás redirigido a tu cuenta...</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="pasarela-contenido" *ngIf="draft && !error && !exito">
+      <!-- Resumen de la reserva -->
+      <div class="pasarela-seccion resumen-reserva">
+        <h2>Resumen de tu reserva</h2>
+        
+        <div class="resumen-finca">
+          <img 
+            [src]="draft.fincaImagen || 'https://via.placeholder.com/200x150?text=Finca'" 
+            [alt]="draft.fincaNombre"
+            class="resumen-imagen"
+          />
+          <div class="resumen-info">
+            <h3>{{ draft.fincaNombre }}</h3>
+            <p class="resumen-ubicacion" *ngIf="draft.municipio">
+              📍 {{ draft.municipio }}
+            </p>
+          </div>
+        </div>
+
+        <div class="resumen-detalles">
+          <div class="detalle-item">
+            <span class="detalle-label">Entrada:</span>
+            <span class="detalle-valor">{{ draft.fechaEntrada | date: 'mediumDate' }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Salida:</span>
+            <span class="detalle-valor">{{ draft.fechaSalida | date: 'mediumDate' }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Noches:</span>
+            <span class="detalle-valor">{{ draft.noches }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Huéspedes:</span>
+            <span class="detalle-valor">{{ draft.huespedes }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Precio por noche:</span>
+            <span class="detalle-valor">{{ draft.precioNoche | currency:'COP':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="resumen-total">
+          <span class="total-label">Total a pagar:</span>
+          <span class="total-valor">{{ draft.montoTotal | currency:'COP':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <!-- Formulario de pago -->
+      <div class="pasarela-seccion form-pago">
+        <h2>Información de pago</h2>
+        
+        <form [formGroup]="pagoForm" (ngSubmit)="confirmarPago()">
+          <div class="form-grupo">
+            <label for="metodoPago">Método de pago</label>
+            <select id="metodoPago" formControlName="metodoPago" class="form-control">
+              <option *ngFor="let metodo of metodosPago" [value]="metodo.id">
+                {{ metodo.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-info">
+            <p>
+              <strong>Nota importante:</strong> Esta es una simulación académica. 
+              No se procesará ningún pago real. Al confirmar, se creará tu reserva 
+              en el sistema.
+            </p>
+          </div>
+
+          <div class="form-grupo form-checkbox">
+            <label>
+              <input 
+                type="checkbox" 
+                formControlName="aceptaTerminos"
+              />
+              <span>
+                Acepto los términos y condiciones del servicio de reserva
+              </span>
+            </label>
+            <small 
+              class="form-error" 
+              *ngIf="pagoForm.get('aceptaTerminos')?.invalid && pagoForm.get('aceptaTerminos')?.touched"
+            >
+              Debes aceptar los términos y condiciones
+            </small>
+          </div>
+
+          <div class="form-acciones">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              (click)="volver()"
+              [disabled]="procesando"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-primary" 
+              [disabled]="pagoForm.invalid || procesando"
+            >
+              <span *ngIf="!procesando">Confirmar Reserva</span>
+              <span *ngIf="procesando">Procesando...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

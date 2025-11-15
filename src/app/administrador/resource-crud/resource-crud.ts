@@ -70,7 +70,7 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    // Asegurar que el scroll se restaure si el componente se destruye con el diálogo abierto
+
     if (this.formularioVisible) {
       this.desbloquearScrollBody();
     }
@@ -106,8 +106,11 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
             : respuesta
             ? [respuesta]
             : [];
-          this.registros = registros;
-          this.columnas = this.calcularColumnas(registros);
+
+          const registrosUnicos = this.eliminarDuplicados(registros);
+          
+          this.registros = registrosUnicos;
+          this.columnas = this.calcularColumnas(registrosUnicos);
         },
         error: (err: Error) => {
           this.error = err.message || 'No fue posible cargar los datos.';
@@ -209,16 +212,10 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    // Si el recurso es 'usuarios' y hay un campo de contraseña, hashear con SHA-512
     if (this.config.id === 'usuarios' && payload['Contrasena']) {
       const passwordPlainText = String(payload['Contrasena']);
       const hashedPassword = await this.cryptoService.hashSHA512(passwordPlainText);
       payload = { ...payload, Contrasena: hashedPassword };
-    }
-
-    // Log para verificar que no se envíe el ID en modo crear
-    if (this.modoFormulario === 'crear') {
-      console.log('🔍 Payload para CREAR (sin ID):', payload);
     }
 
     const accion = this.modoFormulario === 'crear' ? 'create' : 'update';
@@ -260,7 +257,7 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
     this.mostrarCamposAvanzados = false;
 
     if (!this.usaFormularioEstructurado) {
-      // En modo crear, usar plantilla vacía. En modo editar, usar origen o samplePayload
+
       const base = this.modoFormulario === 'editar' 
         ? (origen ?? this.config?.samplePayload ?? this.generarPlantillaDesdeColumnas())
         : this.generarPlantillaDesdeColumnas();
@@ -270,8 +267,8 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     campos.forEach((campo) => {
-      // Solo usar valores del origen si estamos en modo editar
-      // En modo crear, todos los campos deben estar vacíos
+
+
       const valorInicial = (this.modoFormulario === 'editar' && origen && Object.prototype.hasOwnProperty.call(origen, campo.key)) 
         ? origen[campo.key] 
         : '';
@@ -297,8 +294,7 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
       ? this.config.preferredFields.map((campo) => ({ ...campo }))
       : [];
 
-    // Solo agregar el campo ID si estamos en modo edición
-    // En modo creación, el ID será generado automáticamente por la base de datos
+
     const idField = this.config.idField;
     if (idField && this.modoFormulario === 'editar' && !camposBase.some((campo) => campo.key === idField)) {
       camposBase.unshift({
@@ -390,7 +386,6 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
       ...camposProcesados
     };
 
-    // Si estamos en modo CREAR, eliminar el campo ID (identity) para que la BD lo genere automáticamente
     if (this.modoFormulario === 'crear' && this.config?.idField) {
       delete payload[this.config.idField];
     }
@@ -443,7 +438,6 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    // Mostrar modal personalizado en lugar de window.confirm
     this.registroAEliminar = registro;
     this.idRegistroAEliminar = id;
     this.mostrarModalEliminacion = true;
@@ -491,6 +485,27 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   trackById = (_: number, item: any) => this.obtenerId(item) ?? JSON.stringify(item);
+
+  private eliminarDuplicados(registros: any[]): any[] {
+    if (!registros || registros.length === 0) {
+      return [];
+    }
+
+    const vistos = new Set<string>();
+    const registrosUnicos: any[] = [];
+
+    for (const registro of registros) {
+      const id = this.obtenerId(registro);
+      const clave = id ? String(id) : JSON.stringify(registro);
+
+      if (!vistos.has(clave)) {
+        vistos.add(clave);
+        registrosUnicos.push(registro);
+      }
+    }
+
+    return registrosUnicos;
+  }
 
   obtenerCamposTarjeta(registro: any): Array<{ campo: string; etiqueta: string; valor: unknown }> {
     return this.columnas.map((campo) => ({
@@ -636,8 +651,13 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
       if (ocultas.has(columna)) {
         return false;
       }
+
       if (columnasForzadas.has(columna)) {
-        return true;
+
+        const tieneValor = registros.some((registro) => 
+          this.tieneValorDefinido(this.obtenerValorCampo(registro, columna))
+        );
+        return tieneValor;
       }
 
       return registros.some((registro) => this.tieneValorDefinido(this.obtenerValorCampo(registro, columna)));
@@ -799,21 +819,18 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   obtenerOpcionesSelect(campo: AdminResourceFieldConfig): { value: any; label: string }[] {
-    // Si tiene opciones estáticas, devolverlas
+
     if (campo.selectOptions && campo.selectOptions.length > 0) {
       return campo.selectOptions;
     }
 
-    // Si tiene endpoint, cargar opciones desde la API
     if (campo.selectEndpoint) {
       const cacheKey = campo.selectEndpoint;
-      
-      // Si ya está en caché, devolver
+
       if (this.opcionesSelectCache.has(cacheKey)) {
         return this.opcionesSelectCache.get(cacheKey)!;
       }
 
-      // Si no está en caché, cargar
       this.cargarOpcionesSelect(campo);
       return [];
     }
@@ -827,8 +844,7 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const cacheKey = campo.selectEndpoint;
-    
-    // Evitar múltiples llamadas simultáneas
+
     if (this.opcionesSelectCache.has(cacheKey)) {
       return;
     }
@@ -860,7 +876,7 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private cargarTodasLasOpcionesSelect(): void {
-    // Cargar opciones para todos los campos select que tienen endpoint
+
     this.camposFormulario
       .filter(campo => campo.type === 'select' && campo.selectEndpoint)
       .forEach(campo => this.cargarOpcionesSelect(campo));

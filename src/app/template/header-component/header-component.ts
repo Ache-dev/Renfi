@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthStateService } from '../services/auth-state.service';
@@ -76,7 +76,7 @@ export class HeaderComponent {
   private closeMenu() {
     const navbar = document.getElementById('mainNavbar');
     if (navbar && navbar.classList.contains('show')) {
-      // @ts-ignore
+
       const collapse = new (window as any).bootstrap.Collapse(navbar, { toggle: false });
       collapse.hide();
     }

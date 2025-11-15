@@ -5,12 +5,14 @@ import { RouterModule } from '@angular/router';
 import { ListarUsuariosComponent } from './listar-usuarios/listar-usuarios';
 import { MiCuentaUsuarios } from './mi-cuenta-usuarios/mi-cuenta-usuarios';
 import { ComprovanteReservaUsuario } from './comprovante-reserva-usuario/comprovante-reserva-usuario';
+import { PasarelaPagoUsuario } from './pasarela-pago-usuario/pasarela-pago-usuario';
 
 @NgModule({
   declarations: [
     ListarUsuariosComponent,
     MiCuentaUsuarios,
-    ComprovanteReservaUsuario
+    ComprovanteReservaUsuario,
+    PasarelaPagoUsuario
   ],
   imports: [
     CommonModule,

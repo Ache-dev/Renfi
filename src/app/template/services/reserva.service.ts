@@ -177,37 +177,49 @@ export class ReservaService {
     idUsuario?: number | null
   ): Observable<Reserva[]> {
 
-    // Primero intentar con los filtros proporcionados
+    if (documento) {
+      return this.http
+        .get<any>(`${this.baseUrl}/reserva/usuario/${documento}`)
+        .pipe(
+          map((respuesta) => {
+            const coleccion = this.normalizarColeccion(respuesta);
+            const reservasMapeadas = coleccion.map((item) => this.mapearReserva(item))
+              .filter((r): r is Reserva => r !== null);
+            return reservasMapeadas.sort((a, b) => {
+              const fechaA = new Date(a.fechaReserva || a.creadoEn || 0).getTime();
+              const fechaB = new Date(b.fechaReserva || b.creadoEn || 0).getTime();
+              return fechaB - fechaA;
+            });
+          }),
+          catchError(() => {
+            return of([]);
+          })
+        );
+    }
+
     const filtros: ListaReservasFiltro = {};
     
     if (correo) {
       filtros.correo = correo;
     }
-    if (documento) {
-      filtros.documento = documento;
-    }
     if (idUsuario) {
       filtros.idUsuario = idUsuario;
     }
-    
-    // Si no hay filtros, retornar array vacío
-    if (Object.keys(filtros).length === 0) {
 
+    if (Object.keys(filtros).length === 0) {
       return of([]);
     }
     
     return this.listarReservas(filtros).pipe(
       map((reservas) => {
 
-        // Ordenar por fecha de reserva más reciente primero
         return reservas.sort((a, b) => {
           const fechaA = new Date(a.fechaReserva || a.creadoEn || 0).getTime();
           const fechaB = new Date(b.fechaReserva || b.creadoEn || 0).getTime();
-          return fechaB - fechaA; // Más reciente primero
+          return fechaB - fechaA;
         });
       }),
-      catchError((error) => {
-
+      catchError(() => {
         return of([]);
       })
     );
@@ -232,7 +244,7 @@ export class ReservaService {
 
           observer.next([]);
           observer.complete();
-        }, 10000); // 10 segundos de timeout
+        }, 10000);
         
         this.listarReservas({ fincaId }).subscribe({
           next: (reservas) => {
@@ -307,9 +319,10 @@ export class ReservaService {
 
       return throwError(() => new Error('La fecha de salida debe ser posterior a la fecha de entrada'));
     }
-    
+
     const apiPayload = this.compactPayload({
       IdFinca: this.tryParseNumber(payload.fincaId),
+      NumeroDocumentoUsuario: payload.usuarioDocumento ? this.tryParseNumber(payload.usuarioDocumento) : null,
       FechaReserva: new Date().toISOString(),
       FechaEntrada: fechaEntradaISO,
       FechaSalida: fechaSalidaISO,
@@ -319,12 +332,9 @@ export class ReservaService {
 
     return this.http.post<any>(`${this.baseUrl}/reserva`, apiPayload).pipe(
       map((respuesta) => {
-        console.log('✅ Respuesta backend (Reserva):', JSON.stringify(respuesta, null, 2));
-
         const idReserva = this.extraerIdDeRespuesta(respuesta, ['IdReserva', 'idReserva', 'Id', 'id']);
 
         if (!idReserva || idReserva <= 0) {
-
           throw new Error('El backend no devolvió un IdReserva válido. Verifica SP_RegistrarReserva.');
         }
 
@@ -362,7 +372,6 @@ export class ReservaService {
 
   crearReservaConPago(payload: CrearReservaConPagoPayload): Observable<ReservaConPagoResultado> {
 
-    // PASO 1: Crear Reserva
     return this.crearReserva(payload.reserva).pipe(
       switchMap((reserva) => {
         const idReservaNumerico = this.tryParseNumber(reserva.id);
@@ -371,7 +380,6 @@ export class ReservaService {
           return throwError(() => new Error(`ID de reserva inválido: ${reserva.id}`));
         }
 
-        // PASO 2: Crear Factura
         const facturaPayload = {
           IdReserva: idReservaNumerico,
           Total: payload.pago.monto,
@@ -380,8 +388,6 @@ export class ReservaService {
 
         return this.http.post<any>(`${this.baseUrl}/factura`, this.compactPayload(facturaPayload)).pipe(
           switchMap((respuestaFactura) => {
-            console.log('✅ Respuesta backend (Factura):', JSON.stringify(respuestaFactura, null, 2));
-
             const idFactura = this.extraerIdDeRespuesta(respuestaFactura, ['IdFactura', 'idFactura', 'Id', 'id']);
 
             if (!idFactura || idFactura <= 0) {
@@ -397,7 +403,6 @@ export class ReservaService {
               meta: respuestaFactura
             };
 
-            // PASO 3: Crear Pago
             const metodoIdNumerico = this.tryParseNumber(payload.pago.metodoId);
 
             if (!metodoIdNumerico || metodoIdNumerico <= 0) {
@@ -414,8 +419,6 @@ export class ReservaService {
 
             return this.http.post<any>(`${this.baseUrl}/pago`, this.compactPayload(pagoPayload)).pipe(
               map((respuestaPago) => {
-                console.log('✅ Respuesta backend (Pago):', JSON.stringify(respuestaPago, null, 2));
-
                 const idPago = this.extraerIdDeRespuesta(respuestaPago, ['IdPago', 'idPago', 'Id', 'id']);
 
                 const pago: Pago = {
@@ -460,36 +463,26 @@ export class ReservaService {
     }
 
     const id = encodeURIComponent(String(reservaId));
-    return this.http.delete<void>(`${this.baseUrl}/reserva/${id}`).pipe(
-      map(() => {
 
+
+    return this.http.delete<any>(`${this.baseUrl}/reserva/${id}`).pipe(
+      map((respuesta) => {
         return true;
       }),
       catchError((error: HttpErrorResponse) => {
-
-        return this.http.patch<void>(`${this.baseUrl}/reserva/${id}`, { Estado: 'Cancelada' }).pipe(
-          map(() => {
-
-            return true;
-          }),
-          catchError((patchError: HttpErrorResponse) => {
-
-            return of(false);
-          })
-        );
+        return of(false);
       })
     );
   }
 
   private extraerIdDeRespuesta(respuesta: any, keys: string[]): number | null {
-    // Nivel superior directo
+
     let id = this.pickNumber(respuesta, keys);
     if (id !== null && id > 0) {
 
       return id;
     }
 
-    // Niveles anidados
     const nested = respuesta?.data ?? respuesta?.resultado ?? respuesta?.result;
     if (nested) {
       id = this.pickNumber(nested, keys);
@@ -499,7 +492,6 @@ export class ReservaService {
       }
     }
 
-    // Recordset de SQL Server
     if (respuesta?.recordset && Array.isArray(respuesta.recordset) && respuesta.recordset.length > 0) {
       id = this.pickNumber(respuesta.recordset[0], keys);
       if (id !== null && id > 0) {
@@ -508,7 +500,6 @@ export class ReservaService {
       }
     }
 
-    // Recordsets (múltiples)
     if (respuesta?.recordsets && Array.isArray(respuesta.recordsets) && respuesta.recordsets.length > 0) {
       const firstRecordset = respuesta.recordsets[0];
       if (Array.isArray(firstRecordset) && firstRecordset.length > 0) {
@@ -520,7 +511,6 @@ export class ReservaService {
       }
     }
 
-    // Array directo
     if (Array.isArray(respuesta) && respuesta.length > 0) {
       id = this.pickNumber(respuesta[0], keys);
       if (id !== null && id > 0) {
@@ -544,7 +534,6 @@ export class ReservaService {
         const valorStr = String(valor).trim();
         if (valorStr) {
           params = params.append(key, valorStr);
-
         }
       }
     };
@@ -555,7 +544,6 @@ export class ReservaService {
     append('IdFinca', filtros.fincaId ?? null);
 
     const hasParams = params.keys().length > 0;
-    console.log(`📮 Parámetros construidos: ${hasParams ? params.keys().length : 0} parámetros`);
     
     return hasParams ? params : undefined;
   }
@@ -569,8 +557,7 @@ export class ReservaService {
 
     const reservasFiltradas = reservas.filter((reserva) => {
       let cumpleFiltros = true;
-      
-      // Filtro por correo
+
       if (filtros.correo) {
         const correoReserva = (reserva.usuarioCorreo ?? '').toLowerCase().trim();
         const correoFiltro = filtros.correo.toString().toLowerCase().trim();
@@ -583,8 +570,7 @@ export class ReservaService {
 
         }
       }
-      
-      // Filtro por documento
+
       if (filtros.documento && cumpleFiltros) {
         const docReserva = (reserva.usuarioDocumento ?? reserva.idUsuario?.toString() ?? '').toLowerCase().trim();
         const docFiltro = filtros.documento.toString().toLowerCase().trim();
@@ -597,8 +583,7 @@ export class ReservaService {
 
         }
       }
-      
-      // Filtro por idUsuario
+
       if (filtros.idUsuario && cumpleFiltros) {
         const coincideUsuario = reserva.idUsuario !== undefined && 
                                reserva.idUsuario !== null && 
@@ -611,8 +596,7 @@ export class ReservaService {
 
         }
       }
-      
-      // Filtro por fincaId
+
       if (filtros.fincaId && cumpleFiltros) {
         const fincaIdStr = filtros.fincaId.toString();
         const fincaIdNum = this.tryParseNumber(filtros.fincaId);
@@ -874,11 +858,11 @@ export class ReservaService {
       }
 
       const fechas: string[] = [];
-      const maxNoches = Math.min(Math.floor(noches), 365); // Límite de seguridad y asegurar entero
+      const maxNoches = Math.min(Math.floor(noches), 365);
       
       for (let i = 0; i < maxNoches; i++) {
         try {
-          const fecha = new Date(inicio.getTime()); // Crear copia para evitar mutación
+          const fecha = new Date(inicio.getTime());
           fecha.setDate(fecha.getDate() + i);
           
           if (Number.isNaN(fecha.getTime())) {
@@ -908,14 +892,13 @@ export class ReservaService {
     }
 
     try {
-      // Intentar parseo directo
+
       const fecha = new Date(valor);
       if (!Number.isNaN(fecha.getTime()) && fecha.getFullYear() > 1900) {
         fecha.setHours(0, 0, 0, 0);
         return fecha;
       }
 
-      // Intentar con formato ISO
       const fallback = new Date(`${valor}T00:00:00`);
       if (!Number.isNaN(fallback.getTime()) && fallback.getFullYear() > 1900) {
         fallback.setHours(0, 0, 0, 0);
@@ -1106,27 +1089,23 @@ export class ReservaService {
     if (!fecha) {
       return new Date().toISOString();
     }
-    
-    // Si ya es ISO completo, devolverlo
+
     if (fecha.includes('T') && fecha.includes('Z')) {
       return fecha;
     }
-    
-    // Si es formato YYYY-MM-DD, convertir a ISO completo
-    // Agregar hora 12:00:00 para evitar problemas de zona horaria
+
+
     if (/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
       return `${fecha}T12:00:00.000Z`;
     }
-    
-    // Intentar parsear la fecha
+
     const fechaObj = new Date(fecha);
     if (!Number.isNaN(fechaObj.getTime())) {
-      // Establecer a mediodía para evitar problemas de zona horaria
+
       fechaObj.setHours(12, 0, 0, 0);
       return fechaObj.toISOString();
     }
-    
-    // Fallback: fecha actual
+
     return new Date().toISOString();
   }
 

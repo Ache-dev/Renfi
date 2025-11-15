@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UsuarioNormalizado } from './auth.service';
 import { Factura, Reserva } from './reserva.service';
@@ -112,7 +112,7 @@ export class ReservaCheckoutService {
     try {
       window.sessionStorage.setItem(key, JSON.stringify(value));
     } catch {
-      // Ignorar errores de almacenamiento
+
     }
   }
 
@@ -124,7 +124,7 @@ export class ReservaCheckoutService {
     try {
       window.sessionStorage.removeItem(key);
     } catch {
-      // Ignorar errores de almacenamiento
+
     }
   }
 }

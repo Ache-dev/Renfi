@@ -201,9 +201,28 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       { key: 'ApellidoPropietario', label: 'Apellido del propietario', type: 'text' }
     ],
     fieldAliases: {
-      NumeroDocumento: ['IdUsuario', 'UsuarioId', 'usuarioId', 'idUsuario', 'UsuarioID', 'numeroDocumento', 'Numero_Documento']
+      NumeroDocumento: [
+        'IdUsuario', 
+        'UsuarioId', 
+        'usuarioId', 
+        'idUsuario', 
+        'UsuarioID', 
+        'numeroDocumento', 
+        'Numero_Documento',
+        'NumeroDocumentoUsuario',
+        'NumeroDocumentoCliente',
+        'numero_documento_usuario',
+        'numero_documento_cliente'
+      ]
     },
-    hiddenColumns: ['NumeroDocumento'],
+    hiddenColumns: [
+      'NumeroDocumento', 
+      'NumeroDocumentoUsuario', 
+      'NumeroDocumentoCliente',
+      'IdUsuario',
+      'UsuarioId',
+      'usuarioId'
+    ],
     samplePayload: {
       NumeroDocumento: 123456789,
       IdFinca: 1,
@@ -228,6 +247,7 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
     description: 'Registro y estado de pagos realizados por reservas.',
     idField: 'IdPago',
     columns: [
+      'IdPago',
       'Monto',
       'FechaPago',
       'EstadoPago',
@@ -238,12 +258,13 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       'TotalFactura'
     ],
     preferredFields: [
-      { key: 'IdReserva', label: 'Reserva (ID)', type: 'number', required: true },
+      { key: 'IdPago', label: 'Número de identificación', type: 'number' },
       { key: 'Monto', label: 'Monto del pago', type: 'number', required: true },
       { key: 'FechaPago', label: 'Fecha de pago', type: 'date', required: true },
       { key: 'EstadoPago', label: 'Estado del pago', type: 'text' },
       { key: 'NombreMetodoDePago', label: 'Método de pago', type: 'text' },
       { key: 'PagoMixto', label: 'Pago mixto', type: 'text' },
+      { key: 'IdReserva', label: 'Reserva (ID)', type: 'number', required: true },
       { key: 'IdFactura', label: 'Factura (ID)', type: 'number' },
       { key: 'TotalFactura', label: 'Total facturado', type: 'number' }
     ],
@@ -277,21 +298,16 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
     description: 'Generación de facturas asociadas a pagos.',
     idField: 'IdFactura',
     columns: [
+      'IdFactura',
       'FechaFactura',
       'Total',
-      'IdReserva',
-      'EstadoReserva',
-      'NombreFinca',
-      'PrecioFinca',
-      'NombreMunicipio',
-      'IdPropietario',
-      'NombrePropietario',
-      'ApellidoPropietario'
+      'IdReserva'
     ],
     preferredFields: [
+      { key: 'IdFactura', label: 'Número de factura', type: 'number' },
       { key: 'FechaFactura', label: 'Fecha de factura', type: 'date', required: true },
       { key: 'Total', label: 'Total facturado', type: 'number', required: true },
-      { key: 'IdReserva', label: 'Reserva (ID)', type: 'number', required: true },
+      { key: 'IdReserva', label: 'ID Reserva', type: 'number', required: true },
       { key: 'EstadoReserva', label: 'Estado de la reserva', type: 'text' },
       { key: 'NombreFinca', label: 'Nombre de la finca', type: 'text' },
       { key: 'PrecioFinca', label: 'Precio de la finca', type: 'number' },
@@ -301,8 +317,18 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       { key: 'ApellidoPropietario', label: 'Apellido del propietario', type: 'text' }
     ],
     fieldAliases: {
-      FechaFactura: ['FechaEmision', 'fechaEmision'],
-      Total: ['TotalFactura', 'totalFactura']
+      FechaFactura: ['FechaEmision', 'fechaEmision', 'fecha_factura'],
+      Total: ['TotalFactura', 'totalFactura', 'total_factura'],
+      IdReserva: [
+        'ReservaId', 
+        'reservaId', 
+        'id_reserva',
+        'IdReservas',
+        'reserva_id',
+        'Reserva_Id',
+        'reserva',
+        'Reserva'
+      ]
     },
     samplePayload: {
       FechaFactura: '2025-10-20T00:00:00.000Z',
@@ -323,8 +349,9 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
     endpoint: 'metododepago',
     description: 'Configura y habilita los métodos de pago aceptados.',
     idField: 'IdMetodoDePago',
-    columns: ['NombreMetodoDePago', 'PagoMixto'],
+    columns: ['IdMetodoDePago', 'NombreMetodoDePago', 'PagoMixto'],
     preferredFields: [
+      { key: 'IdMetodoDePago', label: 'Número de identificación', type: 'number' },
       { key: 'NombreMetodoDePago', label: 'Nombre del método', required: true },
       { key: 'PagoMixto', label: 'Permite pago mixto', type: 'text' }
     ],

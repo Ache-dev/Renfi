@@ -32,6 +32,7 @@ export interface UsuarioApiDto {
 
 export interface UsuarioNormalizado {
   IdUsuario?: number;
+  NumeroDocumento?: number;
   NombreUsuario?: string;
   ApellidoUsuario?: string;
   Telefono?: string;
@@ -112,6 +113,7 @@ export class AuthService {
 
     return {
       IdUsuario: this.pickNumber(usuario, ['IdUsuario', 'idUsuario']),
+      NumeroDocumento: this.pickNumber(usuario, ['NumeroDocumento', 'numeroDocumento', 'Documento', 'documento']),
       NombreUsuario: this.pickString(usuario, ['NombreUsuario', 'nombre', 'Nombre']),
       ApellidoUsuario: this.pickString(usuario, ['ApellidoUsuario', 'apellido', 'Apellido']),
       Telefono: this.pickString(usuario, ['Telefono', 'telefono', 'TelefonoUsuario']),

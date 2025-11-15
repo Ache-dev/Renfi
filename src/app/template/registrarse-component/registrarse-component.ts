@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+﻿import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -66,7 +66,6 @@ export class RegistrarseComponent implements OnDestroy {
 
     const { nombre, apellido, correo, telefono, password } = this.registroForm.getRawValue();
 
-    // Hashear la contraseña con SHA-512
     const hashedPassword = await this.cryptoService.hashSHA512(password);
 
     const payload = {

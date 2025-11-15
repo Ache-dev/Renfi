@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+﻿import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, finalize, takeUntil } from 'rxjs';
@@ -76,7 +76,6 @@ export class IniciarSesionComponent implements OnDestroy {
 
     const normalizado = correo.trim().toLowerCase();
 
-    // Hashear la contraseña con SHA-512
     const hashedPassword = await this.cryptoService.hashSHA512(password);
 
     const payload: LoginRequest = {

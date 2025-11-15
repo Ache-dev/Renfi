@@ -97,7 +97,6 @@ export class AuthStateService {
       this.adminSubject.next(this.evaluarEsAdmin(data.usuario ?? null));
       this.recordar = !!localData;
 
-      // Reforzar persistencia según si hay datos en localStorage
       this.persistSession(data, !!localData);
     }
   }

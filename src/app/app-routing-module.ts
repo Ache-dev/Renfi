@@ -7,6 +7,7 @@ import { RegistrarseComponent } from './template/registrarse-component/registrar
 import { SobreNosotrosComponent } from './template/sobre-nosotros-component/sobre-nosotros-component';
 import { MiCuentaUsuarios } from './usuario/mi-cuenta-usuarios/mi-cuenta-usuarios';
 import { ComprovanteReservaUsuario } from './usuario/comprovante-reserva-usuario/comprovante-reserva-usuario';
+import { PasarelaPagoUsuario } from './usuario/pasarela-pago-usuario/pasarela-pago-usuario';
 import { Administrador } from './administrador/administrador';
 import { InicioAdministrador } from './administrador/inicio-administrador/inicio-administrador';
 import { UsuarioAdministrador } from './administrador/usuario-administrador/usuario-administrador';
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'registrarse', component: RegistrarseComponent },
   { path: 'fincas/:id', component: DetalleFincaComponent },
   { path: 'mi-cuenta', component: MiCuentaUsuarios },
+  { path: 'reserva/pago', component: PasarelaPagoUsuario },
   { path: 'reserva/comprobante', component: ComprovanteReservaUsuario },
   { path: 'sobre-nosotros', component: SobreNosotrosComponent },
   {
