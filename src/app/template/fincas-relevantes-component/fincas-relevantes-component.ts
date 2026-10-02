@@ -19,7 +19,14 @@ import { FincaDetalle, FincaSeleccionadaService } from '../services/finca-selecc
   styleUrl: './fincas-relevantes-component.css'
 })
 export class FincasRelevantesComponent implements OnInit, AfterViewInit, OnDestroy {
+  readonly placeholderImagen = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 200'%3E%3Crect width='280' height='200' fill='%23f5f2eb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%238c827a'%3EFinca Renfi%3C/text%3E%3C/svg%3E";
   fincas: FincaDetalle[] = [];
+
+  onImageError(finca: FincaDetalle): void {
+    if (finca) {
+      finca.imagenUrl = this.placeholderImagen;
+    }
+  }
   cargando = false;
   errorApi = false;
   translateX = 0;
