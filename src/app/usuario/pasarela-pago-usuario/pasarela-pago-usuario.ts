@@ -186,6 +186,12 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
     return this.reservaService.crearReserva(reservaData);
   }
 
+  onImageError(): void {
+    if (this.draft) {
+      this.draft.fincaImagen = this.placeholderFinca;
+    }
+  }
+
   volver(): void {
     this.router.navigate(['/inicio']);
   }
