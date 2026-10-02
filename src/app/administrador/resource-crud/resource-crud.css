@@ -300,7 +300,7 @@
   display: inline-block;
   padding: 0.15rem 0.4rem;
   font-size: 0.8rem;
-  font-family: 'Courier New', monospace;
+  font-family: monospace;
   font-weight: 600;
   color: #0f172a;
   background: rgba(255, 255, 255, 0.95);
@@ -590,7 +590,7 @@
 .crud-form__control--textarea {
   min-height: 150px;
   resize: vertical;
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
 }
 
 /* Estilos específicos para select */
@@ -673,7 +673,7 @@ select.crud-form__control option {
   border-radius: 18px;
   border: 1px solid rgba(148, 163, 184, 0.45);
   padding: 1rem 1.1rem;
-  font-family: 'Consolas', 'SFMono-Regular', 'Menlo', monospace;
+  font-family: monospace;
   font-size: 0.9rem;
   color: #0f172a;
   background: #f8fafc;
@@ -749,7 +749,7 @@ select.crud-form__control option {
     0 20px 60px rgba(15, 23, 42, 0.25),
     0 0 0 1px rgba(255, 255, 255, 0.5) inset;
   position: relative;
-  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
 }
 

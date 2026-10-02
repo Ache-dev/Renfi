@@ -1,0 +1,7 @@
+{
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": ["overused-font"]
+  }
+}
+

@@ -282,10 +282,7 @@
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-primary-dark);
 }
 
 .titulo-calificacion {
@@ -438,17 +435,11 @@
 }
 
 .detalle-card li {
-  padding-left: clamp(12px, 2vw, 20px);
+  padding-left: 0;
   position: relative;
-}
-
-.detalle-card li:before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #f97316;
-  font-weight: bold;
-  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .detalle-reserva {

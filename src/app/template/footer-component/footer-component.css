@@ -1,8 +1,8 @@
-/* ==== Footer Rediseñado con Patrones y Gradientes ==== */
+/* ==== Footer Rediseñado Renfi ("La Finca Abierta") ==== */
 footer {
   margin-top: auto;
-  background: linear-gradient(180deg, var(--color-surface-light) 0%, var(--color-surface-medium) 100%);
-  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  background: linear-gradient(180deg, var(--color-surface-light) 0%, var(--color-surface-base) 100%);
+  border-top: 1px solid var(--color-surface-medium);
   position: relative;
   overflow: hidden;
 }
@@ -13,8 +13,8 @@ footer::before {
   inset: 0;
   background: 
     var(--pattern-grid),
-    radial-gradient(circle at 80% 20%, rgba(234, 42, 51, 0.03), transparent 50%),
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.03), transparent 50%);
+    radial-gradient(circle at 80% 20%, rgba(194, 65, 12, 0.04), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(27, 67, 50, 0.05), transparent 50%);
   pointer-events: none;
   opacity: 0.6;
 }
@@ -25,11 +25,11 @@ footer::after {
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
+  height: 2px;
   background: linear-gradient(90deg, 
     transparent 0%, 
-    rgba(234, 42, 51, 0.2) 25%, 
-    rgba(59, 130, 246, 0.2) 75%, 
+    rgba(194, 65, 12, 0.3) 25%, 
+    rgba(27, 67, 50, 0.3) 75%, 
     transparent 100%);
 }
 
@@ -37,6 +37,7 @@ footer a {
   transition: all var(--transition-base);
   position: relative;
   display: inline-block;
+  color: var(--color-text-secondary);
 }
 
 footer a::after {
@@ -44,10 +45,12 @@ footer a::after {
   position: absolute;
   bottom: -2px;
   left: 0;
-  width: 0;
+  width: 100%;
   height: 2px;
-  background: var(--gradient-primary);
-  transition: width var(--transition-base);
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-base);
 }
 
 footer a:hover {
@@ -56,32 +59,23 @@ footer a:hover {
 }
 
 footer a:hover::after {
-  width: 100%;
+  transform: scaleX(1);
 }
 
-footer a:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 4px;
-  border-radius: var(--radius-sm);
+footer svg {
+  transition: all var(--transition-base);
+  color: var(--color-secondary);
 }
 
-/* ==== Texto de Copyright Más Oscuro ==== */
-footer p,
-footer .text-muted,
-footer .text-center,
-footer small {
-  color: var(--color-text-primary) !important;
-  font-weight: 600;
-  opacity: 0.9;
+footer a:hover svg {
+  transform: scale(1.15);
+  color: var(--color-primary);
 }
 
-/* Mejoras de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
-  footer a {
-    transition: none;
-  }
-  
-  footer a:hover {
-    transform: none;
+  footer a,
+  footer svg {
+    transition: none !important;
+    transform: none !important;
   }
 }

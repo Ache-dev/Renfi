@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, finalize, takeUntil } from 'rxjs';
@@ -18,6 +18,7 @@ export class IniciarSesionComponent implements OnDestroy {
   mensajeError = '';
   mensajeExito = '';
   mostrarModalRecuperacion = false;
+  mostrarPassword = false;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -32,6 +33,27 @@ export class IniciarSesionComponent implements OnDestroy {
       password: ['', [Validators.required, Validators.minLength(6)]],
       recordarme: [false]
     });
+  }
+
+  toggleMostrarPassword(): void {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
+
+  autocompletarDemo(rol: 'admin' | 'cliente'): void {
+    if (rol === 'admin') {
+      this.loginForm.patchValue({
+        correo: 'admin@renfi.com',
+        password: 'admin123'
+      });
+    } else {
+      this.loginForm.patchValue({
+        correo: 'cliente@renfi.com',
+        password: 'cliente123'
+      });
+    }
+    this.loginForm.markAsDirty();
+    this.loginForm.markAsTouched();
+    this.mensajeError = '';
   }
 
   ngOnDestroy(): void {
@@ -117,5 +139,4 @@ export class IniciarSesionComponent implements OnDestroy {
         }
       });
   }
-
 }

@@ -17,7 +17,7 @@
 						>
 							‹
 						</button>
-						<img [src]="imagenActualUrl" [alt]="detalle.nombre" (error)="manejarErrorImagen()" loading="lazy" />
+						<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f5f2eb'/%3E%3C/svg%3E" [src]="imagenActualUrl" [alt]="detalle.nombre" (error)="manejarErrorImagen()" loading="lazy" />
 						<button
 							type="button"
 							class="detalle-imagen__control detalle-imagen__control--next"
@@ -44,6 +44,7 @@
 							[attr.aria-label]="'Ver imagen ' + (i + 1)"
 						>
 							<img
+								src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f5f2eb'/%3E%3C/svg%3E"
 								[src]="imagen"
 								[alt]="detalle.nombre + ' miniatura ' + (i + 1)"
 								(error)="manejarErrorMiniatura(i)"
@@ -57,14 +58,17 @@
 						<h1>{{ detalle.nombre }}</h1>
 						<div class="calificacion" *ngIf="detalle['Calificacion']">
 							<span class="estrellas">
-								<span *ngFor="let estrella of [1,2,3,4,5]; let i = index" [class.activa]="i < detalle['Calificacion']">⭐</span>
+								<span *ngFor="let estrella of [1,2,3,4,5]; let i = index" [class.activa]="i < detalle['Calificacion']">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+								</span>
 							</span>
 							<span class="puntuacion">{{ detalle['Calificacion'] }}/5</span>
 						</div>
 					</div>
 
 					<p class="detalle-ubicacion" *ngIf="detalle['Direccion'] || detalle['NombreMunicipio']">
-						📍 {{ detalle['Direccion'] || 'Dirección no disponible' }}
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 4px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+						{{ detalle['Direccion'] || 'Dirección no disponible' }}
 						<span *ngIf="detalle['NombreMunicipio']"> - {{ detalle['NombreMunicipio'] }}</span>
 					</p>
 
@@ -74,27 +78,37 @@
 
 					<div class="detalle-datos-principales">
 						<div class="dato-principal" *ngIf="detalle['Precio'] !== null && detalle['Precio'] !== undefined">
-							<span class="icono">💰</span>
+							<span class="icono" aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+							</span>
 							<span class="dato-titulo">Precio/noche</span>
 							<span class="dato-valor">{{ detalle['Precio'] | currency:'COP':'symbol':'1.0-0' }}</span>
 						</div>
 						<div class="dato-principal" *ngIf="detalle['Capacidad'] !== null && detalle['Capacidad'] !== undefined">
-							<span class="icono">👥</span>
+							<span class="icono" aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+							</span>
 							<span class="dato-titulo">Capacidad</span>
 							<span class="dato-valor">{{ detalle['Capacidad'] }} huéspedes</span>
 						</div>
 						<div class="dato-principal" *ngIf="(detalle['NumeroHabitaciones'] !== null && detalle['NumeroHabitaciones'] !== undefined) || detalle.habitaciones !== null">
-							<span class="icono">🛏️</span>
+							<span class="icono" aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+							</span>
 							<span class="dato-titulo">Habitaciones</span>
 							<span class="dato-valor">{{ detalle['NumeroHabitaciones'] || detalle.habitaciones }}</span>
 						</div>
 						<div class="dato-principal" *ngIf="(detalle['NumeroBanos'] !== null && detalle['NumeroBanos'] !== undefined) || detalle.banos !== null">
-							<span class="icono">🚿</span>
+							<span class="icono" aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 2.5 2.5"/><path d="M13.5 4A5.5 5.5 0 0 0 8 9.5V11h7V9.5A5.5 5.5 0 0 0 9.5 4Z"/><path d="M8 11v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>
+							</span>
 							<span class="dato-titulo">Baños</span>
 							<span class="dato-valor">{{ detalle['NumeroBanos'] || detalle.banos }}</span>
 						</div>
 						<div class="dato-principal" *ngIf="detalle['MetrosCuadrados']">
-							<span class="icono">📐</span>
+							<span class="icono" aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3c-.4.4-1 .4-1.4 0l-4.6-4.6c-.4-.4-.4-1 0-1.4L15.3 2.7c.4-.4 1-.4 1.4 0l4.6 4.6c.4.4.4 1 0 1.4Z"/></svg>
+							</span>
 							<span class="dato-titulo">Área total</span>
 							<span class="dato-valor">{{ detalle['MetrosCuadrados'] }} m²</span>
 						</div>
@@ -112,24 +126,50 @@
 				<h2>Información del responsable de la finca</h2>
 				<ul>
 					<li *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario']">
-						👤 {{ detalle['NombrePropietario'] || '' }} {{ detalle['ApellidoPropietario'] || '' }}
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+						{{ detalle['NombrePropietario'] || '' }} {{ detalle['ApellidoPropietario'] || '' }}
 					</li>
-					<li *ngIf="detalle['TelefonoPropietario']">📞 {{ detalle['TelefonoPropietario'] }}</li>
-					<li *ngIf="detalle['CorreoPropietario']">✉️ {{ detalle['CorreoPropietario'] }}</li>
+					<li *ngIf="detalle['TelefonoPropietario']">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+						{{ detalle['TelefonoPropietario'] }}
+					</li>
+					<li *ngIf="detalle['CorreoPropietario']">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+						{{ detalle['CorreoPropietario'] }}
+					</li>
 				</ul>
 			</article>				<article class="detalle-card">
 					<h2>Información General</h2>
 					<ul>
-						<li *ngIf="detalle['IdFinca']">🏠 ID de la finca: {{ detalle['IdFinca'] }}</li>
-						<li *ngIf="detalle['NombreMunicipio']">📍 Municipio: {{ detalle['NombreMunicipio'] }}</li>
-						<li *ngIf="detalle['Estado']">📊 Estado: {{ detalle['Estado'] }}</li>
-						<li *ngIf="detalle['TipoFinca']">🏡 Tipo de finca: {{ detalle['TipoFinca'] }}</li>
-						<li *ngIf="detalle['FechaRegistro']">🗓️ Fecha de registro: {{ detalle['FechaRegistro'] | date:'longDate' }}</li>
+						<li *ngIf="detalle['IdFinca']">
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+							ID de la finca: {{ detalle['IdFinca'] }}
+						</li>
+						<li *ngIf="detalle['NombreMunicipio']">
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+							Municipio: {{ detalle['NombreMunicipio'] }}
+						</li>
+						<li *ngIf="detalle['Estado']">
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+							Estado: {{ detalle['Estado'] }}
+						</li>
+						<li *ngIf="detalle['TipoFinca']">
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+							Tipo de finca: {{ detalle['TipoFinca'] }}
+						</li>
+						<li *ngIf="detalle['FechaRegistro']">
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+							Fecha de registro: {{ detalle['FechaRegistro'] | date:'longDate' }}
+						</li>
 						<li *ngIf="detalle.reservas !== null && detalle.reservas !== undefined; else sinReservas">
-							📅 Reservas realizadas: {{ detalle.reservas }}
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+							Reservas realizadas: {{ detalle.reservas }}
 						</li>
 						<ng-template #sinReservas>
-							<li>📅 Todavía no hay registros de reservas para esta finca.</li>
+							<li>
+								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+								Todavía no hay registros de reservas para esta finca.
+							</li>
 						</ng-template>
 					</ul>
 				</article>
@@ -204,7 +244,10 @@
 								<span class="fecha-valor">{{ fechaEntradaSeleccionada | date: 'mediumDate' }}</span>
 							</div>
 							<div class="fecha-separador">
-								<span class="icono-noches">🌙 {{ nochesSeleccionadas }} {{ nochesSeleccionadas === 1 ? 'noche' : 'noches' }}</span>
+								<span class="icono-noches">
+									<svg class="inline-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+									{{ nochesSeleccionadas }} {{ nochesSeleccionadas === 1 ? 'noche' : 'noches' }}
+								</span>
 							</div>
 							<div class="fecha-item">
 								<span class="fecha-label">Salida</span>
@@ -214,7 +257,8 @@
 						</div>
 
 						<div class="detalle-reserva__alerta" *ngIf="fechaEntradaSeleccionada && fechaSalidaCalculada && fechaSalidaCalculada <= fechaEntradaSeleccionada">
-							⚠️ La fecha de salida debe ser posterior a la de entrada. Verifica el número de noches.
+							<svg class="inline-svg text-warning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+							La fecha de salida debe ser posterior a la de entrada. Verifica el número de noches.
 						</div>
 
 						<div class="detalle-reserva__total">

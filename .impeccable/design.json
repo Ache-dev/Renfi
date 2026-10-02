@@ -1,0 +1,34 @@
+{
+  "name": "Renfi",
+  "direction": "La Finca Abierta / Casa de Campo",
+  "tokens": {
+    "colors": {
+      "primary": "#c2410c",
+      "primary-light": "#ea580c",
+      "primary-dark": "#9a3412",
+      "secondary": "#1b4332",
+      "secondary-light": "#2d6a4f",
+      "secondary-dark": "#081c15",
+      "accent": "#d97706",
+      "surface-base": "#f5f2eb",
+      "surface-light": "#fcfbf9",
+      "surface-medium": "#e8e2d5",
+      "surface-dark": "#d6cfc4",
+      "text-primary": "#1f2421",
+      "text-secondary": "#5c645d",
+      "text-tertiary": "#8f9892",
+      "text-inverse": "#ffffff"
+    },
+    "typography": {
+      "fontFamily": "'Montserrat', sans-serif"
+    },
+    "rounded": {
+      "sm": "8px",
+      "md": "12px",
+      "lg": "16px",
+      "xl": "20px",
+      "2xl": "24px",
+      "full": "9999px"
+    }
+  }
+}

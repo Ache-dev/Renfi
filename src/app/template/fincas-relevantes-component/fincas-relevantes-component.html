@@ -3,7 +3,7 @@
     <h2 class="carousel-title mb-4">Fincas Relevantes</h2>
     <div class="carousel-container">
       <button class="carousel-btn carousel-btn-prev" (click)="prevSlide()" *ngIf="fincas.length > 0" aria-label="Anterior">
-        <span aria-hidden="true">&#8592;</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
       </button>
       <div class="carousel-wrapper" #carouselWrapper>
         <div *ngIf="cargando" class="fincas-spinner-wrapper">
@@ -14,22 +14,22 @@
         </div>
         <div *ngIf="!cargando && errorApi" class="fincas-empty-message">
           <div class="fincas-empty-icon">
-            <svg width="56" height="56" fill="#ea2a33" viewBox="0 0 24 24" aria-hidden="true">
+            <svg width="56" height="56" fill="var(--color-primary, #c2410c)" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M3 11.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1v-9.5a1 1 0 0 0-.293-.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 11.5zm2 0L12 4.5l7 7v8.5h-3v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H5v-8.5z"></path>
             </svg>
           </div>
-          <h3 class="fincas-empty-title">¡Ups! No pudimos conectar con la API</h3>
-          <p class="fincas-empty-text">Hubo un problema al cargar las fincas. Por favor revisa tu conexión o vuelve a intentarlo más tarde.</p>
+          <h3 class="fincas-empty-title">¡Ups! No pudimos conectar con el servidor</h3>
+          <p class="fincas-empty-text">Hubo un problema al cargar las fincas disponibles. Por favor revisa tu conexión o intenta de nuevo.</p>
         </div>
         <div *ngIf="!cargando && !errorApi && fincas.length === 0" class="fincas-empty-message">
           <div class="fincas-empty-icon">
-            <svg width="56" height="56" fill="#ea2a33" viewBox="0 0 24 24" aria-hidden="true">
+            <svg width="56" height="56" fill="var(--color-primary, #c2410c)" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M3 11.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1v-9.5a1 1 0 0 0-.293-.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 11.5zm2 0L12 4.5l7 7v8.5h-3v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H5v-8.5z"></path>
             </svg>
           </div>
-          <h3 class="fincas-empty-title">¡Ups! No encontramos fincas disponibles</h3>
-          <p class="fincas-empty-text">Por ahora no hay fincas publicadas. Vuelve pronto o publica la tuya para ayudar a otros estudiantes a encontrar su lugar ideal.</p>
-          <a routerLink="/publicar" class="btn btn-danger">Publicar mi finca</a>
+          <h3 class="fincas-empty-title">No hay fincas disponibles en este momento</h3>
+          <p class="fincas-empty-text">Por ahora no hay fincas publicadas. Vuelve pronto o publica tu propiedad campestre para conectarte con viajeros en toda Colombia.</p>
+          <a routerLink="/publicar" class="btn btn-primary-finca">Publicar mi finca</a>
         </div>
         <div class="carousel-track" #carouselTrack *ngIf="!cargando && !errorApi && fincas.length > 0" [style.transform]="'translateX(' + translateX + 'px)'"
        (wheel)="onWheel($event)"
@@ -42,7 +42,12 @@
              (touchend)="onTouchEnd($event)">
           <div #carouselCard *ngFor="let finca of fincas; let i = index" class="carousel-card" [attr.data-index]="i" (click)="verDetalle(finca)" (keyup.enter)="verDetalle(finca)" (keyup.space)="$event.preventDefault(); verDetalle(finca)" role="button" tabindex="0">
             <div class="carousel-card-image">
-              <img [src]="finca.imagenUrl" [alt]="finca['NombreFinca']" (error)="finca.imagenUrl = 'https://via.placeholder.com/280x200?text=Sin+Imagen'" loading="lazy" />
+              <img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 200'%3E%3Crect width='280' height='200' fill='%23f5f2eb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%238c827a'%3EFinca Renfi%3C/text%3E%3C/svg%3E"
+                [src]="finca.imagenUrl || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 280 200\'%3E%3Crect width=\'280\' height=\'200\' fill=\'%23f5f2eb\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'14\' fill=\'%238c827a\'%3EFinca Renfi%3C/text%3E%3C/svg%3E'"
+                [alt]="finca['NombreFinca'] || finca.nombre || 'Finca de recreo'"
+                (error)="finca.imagenUrl = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 280 200\'%3E%3Crect width=\'280\' height=\'200\' fill=\'%23f5f2eb\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'14\' fill=\'%238c827a\'%3EFinca Renfi%3C/text%3E%3C/svg%3E'"
+                loading="lazy" />
               <div class="carousel-card-badge" *ngIf="finca['Estado']">
                 <span [ngClass]="{'badge-disponible': finca['Estado']==='Disponible', 'badge-ocupado': finca['Estado']!=='Disponible'}">
                   {{ finca['Estado'] }}
@@ -54,7 +59,9 @@
               
               <div class="carousel-rating-price">
                 <div class="carousel-rating" *ngIf="finca['Calificacion']">
-                  <span class="star-icon">★</span>
+                  <span class="star-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2410c" stroke="#c2410c" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  </span>
                   <span class="rating-value">{{ finca['Calificacion'] }}/5</span>
                 </div>
                 <div class="carousel-price" *ngIf="finca['Precio'] !== null && finca['Precio'] !== undefined">
@@ -65,7 +72,9 @@
 
               <div class="carousel-card-details">
                 <div class="detail-item location-highlight" *ngIf="finca['NombreMunicipio'] || finca['Direccion']">
-                  <span class="detail-icon">📍</span>
+                  <span class="detail-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  </span>
                   <span class="detail-text">
                     <strong>{{ finca['NombreMunicipio'] }}</strong>
                     <span *ngIf="finca['Direccion']" class="address-detail">{{ finca['Direccion'] }}</span>
@@ -74,12 +83,16 @@
 
                 <div class="detail-grid">
                   <div class="detail-item-mini" *ngIf="finca['Capacidad']">
-                    <span class="mini-icon">👥</span>
+                    <span class="mini-icon" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </span>
                     <span class="mini-text"><strong>{{ finca['Capacidad'] }}</strong> huéspedes</span>
                   </div>
                   
                   <div class="detail-item-mini services-mini" *ngIf="finca['InformacionAdicional']">
-                    <span class="mini-icon">🛎️</span>
+                    <span class="mini-icon" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    </span>
                     <span class="mini-text mini-services">{{ finca['InformacionAdicional'] }}</span>
                   </div>
                 </div>
@@ -95,7 +108,7 @@
         </div>
       </div>
       <button class="carousel-btn carousel-btn-next" (click)="nextSlide()" *ngIf="fincas.length > 0" aria-label="Siguiente">
-        <span aria-hidden="true">&#8594;</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </button>
     </div>
   </div>
