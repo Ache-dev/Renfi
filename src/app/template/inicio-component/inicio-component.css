@@ -196,10 +196,7 @@
   font-weight: 800;
   line-height: 1.1;
   max-width: 18ch;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-secondary-dark, #081c15);
   animation: fadeInUp 0.8s ease-out 0.4s both;
   position: relative;
 }
@@ -386,10 +383,7 @@
 .stat-value {
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 800;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-primary, #c2410c);
   position: relative;
   z-index: 1;
 }
@@ -612,15 +606,11 @@
   font-size: clamp(1.1rem, 2.8vw, 1.5rem);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-primary, #c2410c);
   font-weight: 800;
   position: relative;
   display: inline-block;
   align-self: center;
-  animation: titlePulse 3s ease-in-out infinite;
 }
 
 @keyframes titlePulse {
@@ -945,9 +935,9 @@
   right: 20px;
   font-size: 120px;
   font-weight: 800;
-  color: rgba(234, 42, 51, 0.06);
+  color: rgba(194, 65, 12, 0.08);
   line-height: 1;
-  font-family: Georgia, serif;
+  font-family: serif;
   z-index: 0;
 }
 

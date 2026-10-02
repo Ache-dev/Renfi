@@ -31,71 +31,79 @@ export class InicioComponent implements OnInit, OnDestroy {
   totalResultados = 0;
   mostrarTodosResultados = false;
   readonly heroHighlights: Array<{ value: string; label: string }> = [
-    { value: '12%', label: 'Rendimiento promedio anual proyectado' },
-    { value: '+180', label: 'Inversionistas confían en Renfi' },
-    { value: '92%', label: 'Ocupación promedio de las fincas' }
+    { value: '100%', label: 'Fincas verificadas en Colombia' },
+    { value: '+500', label: 'Huéspedes satisfechos' },
+    { value: '4.9/5', label: 'Calificación promedio de estadía' }
   ];
   readonly beneficios: Array<{ icon: string; title: string; description: string }> = [
     {
-      icon: '📊',
-      title: 'Due diligence integral',
-      description: 'Evaluamos cada finca con métricas financieras, demanda turística y valuación de activos para reducir el riesgo.'
+      icon: 'shield-check',
+      title: 'Verificación garantizada',
+      description: 'Inspeccionamos cada finca para asegurar fotos reales, servicios activos y anfitriones confiables.'
     },
     {
-      icon: '🤝',
-      title: 'Operación profesional',
-      description: 'Administramos reservas, mantenimiento y hospitality con aliados certificados que maximizan la ocupación.'
+      icon: 'credit-card',
+      title: 'Tarifas claras en COP',
+      description: 'Sin cargos sorpresa en moneda extranjera. Precios en pesos colombianos con pasarela de pago segura.'
     },
     {
-      icon: '📈',
-      title: 'Datos en tiempo real',
-      description: 'Dashboards de desempeño, ROI y flujo de caja para que tomes decisiones informadas cuando lo necesites.'
+      icon: 'home',
+      title: 'Espacios campestres únicos',
+      description: 'Propiedades equipadas con piscina, zonas verdes, BBQ y privacidad total para tu descanso.'
     },
     {
-      icon: '🌱',
-      title: 'Impacto sostenible',
-      description: 'Proyectos con enfoque rural, empleo local y experiencias auténticas que fortalecen las comunidades.'
+      icon: 'sparkles',
+      title: 'Atención personalizada',
+      description: 'Soporte directo antes y durante tu viaje para resolver cualquier inquietud sobre tu estancia.'
     }
   ];
   readonly pasosInversion: Array<{ title: string; description: string; highlights: string[] }> = [
     {
-      title: 'Identificación y análisis',
-      description: 'Buscamos propiedades con alto potencial y realizamos estudios de mercado, legales y de riesgos.',
-      highlights: ['Matemática de ingresos, ocupación y ticket promedio', 'Revisión jurídica y titulación completa']
+      title: 'Encuentra tu destino',
+      description: 'Explora fincas por municipio, capacidad, amenidades y rango de precio en pesos colombianos.',
+      highlights: ['Fotos y descripciones verificadas', 'Ubicación precisa y clima']
     },
     {
-      title: 'Modelado financiero',
-      description: 'Construimos escenarios de inversión, CAPEX requerido y retornos estimados con sensibilidad a la demanda.',
-      highlights: ['Proyecciones trimestrales de ROI', 'Plan de mejoras y costos operativos detallados']
+      title: 'Selecciona fechas',
+      description: 'Elige los días de tu estadía y el número de huéspedes para verificar disponibilidad al instante.',
+      highlights: ['Calendario en tiempo real', 'Cálculo transparente de noches']
     },
     {
-      title: 'Implementación y lanzamiento',
-      description: 'Coordinamos adecuaciones, branding y canales de comercialización para salir al mercado en semanas.',
-      highlights: ['Manual de experiencia del huésped', 'Integración con OTAs y canales directos']
+      title: 'Reserva segura',
+      description: 'Realiza el pago protegido y recibe de inmediato tu comprobante oficial con código único.',
+      highlights: ['Confirmación inmediata', 'Comprobante digital descargable']
     },
     {
-      title: 'Gestión y reporting',
-      description: 'Monitoreo continuo, optimización de tarifas y reportes transparentes del desempeño del activo.',
-      highlights: ['Dashboard en tiempo real', 'Reuniones estratégicas trimestrales']
+      title: 'Disfruta el campo',
+      description: 'Coordina la llegada directamente con el anfitrión y vive unas vacaciones inolvidables.',
+      highlights: ['Guía de acceso y contacto', 'Soporte Renfi en todo momento']
     }
   ];
   readonly testimonios: Array<{ name: string; role: string; quote: string }> = [
     {
-      name: 'Valeria Gómez',
-      role: 'Inversionista desde 2021',
-      quote: 'Diversifiqué mi portafolio con fincas y hoy recibo ingresos constantes con transparencia total.'
+      name: 'Camila Restrepo',
+      role: 'Viajó en familia a Sopetrán',
+      quote: 'La finca superó nuestras expectativas. Todo estaba impecable, la piscina perfecta y el anfitrión muy atento.'
     },
     {
-      name: 'Carlos Mejía',
-      role: 'Empresario hotelero',
-      quote: 'Renfi entiende la operación turística y convierte cada finca en una experiencia rentable para el huésped.'
+      name: 'Andrés Jaramillo',
+      role: 'Grupo de amigos en La Vega',
+      quote: 'Reservar por Renfi fue facilísimo. El precio en pesos sin sorpresas y la confirmación inmediata nos dio mucha seguridad.'
     },
     {
-      name: 'Laura Rueda',
-      role: 'Gerente financiera',
-      quote: 'Los reportes trimestrales me permiten proyectar el flujo de caja y planear nuevas inversiones.'
+      name: 'Mariana Duarte',
+      role: 'Descanso en Melgar',
+      quote: 'Espacios verdes amplios, tranquilidad absoluta y la certeza de que la finca era exactamente como se mostraba en la plataforma.'
     }
   ];
+  readonly placeholderFinca = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f5f2eb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%238c827a'%3EFinca Renfi%3C/text%3E%3C/svg%3E";
+
+  onImageError(item: { imagenUrl?: string | null }): void {
+    if (item) {
+      item.imagenUrl = this.placeholderFinca;
+    }
+  }
+
   private readonly maxResultadosInicial = 12;
   private previousBodyOverflow = '';
   private readonly destroy$ = new Subject<void>();

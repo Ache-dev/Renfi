@@ -15,6 +15,7 @@ import { UsuarioService } from '../../core/services/usuario.service';
   styleUrl: './pasarela-pago-usuario.css'
 })
 export class PasarelaPagoUsuario implements OnInit, OnDestroy {
+  readonly placeholderFinca = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23f5f2eb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%238c827a'%3EFinca Renfi%3C/text%3E%3C/svg%3E";
   draft: ReservaCheckoutDraft | null = null;
   pagoForm: FormGroup;
   procesando = false;

@@ -3,12 +3,12 @@
     <div class="hero-background" aria-hidden="true"></div>
     <div class="hero-container">
       <div class="hero-content" role="presentation">
-        <span class="hero-pill">Inversión inmobiliaria inteligente</span>
-        <h1 class="hero-title">Impulsa tu patrimonio con fincas rentables en toda Colombia</h1>
-        <p class="hero-subtitle">Accede a oportunidades curadas, con retorno proyectado, ocupación verificada y acompañamiento experto para invertir con confianza.</p>
+        <span class="hero-pill">Hospedaje campestre verificado</span>
+        <h1 class="hero-title">Encuentra y reserva fincas de recreo en toda Colombia</h1>
+        <p class="hero-subtitle">Disfruta de espacios campestres auténticos para tus vacaciones o fines de semana con tarifas transparentes en COP y reserva directa garantizada.</p>
         <div class="hero-actions">
-          <button type="button" class="btn btn-primary" (click)="openSearch()" aria-haspopup="dialog" [attr.aria-expanded]="searchOpen">Explorar oportunidades</button>
-          <button type="button" class="btn btn-secondary" (click)="scrollToSection('procesos')">Conoce nuestro proceso</button>
+          <button type="button" class="btn btn-primary" (click)="openSearch()" aria-haspopup="dialog" [attr.aria-expanded]="searchOpen">Explorar fincas</button>
+          <button type="button" class="btn btn-secondary" (click)="scrollToSection('procesos')">Cómo funciona</button>
         </div>
         <ul class="hero-stats" aria-label="Indicadores de confianza Renfi">
           <li class="hero-stat" *ngFor="let stat of heroHighlights">
@@ -17,19 +17,33 @@
           </li>
         </ul>
       </div>
-      <div class="hero-showcase" aria-label="Oportunidad destacada">
+      <div class="hero-showcase" aria-label="Finca campestre destacada">
         <div class="hero-card" *ngIf="displayedFincas[0] as destacada; else heroPlaceholder">
           <div class="hero-card-image" aria-hidden="true">
-            <img [src]="destacada.imagenUrl" [alt]="destacada.nombre" loading="lazy" />
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f5f2eb'/%3E%3C/svg%3E"
+              [src]="destacada.imagenUrl || placeholderFinca"
+              [alt]="destacada.nombre || 'Finca destacada'"
+              (error)="onImageError(destacada)"
+              loading="lazy" />
           </div>
           <div class="hero-card-body">
-            <span class="hero-card-tag">Oportunidad destacada</span>
+            <span class="hero-card-tag">Finca destacada</span>
             <h3>{{ destacada.nombre }}</h3>
-            <p>{{ destacada['InformacionAdicional'] || destacada.descripcion || 'Rentabilidad estable con alto potencial turístico.' }}</p>
+            <p>{{ destacada['InformacionAdicional'] || destacada.descripcion || 'Espacio campestre ideal para vacaciones y eventos de descanso.' }}</p>
             <div class="hero-card-meta">
-              <span>📍 {{ destacada['NombreMunicipio'] || destacada.ubicacion || 'Ubicación reservada' }}</span>
-              <span>👥 {{ destacada.capacidad || destacada['Capacidad'] || '—' }} huéspedes</span>
-              <span>💰 {{ (destacada.precioNoche || destacada['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}</span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                {{ destacada['NombreMunicipio'] || destacada.ubicacion || 'Colombia' }}
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                {{ destacada.capacidad || destacada['Capacidad'] || '—' }} huéspedes
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                {{ (destacada.precioNoche || destacada['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}
+              </span>
             </div>
           </div>
           <button type="button" class="hero-card-cta" (click)="seleccionarFinca(destacada)">Ver detalle de la finca</button>
@@ -37,16 +51,25 @@
         <ng-template #heroPlaceholder>
           <div class="hero-card hero-card-placeholder">
             <div class="hero-card-body">
-              <span class="hero-card-tag">Modelo Renfi</span>
-              <h3>Proyectos de finca con retorno proyectado</h3>
-              <p>Explora portafolios de inversión con estudios de ocupación, valorización y planes operativos listos para implementar.</p>
+              <span class="hero-card-tag">Experiencia Renfi</span>
+              <h3>Fincas campestres con todo incluido</h3>
+              <p>Espacios privados con piscina, zonas verdes y áreas para asados en los mejores climas de Colombia.</p>
               <div class="hero-card-meta">
-                <span>📍 Antioquia · Eje cafetero</span>
-                <span>📊 ROI proyectado 12% anual</span>
-                <span>🤝 Administración aliada</span>
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  Antioquia · Cundinamarca · Eje Cafetero
+                </span>
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                  Tarifas directas en COP
+                </span>
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  Reserva 100% verificada
+                </span>
               </div>
             </div>
-            <button type="button" class="hero-card-cta" (click)="openSearch()">Conocer portafolio</button>
+            <button type="button" class="hero-card-cta" (click)="openSearch()">Explorar fincas</button>
           </div>
         </ng-template>
       </div>
@@ -61,7 +84,9 @@
             <h2>Encuentra tu finca perfecta</h2>
             <p>Filtra por municipio, capacidad, precio, estado y más.</p>
           </div>
-          <button type="button" class="busqueda-close" (click)="closeSearch()" aria-label="Cerrar búsqueda">✕</button>
+          <button type="button" class="busqueda-close" (click)="closeSearch()" aria-label="Cerrar búsqueda">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </header>
 
         <form [formGroup]="searchForm" class="busqueda-form" (ngSubmit)="submitSearch()">
@@ -69,7 +94,9 @@
             <label class="busqueda-field busqueda-field-query">
               <span>¿Qué estás buscando?</span>
               <div class="busqueda-input-wrapper">
-                <span class="busqueda-icon" aria-hidden="true">🔎</span>
+                <span class="busqueda-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
                 <input #queryInput id="search-query" type="search" formControlName="query" placeholder="Nombre, dirección o amenidades" autocomplete="off" />
               </div>
             </label>
@@ -140,7 +167,12 @@
             <div class="busqueda-cards" *ngIf="displayedFincas.length; else sinCoincidencias">
               <article class="busqueda-card" *ngFor="let finca of displayedFincas" (click)="seleccionarFinca(finca)">
                 <div class="busqueda-card-imagen" aria-hidden="true">
-                  <img [src]="finca.imagenUrl" [alt]="finca.nombre" loading="lazy" />
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'%3E%3Crect width='320' height='200' fill='%23f5f2eb'/%3E%3C/svg%3E"
+                    [src]="finca.imagenUrl || placeholderFinca"
+                    [alt]="finca.nombre || 'Finca de recreo'"
+                    (error)="onImageError(finca)"
+                    loading="lazy" />
                 </div>
                 <div class="busqueda-card-body">
                   <div class="busqueda-card-header">
@@ -153,9 +185,18 @@
                   </p>
                   <p class="busqueda-card-descripcion" *ngIf="finca['InformacionAdicional']">{{ finca['InformacionAdicional'] }}</p>
                   <div class="busqueda-card-meta">
-                    <span>👥 {{ finca.capacidad || finca['Capacidad'] || '—' }} huéspedes</span>
-                    <span>💰 {{ (finca.precioNoche || finca['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}</span>
-                    <span>⭐ {{ finca['Calificacion'] || 'Sin calificar' }}</span>
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      {{ finca.capacidad || finca['Capacidad'] || '—' }} huéspedes
+                    </span>
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                      {{ (finca.precioNoche || finca['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}
+                    </span>
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2410c" stroke="#c2410c" stroke-width="1.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                      {{ finca['Calificacion'] || 'Sin calificar' }}
+                    </span>
                   </div>
                 </div>
               </article>
@@ -184,13 +225,17 @@
   <main class="inicio-main">
     <section class="section benefits" id="ventajas">
       <div class="section-header">
-        <span class="section-kicker">¿POR QUÉ RENFI?</span>
-        <h2>Invertir en fincas nunca fue tan accesible</h2>
-        <p>Combinamos análisis de datos, gestión operativa y acompañamiento experto para que tu inversión genere ingresos desde el día uno.</p>
+        <h2>Descanso auténtico con total tranquilidad</h2>
+        <p>Propiedades seleccionadas, verificación rigurosa y pagos seguros para que tus escapadas al campo sean memorables.</p>
       </div>
       <div class="benefits-grid">
         <article class="benefit-card" *ngFor="let benefit of beneficios">
-          <div class="benefit-icon" aria-hidden="true">{{ benefit.icon }}</div>
+          <div class="benefit-icon" aria-hidden="true">
+            <svg *ngIf="benefit.icon === 'shield-check'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            <svg *ngIf="benefit.icon === 'credit-card'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+            <svg *ngIf="benefit.icon === 'home'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <svg *ngIf="benefit.icon === 'sparkles'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+          </div>
           <h3>{{ benefit.title }}</h3>
           <p>{{ benefit.description }}</p>
         </article>
@@ -199,9 +244,8 @@
 
     <section class="section portfolio" id="portafolio">
       <div class="section-header">
-        <span class="section-kicker">Portafolio vivo</span>
-        <h2>Oportunidades disponibles y en operación</h2>
-        <p>Explora fincas con flujo de caja probado y alojamientos listos para recibir huéspedes corporativos y vacacionales.</p>
+        <h2>Fincas campestres destacadas</h2>
+        <p>Encuentra el lugar ideal para relajarte con tu familia o amigos en los mejores destinos rurales de Colombia.</p>
       </div>
       <div class="portfolio-content">
         <app-fincas-relevantes-component></app-fincas-relevantes-component>
@@ -210,9 +254,8 @@
 
     <section class="section process" id="procesos">
       <div class="section-header">
-        <span class="section-kicker">Metodología Renfi</span>
-        <h2>Así convertimos propiedades rurales en activos rentables</h2>
-        <p>Nos encargamos de todo el ciclo: desde la búsqueda y evaluación hasta la operación y reportes de desempeño.</p>
+        <h2>Tu escapada en 4 sencillos pasos</h2>
+        <p>Desde la búsqueda del destino hasta la llegada a la finca, hacemos que reservar sea transparente y confiable.</p>
       </div>
       <div class="process-timeline" role="list">
         <article class="process-step" role="listitem" *ngFor="let step of pasosInversion; index as i">
@@ -228,9 +271,8 @@
 
     <section class="section testimonials" id="testimonios">
       <div class="section-header">
-        <span class="section-kicker">Historias reales</span>
-        <h2>Inversionistas que ya están multiplicando su patrimonio</h2>
-        <p>Rentabilidad, transparencia y acompañamiento que generan tranquilidad.</p>
+        <h2>Experiencias de nuestros huéspedes</h2>
+        <p>Descanso, naturaleza y momentos memorables compartidos en el campo.</p>
       </div>
       <div class="testimonials-grid">
         <figure class="testimonial-card" *ngFor="let testimonial of testimonios">
@@ -246,13 +288,12 @@
     <section class="section cta-final" id="asesoria">
       <div class="cta-card">
         <div class="cta-content">
-          <span class="cta-pill">Acompañamiento personalizado</span>
-          <h2>Agenda una asesoría y proyecta tu próxima inversión</h2>
-          <p>Revisa escenarios financieros, indicadores clave y cómo Renfi gestiona la operación de tu finca para maximizar su rendimiento.</p>
+          <h2>¿Listo para tu próxima escapada al campo?</h2>
+          <p>Explora nuestras fincas campestres verificadas o comunícate con nosotros para brindarte asistencia personalizada.</p>
         </div>
         <div class="cta-actions">
-          <button type="button" class="btn btn-primary" (click)="openSearch()">Explorar portafolio</button>
-          <button type="button" class="btn btn-secondary" (click)="openWhatsapp()">Escríbenos</button>
+          <button type="button" class="btn btn-primary" (click)="openSearch()">Explorar fincas</button>
+          <button type="button" class="btn btn-secondary" (click)="openWhatsapp()">Contactar por WhatsApp</button>
         </div>
       </div>
     </section>

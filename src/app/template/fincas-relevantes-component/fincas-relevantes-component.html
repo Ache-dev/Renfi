@@ -43,6 +43,7 @@
           <div #carouselCard *ngFor="let finca of fincas; let i = index" class="carousel-card" [attr.data-index]="i" (click)="verDetalle(finca)" (keyup.enter)="verDetalle(finca)" (keyup.space)="$event.preventDefault(); verDetalle(finca)" role="button" tabindex="0">
             <div class="carousel-card-image">
               <img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 200'%3E%3Crect width='280' height='200' fill='%23f5f2eb'/%3E%3C/svg%3E"
                 [src]="finca.imagenUrl || placeholderImagen"
                 [alt]="finca['NombreFinca'] || finca.nombre || 'Finca de recreo'"
                 (error)="onImageError(finca)"
