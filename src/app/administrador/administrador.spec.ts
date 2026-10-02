@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterModule } from '@angular/router';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Administrador } from './administrador';
 
 describe('Administrador', () => {
@@ -8,7 +9,9 @@ describe('Administrador', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Administrador]
+      imports: [RouterModule.forRoot([])],
+      declarations: [Administrador],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

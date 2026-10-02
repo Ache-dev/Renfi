@@ -1,10 +1,10 @@
-﻿import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Subject, forkJoin, of } from 'rxjs';
-import { catchError, debounceTime, map, takeUntil } from 'rxjs/operators';
-import { FincaDetalle, FincaSeleccionadaService, mapearFinca } from '../services/finca-seleccionada.service';
+import { Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+import { FincaDetalle, FincaSeleccionadaService } from '../services/finca-seleccionada.service';
+import { FincaService } from '../../core/services/finca.service';
 
 @Component({
   selector: 'app-inicio-component',
@@ -30,7 +30,6 @@ export class InicioComponent implements OnInit, OnDestroy {
   maxPrecio = 0;
   totalResultados = 0;
   mostrarTodosResultados = false;
-  private readonly imagenesEndpoint = 'http://localhost:3000/api/imagen';
   readonly heroHighlights: Array<{ value: string; label: string }> = [
     { value: '12%', label: 'Rendimiento promedio anual proyectado' },
     { value: '+180', label: 'Inversionistas confían en Renfi' },
@@ -103,9 +102,9 @@ export class InicioComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly http: HttpClient,
     private readonly router: Router,
-    private readonly fincaSeleccionada: FincaSeleccionadaService
+    private readonly fincaSeleccionada: FincaSeleccionadaService,
+    private readonly fincaService: FincaService
   ) {
     this.searchForm = this.fb.group({
       query: [''],
@@ -218,14 +217,12 @@ export class InicioComponent implements OnInit, OnDestroy {
 
   private cargarFincas(): void {
     this.loadingSearch = true;
-    this.http.get<any[]>('http://localhost:3000/api/finca').pipe(takeUntil(this.destroy$)).subscribe({
-      next: respuesta => {
-        const listaRaw = Array.isArray(respuesta) ? respuesta : [respuesta];
-        this.fincas = listaRaw.map((raw, index) => mapearFinca(raw, index));
+    this.fincaService.getFincasConImagenes().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (fincas) => {
+        this.fincas = fincas as FincaDetalle[];
         this.prepararOpciones();
         this.filteredFincas = [...this.fincas];
         this.actualizarDisplay(this.fincas);
-        this.enriquecerFincasConImagenes(listaRaw, this.fincas);
         this.loadingSearch = false;
       },
       error: () => {
@@ -451,54 +448,6 @@ export class InicioComponent implements OnInit, OnDestroy {
     }
     const numero = Number(valor);
     return Number.isFinite(numero) ? numero : null;
-  }
-
-  private enriquecerFincasConImagenes(fincasRaw: any[], fincasMapeadas: FincaDetalle[]): void {
-    if (!Array.isArray(fincasRaw) || !fincasRaw.length) {
-      return;
-    }
-
-    const solicitudes = fincasRaw.map((raw, index) => {
-      const fincaDetalle = fincasMapeadas[index];
-      const idConsulta = this.obtenerIdFincaParaConsulta(fincaDetalle, raw);
-
-      if (!idConsulta) {
-        return of({ index, urls: [] as string[] });
-      }
-
-      return this.http
-        .get<any>(`${this.imagenesEndpoint}/finca/${encodeURIComponent(idConsulta)}`)
-        .pipe(
-          map((resp) => this.normalizarColeccion(resp)),
-          catchError(() => of([] as any[])),
-          map((imagenes) => ({ index, urls: this.extraerUrlsImagenes(imagenes) }))
-        );
-    });
-
-    forkJoin(solicitudes)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resultados) => {
-        let huboCambios = false;
-        const fincasActualizadas = [...this.fincas];
-
-        resultados.forEach(({ index, urls }) => {
-          const fincaActual = fincasActualizadas[index];
-          if (!fincaActual || !urls.length) {
-            return;
-          }
-
-          const actualizada = this.aplicarImagenes(fincaActual, urls);
-          if (actualizada !== fincaActual) {
-            fincasActualizadas[index] = actualizada;
-            huboCambios = true;
-          }
-        });
-
-        if (huboCambios) {
-          this.fincas = fincasActualizadas;
-          this.aplicarFiltros(this.mostrarTodosResultados);
-        }
-      });
   }
 
   private aplicarImagenes(finca: FincaDetalle, urls: string[]): FincaDetalle {

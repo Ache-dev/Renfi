@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ReservaAdministrador } from './reserva-administrador';
 
@@ -8,6 +9,7 @@ describe('ReservaAdministrador', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       declarations: [ReservaAdministrador]
     })
     .compileComponents();

@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -6,7 +6,7 @@ import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ReservaCheckoutDraft, ReservaCheckoutService } from '../../template/services/reserva-checkout.service';
 import { ReservaService } from '../../template/services/reserva.service';
 import { AuthStateService } from '../../template/services/auth-state.service';
-import { HttpClient } from '@angular/common/http';
+import { UsuarioService } from '../../core/services/usuario.service';
 
 @Component({
   selector: 'app-pasarela-pago-usuario',
@@ -37,7 +37,7 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
     private readonly authState: AuthStateService,
     private readonly fb: FormBuilder,
     private readonly router: Router,
-    private readonly http: HttpClient
+    private readonly usuarioService: UsuarioService
   ) {
     this.pagoForm = this.fb.group({
       metodoPago: ['1', [Validators.required]],
@@ -100,19 +100,13 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
     }
 
     if (!documento && usuario.Correo) {
-      this.http.get<any[]>('http://localhost:3000/api/usuario')
+      this.usuarioService.obtenerDocumentoPorCorreo(usuario.Correo)
         .pipe(
-          switchMap(usuarios => {
-            const usuarioCompleto = usuarios.find(u => 
-              (u.Correo?.toLowerCase() === usuario.Correo?.toLowerCase())
-            );
-
-            documento = usuarioCompleto?.NumeroDocumento ?? usuarioCompleto?.IdUsuario;
-            
+          switchMap(doc => {
+            documento = doc;
             if (!documento) {
               throw new Error('No se pudo obtener el número de documento del usuario');
             }
-
             return this.crearReservaConDocumento(documento, idFinca, metodoPagoId);
           }),
           takeUntil(this.destroy$),

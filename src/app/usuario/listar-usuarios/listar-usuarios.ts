@@ -1,15 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-interface Usuario {
-  IdUsuario: number;
-  NombreUsuario: string;
-  ApellidoUsuario: string;
-  Telefono: string;
-  Correo: string;
-  Contraseña: string;
-  Rol: string;
-}
+import { UsuarioService } from '../../core/services/usuario.service';
+import { UsuarioApiDto } from '../../core/models/usuario.model';
 
 @Component({
   selector: 'app-listar-usuarios',
@@ -18,19 +9,19 @@ interface Usuario {
   standalone: false,
 })
 export class ListarUsuariosComponent implements OnInit {
-  usuarios: Usuario[] = [];
+  usuarios: UsuarioApiDto[] = [];
   loading = true;
   error = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly usuarioService: UsuarioService) {}
 
   ngOnInit() {
-    this.http.get<Usuario[]>('http://localhost:3000/api/usuario').subscribe({
-      next: data => {
+    this.usuarioService.getUsuarios().subscribe({
+      next: (data) => {
         this.usuarios = data;
         this.loading = false;
       },
-      error: err => {
+      error: () => {
         this.error = 'Error al cargar usuarios';
         this.loading = false;
       }

@@ -1,7 +1,9 @@
-﻿import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { environment } from '../../../environments/environment';
 
 type Primitive = string | number | boolean | null | undefined;
 
@@ -12,7 +14,7 @@ export interface AdminRequestOptions {
 
 @Injectable({ providedIn: 'root' })
 export class AdminApiService {
-  private readonly baseUrl = 'http://localhost:3000/api';
+  private readonly baseUrl = environment.apiUrl;
 
   constructor(private readonly http: HttpClient) {}
 

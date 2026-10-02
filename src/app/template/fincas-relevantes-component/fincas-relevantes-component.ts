@@ -8,11 +8,9 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { FincaService } from '../../core/services/finca.service';
 import { Router } from '@angular/router';
-import { FincaDetalle, FincaSeleccionadaService, mapearFinca } from '../services/finca-seleccionada.service';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { FincaDetalle, FincaSeleccionadaService } from '../services/finca-seleccionada.service';
 
 @Component({
   selector: 'app-fincas-relevantes-component',
@@ -37,11 +35,10 @@ export class FincasRelevantesComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('carouselWrapper') private wrapperRef?: ElementRef<HTMLDivElement>;
   @ViewChild('carouselTrack') private trackRef?: ElementRef<HTMLDivElement>;
   @ViewChildren('carouselCard') private cardRefs?: QueryList<ElementRef<HTMLDivElement>>;
-  private readonly apiBase = 'http://localhost:3000/api';
   private resizeObserver?: ResizeObserver;
 
   constructor(
-    private http: HttpClient,
+    private fincaService: FincaService,
     private router: Router,
     private fincaSeleccionada: FincaSeleccionadaService
   ) {}
@@ -61,50 +58,21 @@ export class FincasRelevantesComponent implements OnInit, AfterViewInit, OnDestr
   cargarFincasRelevantes() {
     this.cargando = true;
     this.errorApi = false;
-    this.http
-      .get<any>(`${this.apiBase}/finca`)
-      .pipe(
-        map((resp) => this.normalizarColeccion(resp)),
-        switchMap((fincasRaw) => {
-          if (!fincasRaw.length) {
-            return of([] as Array<{ detalle: FincaDetalle; raw: any; imagenes: any[] }>);
-          }
-
-          const solicitudes = fincasRaw.map((raw, index) => {
-            const detalle = mapearFinca(raw, index);
-            const idConsulta = this.obtenerIdFincaParaConsulta(detalle, raw);
-
-            if (!idConsulta) {
-              return of({ detalle, imagenes: [] as any[] });
-            }
-
-            return this.http
-              .get<any>(`${this.apiBase}/imagen/finca/${encodeURIComponent(idConsulta)}`)
-              .pipe(
-                map((resp) => this.normalizarColeccion(resp)),
-                catchError(() => of([] as any[])),
-                map((imagenes) => ({ detalle, imagenes }))
-              );
-          });
-
-          return forkJoin(solicitudes);
-        })
-      )
-      .subscribe({
-        next: (resultados) => {
-          this.fincas = resultados.map(({ detalle, imagenes }) => this.aplicarImagenes(detalle, imagenes));
-          this.currentIndex = 0;
-          this.updateTranslateX();
-          this.cargando = false;
-        },
-        error: () => {
-          this.fincas = [];
-          this.currentIndex = 0;
-          this.updateTranslateX();
-          this.cargando = false;
-          this.errorApi = true;
-        }
-      });
+    this.fincaService.getFincasConImagenes().subscribe({
+      next: (fincas) => {
+        this.fincas = fincas as FincaDetalle[];
+        this.currentIndex = 0;
+        this.updateTranslateX();
+        this.cargando = false;
+      },
+      error: () => {
+        this.fincas = [];
+        this.currentIndex = 0;
+        this.updateTranslateX();
+        this.cargando = false;
+        this.errorApi = true;
+      }
+    });
   }
 
   verDetalle(finca: FincaDetalle) {

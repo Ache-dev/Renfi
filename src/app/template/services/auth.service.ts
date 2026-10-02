@@ -41,10 +41,11 @@ export interface UsuarioNormalizado {
   Rol?: string;
   IdRol?: number;
 }
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:3000/api/usuario';
+  private readonly apiUrl = `${environment.apiUrl}/usuario`;
 
   constructor(private readonly http: HttpClient) {}
 

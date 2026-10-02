@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,8 @@ import { ReservaCheckoutDraft, ReservaCheckoutService } from '../services/reserv
 import { ReservaService } from '../services/reserva.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+
+import { environment } from '../../../environments/environment';
 
 type EstadoDia = 'disponible' | 'ocupado' | 'bloqueado';
 
@@ -46,8 +48,8 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
   private anioActual = new Date().getFullYear();
   private fechaSeleccionada: string | null = null;
 
-  private readonly apiUrl = 'http://localhost:3000/api/finca';
-  private readonly imagenesBaseUrl = 'http://localhost:3000/api/imagen';
+  private readonly apiUrl = `${environment.apiUrl}/finca`;
+  private readonly imagenesBaseUrl = `${environment.apiUrl}/imagen`;
   private subscripcionRuta?: Subscription;
   private subscripcionAuth?: Subscription;
   private subscripcionDisponibilidad?: Subscription;

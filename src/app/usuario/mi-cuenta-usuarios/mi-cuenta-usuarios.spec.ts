@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MiCuentaUsuarios } from './mi-cuenta-usuarios';
 
 describe('MiCuentaUsuarios', () => {
@@ -8,7 +11,13 @@ describe('MiCuentaUsuarios', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MiCuentaUsuarios]
+      imports: [ReactiveFormsModule],
+      declarations: [MiCuentaUsuarios],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

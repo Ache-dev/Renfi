@@ -1,10 +1,10 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, Subject, switchMap, takeUntil, of } from 'rxjs';
 import { AuthStateService } from '../../template/services/auth-state.service';
 import { AuthService, UsuarioNormalizado } from '../../template/services/auth.service';
 import { Reserva, ReservaService } from '../../template/services/reserva.service';
-import { HttpClient } from '@angular/common/http';
+import { UsuarioService } from '../../core/services/usuario.service';
 
 @Component({
   selector: 'app-mi-cuenta-usuarios',
@@ -36,7 +36,7 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
     private readonly authState: AuthStateService,
     private readonly authService: AuthService,
     private readonly reservaService: ReservaService,
-    private readonly http: HttpClient
+    private readonly usuarioService: UsuarioService
   ) {
     this.cuentaForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
@@ -253,16 +253,9 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
     this.errorReservas = '';
     this.reservasCargando = true;
 
-    const obtenerDocumento$ = !documento && correo ? 
-      this.http.get<any[]>('http://localhost:3000/api/usuario').pipe(
-        switchMap(usuarios => {
-          const usuarioCompleto = usuarios.find(u => 
-            u.Correo?.toLowerCase() === correo?.toLowerCase()
-          );
-          documento = usuarioCompleto?.NumeroDocumento ?? usuarioCompleto?.IdUsuario ?? null;
-          return of(documento);
-        })
-      ) : of(documento);
+    const obtenerDocumento$ = !documento && correo
+      ? this.usuarioService.obtenerDocumentoPorCorreo(correo)
+      : of(documento);
 
     obtenerDocumento$
       .pipe(
