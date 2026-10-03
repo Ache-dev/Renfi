@@ -1,14 +1,26 @@
 <section class="crud-panel" *ngIf="config as cfg">
   <header class="crud-panel__header">
     <div class="crud-panel__heading">
-      <span class="crud-panel__kicker">Gestión de {{ cfg.title }}</span>
       <h2>{{ cfg.title }}</h2>
       <p *ngIf="cfg.description">{{ cfg.description }}</p>
       <small class="crud-panel__meta" *ngIf="registros.length">{{ registros.length }} registros encontrados</small>
     </div>
     <div class="crud-panel__actions">
-      <button type="button" class="btn-secondary" (click)="recargar()">↻ Actualizar</button>
-      <button type="button" class="btn-primary" (click)="abrirCrear()">＋ Nuevo registro</button>
+      <button type="button" class="btn-secondary" (click)="recargar()">
+        <svg class="icono-svg icono-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <span>Actualizar</span>
+      </button>
+      <button type="button" class="btn-primary" (click)="abrirCrear()">
+        <svg class="icono-svg icono-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Nuevo registro</span>
+      </button>
     </div>
   </header>
 
@@ -45,7 +57,11 @@
       </div>
 
       <div *ngIf="modoVisualizacion === 'tabla'" class="crud-tabla__hint">
-        <span class="crud-tabla__hint-icon">💡</span>
+        <svg class="crud-tabla__hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
         <span class="crud-tabla__hint-text">
           Usa la <strong>rueda del ratón</strong> para desplazarte horizontalmente. 
           Mantén <kbd>Shift</kbd> para scroll rápido.
@@ -170,7 +186,12 @@
             Completa los campos principales para este recurso. Puedes añadir propiedades extra desde los campos avanzados.
           </p>
         </div>
-        <button type="button" class="crud-dialog__close" (click)="cerrarFormulario()" aria-label="Cerrar">✕</button>
+        <button type="button" class="crud-dialog__close" (click)="cerrarFormulario()" aria-label="Cerrar">
+          <svg class="icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </header>
 
       <ng-template #crudJsonHint>
