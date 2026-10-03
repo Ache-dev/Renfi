@@ -1,342 +1,241 @@
-/* ==========================================================================
-   RENFI DESIGN SYSTEM - Registrarse ("La Finca Abierta / Casa de Campo")
-   ========================================================================== */
-
 :host {
-	display: block;
-	min-height: 100vh;
-	font-family: 'Montserrat', sans-serif;
-	background-color: var(--color-surface-base, #f5f2eb);
-	background-image: 
-		radial-gradient(circle at 85% 15%, rgba(194, 65, 12, 0.04), transparent 50%),
-		radial-gradient(circle at 15% 85%, rgba(27, 67, 50, 0.05), transparent 50%),
-		var(--pattern-grid);
-	color: var(--color-text-primary, #1f2421);
-	position: relative;
+  display: block;
 }
 
-.registro-page {
-	min-height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: clamp(32px, 6vw, 64px) clamp(16px, 4vw, 40px);
+/* ==== Layout: formulario primero; panel verde solo en escritorio ==== */
+.auth {
+  display: grid;
+  gap: var(--spacing-lg);
+  max-width: 600px;
+  padding-block: var(--spacing-lg) var(--spacing-xl);
 }
 
-.registro-shell {
-	width: min(640px, 100%);
-	display: flex;
-	flex-direction: column;
-	gap: clamp(20px, 4vw, 32px);
+.auth-panel {
+  display: none;
 }
 
-/* ==== Encabezado de la Página ==== */
-.registro-intro {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	text-align: center;
-	align-items: center;
+@media (min-width: 960px) {
+  .auth {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    max-width: 1120px;
+    padding-block: var(--spacing-xl);
+  }
+
+  .auth-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--color-text-on-dark-muted);
+    background: var(--color-secondary);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+  }
 }
 
-.registro-intro h1 {
-	margin: 0;
-	font-size: clamp(1.8rem, 4vw, 2.5rem);
-	font-weight: 700;
-	color: var(--color-secondary, #1b4332);
-	line-height: 1.2;
-	letter-spacing: -0.01em;
+/* ==== Panel verde cordillera ==== */
+.auth-panel__body {
+  display: grid;
+  gap: 16px;
+  padding: clamp(28px, 3.5vw, 48px);
 }
 
-.registro-intro p {
-	margin: 0;
-	font-size: clamp(0.95rem, 2vw, 1.05rem);
-	color: var(--color-text-secondary, #5c645d);
-	line-height: 1.5;
-	max-width: 520px;
+.auth-panel__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-inverse);
 }
 
-/* ==== Switch Pestañas en Cápsula Campestre ==== */
-.registro-switch {
-	display: flex;
-	gap: 6px;
-	background: var(--color-surface-medium, #e8e2d5);
-	padding: 5px;
-	border-radius: var(--radius-full, 9999px);
-	border: 1px solid rgba(27, 67, 50, 0.08);
-	box-shadow: inset 0 2px 4px rgba(27, 67, 50, 0.04);
+.auth-panel__brand svg {
+  width: 36px;
+  height: 36px;
 }
 
-.registro-switch__btn {
-	flex: 1;
-	border: none;
-	border-radius: var(--radius-full, 9999px);
-	background: transparent;
-	color: var(--color-text-secondary, #5c645d);
-	font-weight: 600;
-	font-size: 0.95rem;
-	padding: 0.65rem 1.2rem;
-	cursor: pointer;
-	transition: all var(--transition-base, 0.25s ease);
-	font-family: inherit;
-	text-align: center;
+.auth-panel__title {
+  margin-top: 20px;
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  color: var(--color-text-inverse);
 }
 
-.registro-switch__btn:hover:not(.is-active) {
-	color: var(--color-secondary, #1b4332);
-	background: rgba(255, 255, 255, 0.5);
+.auth-panel__text {
+  max-width: 42ch;
 }
 
-.registro-switch__btn.is-active {
-	background: var(--color-secondary, #1b4332);
-	color: var(--color-text-inverse, #ffffff);
-	box-shadow: 0 4px 12px rgba(27, 67, 50, 0.18);
+.auth-panel__list {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
 }
 
-/* ==== Tarjeta Arquitectónica (Blanco Cal Viva + Chambrana) ==== */
-.registro-card {
-	background: var(--color-surface-light, #fcfbf9);
-	border-radius: var(--radius-2xl, 24px);
-	border: 1px solid var(--color-surface-medium, #e8e2d5);
-	box-shadow: 0 12px 32px rgba(27, 67, 50, 0.06), 0 2px 6px rgba(27, 67, 50, 0.03);
-	padding: clamp(24px, 5vw, 40px);
-	position: relative;
+.auth-panel__list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-text-inverse);
 }
 
-.registro-card form {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
+.auth-panel__check {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
-.registro-subtitle {
-	margin: 0;
-	color: var(--color-text-secondary, #5c645d);
-	font-size: 0.95rem;
-	line-height: 1.5;
+.auth-panel__check svg {
+  width: 15px;
+  height: 15px;
 }
 
-/* ==== Grilla de Campos ==== */
-.registro-grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 16px;
+.auth-panel__ridges {
+  width: 100%;
+  height: 150px;
+  margin-top: auto;
 }
 
-.registro-field {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
+.ridge--back {
+  fill: rgba(45, 106, 79, 0.45);
 }
 
-.registro-field__label {
-	font-size: 0.875rem;
-	font-weight: 600;
-	color: var(--color-text-primary, #1f2421);
-	letter-spacing: 0.02em;
+.ridge--mid {
+  fill: rgba(45, 106, 79, 0.9);
 }
 
-.registro-input-wrapper {
-	position: relative;
-	display: flex;
-	align-items: center;
+.ridge--front {
+  fill: var(--color-secondary-dark);
 }
 
-.registro-input-icon {
-	position: absolute;
-	left: 14px;
-	width: 18px;
-	height: 18px;
-	color: var(--color-text-tertiary, #8f9892);
-	pointer-events: none;
-	transition: color 0.2s ease;
+/* ==== Tarjeta del formulario ==== */
+.auth-card {
+  padding: clamp(24px, 4vw, 40px);
+  container-type: inline-size;
 }
 
-.registro-field input {
-	width: 100%;
-	padding: 12px 14px 12px 42px;
-	font-size: 0.95rem;
-	font-family: inherit;
-	color: var(--color-text-primary, #1f2421);
-	background: #ffffff;
-	border: 1px solid var(--color-surface-medium, #e8e2d5);
-	border-radius: var(--radius-md, 12px);
-	transition: all var(--transition-base, 0.25s ease);
+.auth-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 28px;
+  background: var(--color-surface-base);
+  border: 1px solid var(--color-surface-medium);
+  border-radius: var(--radius-full);
 }
 
-.registro-field input:focus {
-	outline: none;
-	border-color: var(--color-primary, #c2410c);
-	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.15);
+.auth-switch a {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  transition: color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.registro-input-wrapper:focus-within .registro-input-icon {
-	color: var(--color-primary, #c2410c);
+.auth-switch a:hover {
+  color: var(--color-secondary);
 }
 
-.registro-field input.has-error {
-	border-color: #dc2626;
-	background: #fff8f8;
+.auth-switch a[aria-current='page'] {
+  color: var(--color-secondary);
+  background: var(--color-surface-light);
+  box-shadow: var(--shadow-sm);
 }
 
-.registro-field input.has-error:focus {
-	box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+.auth-title {
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
 }
 
-.registro-field__error {
-	color: #dc2626;
-	font-size: 0.8rem;
-	font-weight: 500;
-	margin-top: 2px;
+.auth-lead {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
 }
 
-/* ==== Checkbox Términos ==== */
-.registro-checkbox {
-	display: flex;
-	align-items: flex-start;
-	gap: 10px;
-	font-size: 0.875rem;
-	color: var(--color-text-secondary, #5c645d);
-	cursor: pointer;
-	user-select: none;
-	line-height: 1.4;
-	margin-top: 4px;
+/* ==== Formulario ==== */
+.auth-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
 }
 
-.registro-checkbox input {
-	accent-color: var(--color-primary, #c2410c);
-	width: 18px;
-	height: 18px;
-	margin-top: 2px;
-	cursor: pointer;
-	flex-shrink: 0;
+.auth-grid {
+  display: grid;
+  align-items: start;
+  gap: 18px 16px;
 }
 
-/* ==== Retroalimentación / Alertas ==== */
-.registro-feedback {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+/* Dos columnas cuando la tarjeta tiene espacio real, no según el viewport */
+@container (min-width: 460px) {
+  .auth-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-.registro-feedback--error,
-.registro-feedback--success {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 12px 16px;
-	border-radius: var(--radius-md, 12px);
-	font-size: 0.9rem;
-	font-weight: 500;
-	line-height: 1.4;
+.pw-field > input {
+  padding-right: 50px;
 }
 
-.registro-feedback--error {
-	background: #fef2f2;
-	border: 1px solid #fecaca;
-	color: #991b1b;
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  transform: translateY(-50%);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
-.registro-feedback--success {
-	background: #f0fdf4;
-	border: 1px solid #bbf7d0;
-	color: #166534;
+.pw-toggle:hover {
+  color: var(--color-secondary);
+  background: rgba(27, 67, 50, 0.07);
 }
 
-.feedback-icon {
-	width: 20px;
-	height: 20px;
-	flex-shrink: 0;
+.pw-toggle:active {
+  background: rgba(27, 67, 50, 0.12);
 }
 
-/* ==== Botón Submit Cápsula Terracota (Craft Floor) ==== */
-.registro-submit {
-	background: var(--color-primary, #c2410c);
-	color: var(--color-text-inverse, #ffffff);
-	border: none;
-	border-radius: var(--radius-full, 9999px);
-	padding: 14px 28px;
-	font-size: 1rem;
-	font-weight: 600;
-	font-family: inherit;
-	cursor: pointer;
-	box-shadow: 0 8px 24px rgba(194, 65, 12, 0.25);
-	transition: all var(--transition-base, 0.25s ease);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
+.pw-toggle svg {
+  width: 18px;
+  height: 18px;
 }
 
-.registro-submit:hover:not(:disabled) {
-	background: var(--color-primary-dark, #9a3412);
-	transform: translateY(-2px);
-	box-shadow: 0 12px 28px rgba(194, 65, 12, 0.35);
+.auth-feedback {
+  display: grid;
+  gap: 8px;
 }
 
-.registro-submit:active:not(:disabled) {
-	transform: translateY(0);
+.auth-feedback:empty {
+  display: none;
 }
 
-.registro-submit:disabled {
-	opacity: 0.55;
-	cursor: not-allowed;
-	box-shadow: none;
-	background: #9ca3af;
+.auth-submit {
+  margin-top: 4px;
 }
 
-.registro-spinner {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
+.auth-submit[aria-busy='true'] {
+  opacity: 0.85;
+  cursor: progress;
 }
 
-.spinner-icon {
-	width: 18px;
-	height: 18px;
-	animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-.registro-login-link {
-	margin: 0;
-	text-align: center;
-	font-size: 0.9rem;
-	color: var(--color-text-secondary, #5c645d);
-}
-
-.registro-login-link a {
-	font-weight: 600;
-	color: var(--color-primary, #c2410c);
-	text-decoration: none;
-	transition: all 0.2s ease;
-}
-
-.registro-login-link a:hover {
-	color: var(--color-primary-dark, #9a3412);
-	text-decoration: underline;
-}
-
-/* ==== Responsive ==== */
-@media (max-width: 640px) {
-	.registro-grid {
-		grid-template-columns: 1fr;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		transition-duration: 0.01ms !important;
-		animation-duration: 0.01ms !important;
-	}
+.auth-alt {
+  margin-top: 24px;
+  padding-top: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-surface-medium);
 }

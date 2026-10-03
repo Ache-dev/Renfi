@@ -1,49 +1,76 @@
-<section class="about-wrapper">
-	<div class="about-shell">
-		<div class="about-intro">
-			<h1>¿Quiénes somos?</h1>
+<header class="about-head">
+	<div class="page">
+		<h1>¿Quiénes somos?</h1>
+		<p class="about-head__lead">
+			Renfi es la plataforma web colombiana para encontrar, reservar y disfrutar fincas de recreo y descanso en toda Colombia. Conectamos a familias, grupos de amigos y viajeros con espacios campestres verificados para vivir momentos inolvidables en la naturaleza, con tarifas transparentes y pagos seguros.
+		</p>
+	</div>
+</header>
+
+<section class="page about-values" aria-label="Lo que nos define">
+	<ul class="values">
+		<li class="value">
+			<span class="value__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+			</span>
+			<div>
+				<h2 class="value__title">Propiedades 100% verificadas</h2>
+				<p class="value__text">Inspeccionamos cada finca para asegurar fotos reales, servicios activos y anfitriones confiables.</p>
+			</div>
+		</li>
+		<li class="value">
+			<span class="value__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+			</span>
+			<div>
+				<h2 class="value__title">Tarifas claras en COP</h2>
+				<p class="value__text">Precios en moneda local colombiana con pasarela de pago segura y sin comisiones ocultas.</p>
+			</div>
+		</li>
+		<li class="value">
+			<span class="value__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+			</span>
+			<div>
+				<h2 class="value__title">Espacios campestres únicos</h2>
+				<p class="value__text">Fincas con piscina, zonas verdes, BBQ y privacidad total para descansar y celebrar en familia.</p>
+			</div>
+		</li>
+		<li class="value">
+			<span class="value__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"></path><path d="M10 20c5.5-2.5.8-6.4 3-10"></path><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path></svg>
+			</span>
+			<div>
+				<h2 class="value__title">Desarrollo y turismo rural</h2>
+				<p class="value__text">Impulsamos el turismo sostenible y el empleo local en los municipios más bellos de Colombia.</p>
+			</div>
+		</li>
+	</ul>
+</section>
+
+<section class="page about-pledge" id="contacto" aria-labelledby="compromiso-titulo">
+	<div class="pledge">
+		<div class="pledge__body">
+			<h2 id="compromiso-titulo">Nuestro compromiso</h2>
 			<p>
-				Renfi es la plataforma web colombiana para encontrar, reservar y disfrutar fincas de recreo y descanso en toda Colombia. Conectamos a familias, grupos de amigos y viajeros con espacios campestres verificados para vivir momentos inolvidables en la naturaleza con tarifas transparentes y pagos seguros.
+				Trabajamos con anfitriones y viajeros en todo el país para ofrecer una experiencia de hospedaje campestre cálida, confiable y accesible, desde el primer clic hasta la entrega de llaves.
 			</p>
+			<div class="pledge__actions">
+				<a routerLink="/inicio" fragment="portafolio" class="btn btn--primary btn--lg">
+					Explorar fincas
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+				</a>
+				<a href="https://w.app/c2laje" target="_blank" rel="noopener noreferrer" class="btn btn--on-dark btn--lg">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+					Escríbenos por WhatsApp
+				</a>
+			</div>
 		</div>
-		<div class="about-values">
-			<ul class="about-benefits">
-				<li>
-					<span class="benefit-icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
-					</span>
-					<span class="benefit-title">Propiedades 100% verificadas</span>
-					<span class="benefit-text">Inspeccionamos cada finca para asegurar fotos reales, servicios activos y anfitriones confiables.</span>
-				</li>
-				<li>
-					<span class="benefit-icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
-					</span>
-					<span class="benefit-title">Tarifas claras en COP</span>
-					<span class="benefit-text">Precios en moneda local colombiana con pasarela de pago segura y sin comisiones ocultas.</span>
-				</li>
-				<li>
-					<span class="benefit-icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-					</span>
-					<span class="benefit-title">Espacios campestres únicos</span>
-					<span class="benefit-text">Fincas con piscina, zonas verdes, BBQ y privacidad total para descansar y celebrar en familia.</span>
-				</li>
-				<li>
-					<span class="benefit-icon" aria-hidden="true">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-7l-4-4 4-4 4 4-4 4"></path><path d="M12 2a10 10 0 0 0-7 17.07"></path><path d="M19 19.07A10 10 0 0 0 12 2"></path></svg>
-					</span>
-					<span class="benefit-title">Desarrollo y turismo rural</span>
-					<span class="benefit-text">Impulsamos el turismo sostenible y el empleo local en los municipios más bellos de Colombia.</span>
-				</li>
-			</ul>
-		</div>
-		<div class="about-team">
-			<h2>Nuestro compromiso</h2>
-			<p>
-				Trabajamos con anfitriones y viajeros en todo el país para ofrecer una experiencia de hospedaje campestre cálida, confiable y accesible desde el primer clic hasta la entrega de llaves.
-			</p>
-		</div>
+		<svg class="pledge__ridges" viewBox="0 0 1200 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+			<path class="ridge ridge--back" d="M0 160V96l70-26 60 16 70-42 70 34 60-18 80 32 70-52 70 34 60-18 80 28 70-50 80 42 60-18 80 30 70-40 70 24 80-14v102z" />
+			<path class="ridge ridge--mid" d="M0 160v-42l90-26 70 18 90-30 80 26 90-18 80 24 90-30 80 22 90-14 90 24 90-30 90 22 80-14 90 10v58z" />
+			<path class="ridge ridge--front" d="M0 160v-22c120-14 210-18 330-8s230 16 360 2 240-14 360-4 110 8 150 4v28z" />
+		</svg>
+		<div class="zocalo" aria-hidden="true"></div>
 	</div>
 </section>
-<app-footer-component></app-footer-component>

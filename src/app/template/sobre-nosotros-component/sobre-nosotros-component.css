@@ -1,120 +1,149 @@
 :host {
   display: block;
-  font-family: var(--font-family, 'Montserrat', sans-serif);
-  background: var(--color-surface, #f5f2eb);
-  min-height: 100vh;
 }
 
-.about-wrapper {
-  min-height: calc(100vh - 200px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: clamp(48px, 8vw, 80px) clamp(20px, 6vw, 64px);
+/* ==== Cabecera ==== */
+.about-head {
+  padding-block: var(--spacing-xl) var(--spacing-lg);
+  background: var(--color-surface-light);
+  border-bottom: 1px solid var(--color-surface-medium);
 }
 
-.about-shell {
-  width: min(960px, 100%);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(32px, 6vw, 48px);
+.about-head h1 {
+  font-size: var(--text-headline);
 }
 
-.about-intro {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.about-intro h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
-  font-weight: 800;
-  line-height: 1.15;
-  color: var(--color-secondary-dark, #081c15);
-}
-
-.about-intro p {
-  margin: 0;
-  font-size: clamp(1.05rem, 2.5vw, 1.2rem);
-  color: var(--color-text-secondary, #5c645d);
+.about-head__lead {
+  max-width: 65ch;
+  margin-top: 16px;
+  font-size: 1.125rem;
   line-height: 1.65;
-  max-width: 760px;
+  color: var(--color-text-secondary);
 }
 
+@media (min-width: 960px) {
+  .about-head h1 {
+    font-size: var(--text-display);
+  }
+}
+
+/* ==== Valores: lista con filetes, no tarjetas ==== */
 .about-values {
-  padding: 0;
+  padding-block: var(--spacing-lg) var(--spacing-xl);
 }
 
-.about-benefits {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.values {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: clamp(16px, 3vw, 24px);
+  column-gap: var(--spacing-xl);
 }
 
-.about-benefits li {
+@media (min-width: 768px) {
+  .values {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.value {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: var(--color-surface-light, #fcfbf9);
-  border-radius: var(--radius-xl, 20px);
-  padding: clamp(20px, 4vw, 28px);
-  box-shadow: 0 8px 24px rgba(27, 67, 50, 0.04);
-  border: 1px solid var(--color-surface-medium, #e8e2d5);
-  transition: transform var(--transition-base, 0.2s ease), border-color var(--transition-base, 0.2s ease);
+  align-items: flex-start;
+  gap: 18px;
+  padding-block: 28px;
+  border-top: 1px solid var(--color-surface-medium);
 }
 
-.about-benefits li:hover {
-  transform: translateY(-2px);
-  border-color: var(--color-primary, #c2410c);
-}
-
-.benefit-icon {
+.value__icon {
+  display: grid;
+  place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-md, 12px);
-  background: var(--color-surface, #f5f2eb);
-  color: var(--color-primary, #c2410c);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-secondary);
+  background: var(--color-secondary-surface);
+  border-radius: 50%;
 }
 
-.benefit-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-secondary-dark, #081c15);
+.value__icon svg {
+  width: 22px;
+  height: 22px;
 }
 
-.benefit-text {
-  font-size: 0.95rem;
-  color: var(--color-text-secondary, #5c645d);
-  line-height: 1.55;
+.value__title {
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 
-.about-team {
+.value__text {
+  max-width: 46ch;
+  margin-top: 6px;
+  color: var(--color-text-secondary);
+}
+
+/* ==== Compromiso: franja verde cordillera ==== */
+.about-pledge {
+  padding-bottom: var(--spacing-xl);
+}
+
+.pledge {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  color: var(--color-text-on-dark-muted);
+  background: var(--color-secondary);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.pledge__body {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  padding: clamp(28px, 5vw, 64px) clamp(28px, 5vw, 64px) 0;
+}
+
+.pledge h2 {
+  font-size: var(--text-headline);
+  color: var(--color-text-inverse);
+}
+
+.pledge p {
+  max-width: 60ch;
+  font-size: 1.0625rem;
+}
+
+.pledge__actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
-  background: var(--color-surface-light, #fcfbf9);
-  border-radius: var(--radius-xl, 20px);
-  padding: clamp(24px, 4vw, 36px);
-  border: 1px solid var(--color-surface-medium, #e8e2d5);
+  margin-top: 8px;
 }
 
-.about-team h2 {
-  font-size: clamp(1.4rem, 3vw, 1.8rem);
-  font-weight: 700;
-  color: var(--color-secondary-dark, #081c15);
-  margin: 0;
+.pledge__ridges {
+  width: 100%;
+  height: clamp(80px, 12vw, 150px);
+  margin-top: var(--spacing-md);
 }
 
-.about-team p {
-  font-size: 1rem;
-  color: var(--color-text-secondary, #5c645d);
-  line-height: 1.6;
-  margin: 0;
+.ridge--back {
+  fill: rgba(45, 106, 79, 0.45);
+}
+
+.ridge--mid {
+  fill: rgba(45, 106, 79, 0.9);
+}
+
+.ridge--front {
+  fill: var(--color-secondary-dark);
+}
+
+@media (max-width: 480px) {
+  .pledge__body {
+    justify-items: stretch;
+  }
+
+  .pledge__actions .btn {
+    flex: 1 1 100%;
+    padding-inline: 16px;
+    white-space: normal;
+    text-align: center;
+  }
 }

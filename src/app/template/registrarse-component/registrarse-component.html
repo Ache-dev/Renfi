@@ -1,170 +1,232 @@
-<section class="registro-page">
-	<div class="registro-shell">
-		<div class="registro-intro">
-			<h1>Crear cuenta</h1>
-			<p>Completa tu registro para reservar fincas campestres exclusivas y gestionar tu experiencia en Renfi.</p>
+<div class="page auth">
+	<aside class="auth-panel" aria-label="Por qué reservar con Renfi">
+		<div class="auth-panel__body">
+			<div class="auth-panel__brand">
+				<svg viewBox="0 0 32 32" aria-hidden="true">
+					<rect width="32" height="32" rx="9" fill="#fcfbf9" />
+					<path d="M6 15.5 16 7l10 8.5" fill="none" stroke="#c2410c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M9.5 14.6V24h13v-9.4" fill="none" stroke="#1b4332" stroke-width="2" stroke-linejoin="round" />
+					<path d="M14 24v-3.8a2 2 0 0 1 4 0V24" fill="none" stroke="#1b4332" stroke-width="2" />
+				</svg>
+				<span>Renfi</span>
+			</div>
+			<h2 class="auth-panel__title">Crea tu cuenta y reserva con total confianza</h2>
+			<p class="auth-panel__text">Con tu cuenta reservas en pocos pasos, pagas de forma segura y guardas el comprobante de cada estadía.</p>
+			<ul class="auth-panel__list">
+				<li>
+					<span class="auth-panel__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+					Fincas verificadas, con fotos reales y servicios activos
+				</li>
+				<li>
+					<span class="auth-panel__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+					Tarifas claras en COP, sin comisiones ocultas
+				</li>
+				<li>
+					<span class="auth-panel__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+					Comprobante oficial de cada reserva
+				</li>
+			</ul>
 		</div>
+		<svg class="auth-panel__ridges" viewBox="0 0 480 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+			<path class="ridge ridge--back" d="M0 160V92l46-28 38 16 48-42 46 34 36-16 48 32 52-58 46 40 40-18 40 22 40-14v100z" />
+			<path class="ridge ridge--mid" d="M0 160v-48l58-26 46 18 56-32 54 30 54-18 54 24 56-30 52 20 50-12v74z" />
+			<path class="ridge ridge--front" d="M0 160v-24c60-14 110-18 170-8s120 12 180-4 90-12 130-2v38z" />
+		</svg>
+		<div class="zocalo" aria-hidden="true"></div>
+	</aside>
 
-		<!-- Switch de acceso en cápsula campestre -->
-		<div class="registro-switch" role="tablist" aria-label="Opciones de acceso">
-			<button type="button" class="registro-switch__btn" (click)="goToLogin()" aria-selected="false">Iniciar sesión</button>
-			<button type="button" class="registro-switch__btn is-active" aria-selected="true">Crear cuenta</button>
-		</div>
+	<section class="card auth-card" aria-labelledby="registro-title">
+		<nav class="auth-switch" aria-label="Acceso a tu cuenta">
+			<a routerLink="/iniciar-sesion">Iniciar sesión</a>
+			<a routerLink="/registrarse" aria-current="page">Crear cuenta</a>
+		</nav>
 
-		<!-- Tarjeta arquitectónica en Blanco Cal Viva con Chambrana -->
-		<div class="registro-card">
-			<form [formGroup]="registroForm" (ngSubmit)="onSubmit()" novalidate>
-				<p class="registro-subtitle">Ingresa tus datos personales para activar tu cuenta en la plataforma.</p>
+		<h1 class="auth-title" id="registro-title">Crear cuenta</h1>
+		<p class="auth-lead">Completa tus datos para reservar fincas y gestionar tus reservas en Renfi.</p>
 
-				<div class="registro-grid">
-					<label class="registro-field">
-						<span class="registro-field__label">Nombre</span>
-						<div class="registro-input-wrapper">
-							<svg class="registro-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-								<circle cx="12" cy="7" r="4"></circle>
-							</svg>
-							<input 
-								type="text" 
-								formControlName="nombre" 
-								autocomplete="given-name" 
-								placeholder="Ej. Valeria" 
-								[class.has-error]="campoInvalido('nombre')"
-							/>
-						</div>
-						<small class="registro-field__error" *ngIf="campoInvalido('nombre')">Ingresa tu nombre (mínimo 2 letras).</small>
-					</label>
-
-					<label class="registro-field">
-						<span class="registro-field__label">Apellido</span>
-						<div class="registro-input-wrapper">
-							<svg class="registro-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-								<circle cx="12" cy="7" r="4"></circle>
-							</svg>
-							<input 
-								type="text" 
-								formControlName="apellido" 
-								autocomplete="family-name" 
-								placeholder="Ej. Gómez" 
-								[class.has-error]="campoInvalido('apellido')"
-							/>
-						</div>
-						<small class="registro-field__error" *ngIf="campoInvalido('apellido')">Ingresa tu apellido (mínimo 2 letras).</small>
-					</label>
-
-					<label class="registro-field">
-						<span class="registro-field__label">Correo electrónico</span>
-						<div class="registro-input-wrapper">
-							<svg class="registro-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-								<polyline points="22,6 12,13 2,6"></polyline>
-							</svg>
-							<input 
-								type="email" 
-								formControlName="correo" 
-								autocomplete="email" 
-								placeholder="valeria@ejemplo.com" 
-								[class.has-error]="campoInvalido('correo')"
-							/>
-						</div>
-						<small class="registro-field__error" *ngIf="campoInvalido('correo')">Ingresa un correo electrónico válido.</small>
-					</label>
-
-					<label class="registro-field">
-						<span class="registro-field__label">Teléfono móvil</span>
-						<div class="registro-input-wrapper">
-							<svg class="registro-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-							</svg>
-							<input 
-								type="tel" 
-								formControlName="telefono" 
-								autocomplete="tel" 
-								placeholder="Ej. 3001234567" 
-								[class.has-error]="campoInvalido('telefono')"
-							/>
-						</div>
-						<small class="registro-field__error" *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (10 dígitos numéricos).</small>
-					</label>
-
-					<label class="registro-field">
-						<span class="registro-field__label">Contraseña</span>
-						<div class="registro-input-wrapper">
-							<svg class="registro-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-								<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-							</svg>
-							<input 
-								type="password" 
-								formControlName="password" 
-								autocomplete="new-password" 
-								placeholder="Mínimo 8 caracteres" 
-								[class.has-error]="campoInvalido('password')"
-							/>
-						</div>
-						<small class="registro-field__error" *ngIf="campoInvalido('password')">Ingresa una contraseña de al menos 8 caracteres.</small>
-					</label>
-
-					<label class="registro-field">
-						<span class="registro-field__label">Confirmar contraseña</span>
-						<div class="registro-input-wrapper">
-							<svg class="registro-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-								<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-							</svg>
-							<input 
-								type="password" 
-								formControlName="confirmPassword" 
-								autocomplete="new-password" 
-								placeholder="Repite tu contraseña" 
-								[class.has-error]="registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched"
-							/>
-						</div>
-						<small class="registro-field__error" *ngIf="registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched">
-							Las contraseñas no coinciden.
-						</small>
-					</label>
+		<form class="auth-form" [formGroup]="registroForm" (ngSubmit)="onSubmit()" novalidate>
+			<div class="auth-grid">
+				<div class="field">
+					<label class="field__label" for="reg-nombre">Nombre</label>
+					<div class="input-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+							<circle cx="12" cy="7" r="4"></circle>
+						</svg>
+						<input
+							id="reg-nombre"
+							type="text"
+							formControlName="nombre"
+							autocomplete="given-name"
+							placeholder="Ej. Valeria"
+							[class.has-error]="campoInvalido('nombre')"
+							[attr.aria-invalid]="campoInvalido('nombre')"
+							[attr.aria-describedby]="campoInvalido('nombre') ? 'reg-nombre-error' : null"
+						/>
+					</div>
+					<small class="field__error" id="reg-nombre-error" *ngIf="campoInvalido('nombre')">Ingresa tu nombre (mínimo 2 letras).</small>
 				</div>
 
-				<label class="registro-checkbox">
+				<div class="field">
+					<label class="field__label" for="reg-apellido">Apellido</label>
+					<div class="input-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+							<circle cx="12" cy="7" r="4"></circle>
+						</svg>
+						<input
+							id="reg-apellido"
+							type="text"
+							formControlName="apellido"
+							autocomplete="family-name"
+							placeholder="Ej. Gómez"
+							[class.has-error]="campoInvalido('apellido')"
+							[attr.aria-invalid]="campoInvalido('apellido')"
+							[attr.aria-describedby]="campoInvalido('apellido') ? 'reg-apellido-error' : null"
+						/>
+					</div>
+					<small class="field__error" id="reg-apellido-error" *ngIf="campoInvalido('apellido')">Ingresa tu apellido (mínimo 2 letras).</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="reg-correo">Correo electrónico</label>
+					<div class="input-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<rect x="2" y="4" width="20" height="16" rx="2"></rect>
+							<path d="m22 7-10 6L2 7"></path>
+						</svg>
+						<input
+							id="reg-correo"
+							type="email"
+							formControlName="correo"
+							autocomplete="email"
+							placeholder="valeria@ejemplo.com"
+							[class.has-error]="campoInvalido('correo')"
+							[attr.aria-invalid]="campoInvalido('correo')"
+							[attr.aria-describedby]="campoInvalido('correo') ? 'reg-correo-error' : null"
+						/>
+					</div>
+					<small class="field__error" id="reg-correo-error" *ngIf="campoInvalido('correo')">Ingresa un correo electrónico válido.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="reg-telefono">Teléfono móvil</label>
+					<div class="input-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<rect x="5" y="2" width="14" height="20" rx="2"></rect>
+							<path d="M12 18h.01"></path>
+						</svg>
+						<input
+							id="reg-telefono"
+							type="tel"
+							formControlName="telefono"
+							autocomplete="tel"
+							placeholder="Ej. 3001234567"
+							[class.has-error]="campoInvalido('telefono')"
+							[attr.aria-invalid]="campoInvalido('telefono')"
+							[attr.aria-describedby]="campoInvalido('telefono') ? 'reg-telefono-error' : null"
+						/>
+					</div>
+					<small class="field__error" id="reg-telefono-error" *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (10 dígitos).</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="reg-password">Contraseña</label>
+					<div class="input-icon pw-field">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<rect x="3" y="11" width="18" height="11" rx="2"></rect>
+							<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+						</svg>
+						<input
+							id="reg-password"
+							[type]="mostrarPassword ? 'text' : 'password'"
+							formControlName="password"
+							autocomplete="new-password"
+							placeholder="Tu contraseña"
+							[class.has-error]="campoInvalido('password')"
+							[attr.aria-invalid]="campoInvalido('password')"
+							aria-describedby="reg-password-help"
+						/>
+						<button
+							type="button"
+							class="pw-toggle"
+							(click)="toggleMostrarPassword()"
+							[attr.aria-label]="mostrarPassword ? 'Ocultar contraseñas' : 'Mostrar contraseñas'"
+							[attr.aria-pressed]="mostrarPassword">
+							<svg *ngIf="!mostrarPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
+								<circle cx="12" cy="12" r="3"></circle>
+							</svg>
+							<svg *ngIf="mostrarPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+								<line x1="1" y1="1" x2="23" y2="23"></line>
+							</svg>
+						</button>
+					</div>
+					<small class="field__hint" id="reg-password-help" *ngIf="!campoInvalido('password')">Mínimo 8 caracteres.</small>
+					<small class="field__error" id="reg-password-help" *ngIf="campoInvalido('password')">Usa al menos 8 caracteres.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="reg-confirm">Confirmar contraseña</label>
+					<div class="input-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<rect x="3" y="11" width="18" height="11" rx="2"></rect>
+							<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+						</svg>
+						<input
+							id="reg-confirm"
+							[type]="mostrarPassword ? 'text' : 'password'"
+							formControlName="confirmPassword"
+							autocomplete="new-password"
+							placeholder="Repite tu contraseña"
+							[class.has-error]="registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched"
+							[attr.aria-invalid]="campoInvalido('confirmPassword') || (registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched)"
+							aria-describedby="reg-confirm-error"
+						/>
+					</div>
+					<small class="field__error" id="reg-confirm-error" *ngIf="campoInvalido('confirmPassword')">Confirma tu contraseña.</small>
+					<small class="field__error" id="reg-confirm-error" *ngIf="registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched">
+						Las contraseñas no coinciden.
+					</small>
+				</div>
+			</div>
+
+			<div class="field">
+				<label class="check">
 					<input type="checkbox" formControlName="terminos" />
-					<span>Acepto los términos, condiciones y la política de tratamiento de datos personales de Renfi.</span>
+					<span>Acepto los términos y condiciones y la política de tratamiento de datos personales de Renfi.</span>
 				</label>
-				<small class="registro-field__error" *ngIf="campoInvalido('terminos')">Debes aceptar los términos para continuar.</small>
+				<small class="field__error" *ngIf="campoInvalido('terminos')">Debes aceptar los términos para continuar.</small>
+			</div>
 
-				<div class="registro-feedback" *ngIf="mensajeError || mensajeExito">
-					<div class="registro-feedback--error" *ngIf="mensajeError" aria-live="assertive">
-						<svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<circle cx="12" cy="12" r="10"></circle>
-							<line x1="12" y1="8" x2="12" y2="12"></line>
-							<line x1="12" y1="16" x2="12.01" y2="16"></line>
-						</svg>
-						<span>{{ mensajeError }}</span>
-					</div>
-					<div class="registro-feedback--success" *ngIf="mensajeExito" aria-live="polite">
-						<svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-							<polyline points="22 4 12 14.01 9 11.01"></polyline>
-						</svg>
-						<span>{{ mensajeExito }}</span>
-					</div>
-				</div>
-
-				<button type="submit" class="registro-submit" [disabled]="registroForm.invalid || enviando">
-					<span *ngIf="!enviando">Crear mi cuenta</span>
-					<span *ngIf="enviando" class="registro-spinner" aria-live="polite">
-						<svg class="spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-						</svg>
-						Registrando usuario...
-					</span>
-				</button>
-
-				<p class="registro-login-link">
-					¿Ya tienes cuenta? <a href="#" (click)="goToLogin(); $event.preventDefault()">Inicia sesión aquí</a>
+			<div class="auth-feedback" aria-live="polite" aria-atomic="true">
+				<p class="alert alert--error" *ngIf="mensajeError">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<circle cx="12" cy="12" r="10"></circle>
+						<line x1="12" y1="8" x2="12" y2="12"></line>
+						<line x1="12" y1="16" x2="12.01" y2="16"></line>
+					</svg>
+					<span>{{ mensajeError }}</span>
 				</p>
-			</form>
-		</div>
-	</div>
-</section>
+				<p class="alert alert--success" *ngIf="mensajeExito">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+						<polyline points="22 4 12 14.01 9 11.01"></polyline>
+					</svg>
+					<span>{{ mensajeExito }}</span>
+				</p>
+			</div>
+
+			<button type="submit" class="btn btn--primary btn--lg btn--block auth-submit" [disabled]="registroForm.invalid || enviando" [attr.aria-busy]="enviando">
+				<ng-container *ngIf="!enviando">Crear mi cuenta</ng-container>
+				<ng-container *ngIf="enviando">
+					<span class="spinner" aria-hidden="true"></span>
+					Registrando usuario...
+				</ng-container>
+			</button>
+		</form>
+
+		<p class="auth-alt">¿Ya tienes cuenta? <a routerLink="/iniciar-sesion" class="text-link">Inicia sesión</a></p>
+	</section>
+</div>

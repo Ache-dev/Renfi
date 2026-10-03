@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, finalize, takeUntil } from 'rxjs';
@@ -66,15 +66,12 @@ export class IniciarSesionComponent implements OnDestroy {
     return !!control && control.invalid && (control.dirty || control.touched);
   }
 
-  goToRegister(): void {
-    this.router.navigate(['/registrarse']);
-  }
-
   onForgotPassword(event: Event): void {
     event.preventDefault();
     this.mostrarModalRecuperacion = true;
   }
 
+  @HostListener('document:keydown.escape')
   cerrarModal(): void {
     this.mostrarModalRecuperacion = false;
   }

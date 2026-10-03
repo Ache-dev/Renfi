@@ -16,6 +16,7 @@ export class RegistrarseComponent implements OnDestroy {
   enviando = false;
   mensajeError = '';
   mensajeExito = '';
+  mostrarPassword = false;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -51,8 +52,8 @@ export class RegistrarseComponent implements OnDestroy {
     return !!control && control.invalid && (control.dirty || control.touched);
   }
 
-  goToLogin(): void {
-    this.router.navigate(['/iniciar-sesion']);
+  toggleMostrarPassword(): void {
+    this.mostrarPassword = !this.mostrarPassword;
   }
 
   async onSubmit(): Promise<void> {
