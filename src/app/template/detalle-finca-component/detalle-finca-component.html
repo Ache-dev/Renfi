@@ -1,315 +1,315 @@
 <ng-container *ngIf="!cargando && finca as detalle; else estado">
-	<section class="detalle-page">
-		<div class="detalle-container">
-			<button type="button" class="volver-btn" (click)="volverAlInicio()">
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-					<line x1="19" y1="12" x2="5" y2="12"></line>
-					<polyline points="12 19 5 12 12 5"></polyline>
-				</svg>
-				<span>Volver</span>
-			</button>
+  <div class="page detalle">
+    <button type="button" class="back-link" (click)="volverAlInicio()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Volver a las fincas
+    </button>
 
-			<div class="detalle-header">
-				<div class="detalle-imagen" [class.detalle-imagen--multiple]="hayCarrusel()">
-					<div class="detalle-imagen__principal">
-						<button
-							type="button"
-							class="detalle-imagen__control detalle-imagen__control--prev"
-							*ngIf="hayCarrusel()"
-							(click)="cambiarImagen(-1)"
-							aria-label="Imagen anterior"
-						>
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-								<polyline points="15 18 9 12 15 6"></polyline>
-							</svg>
-						</button>
-						<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f5f2eb'/%3E%3C/svg%3E" [src]="imagenActualUrl" [alt]="detalle.nombre" (error)="manejarErrorImagen()" loading="lazy" />
-						<button
-							type="button"
-							class="detalle-imagen__control detalle-imagen__control--next"
-							*ngIf="hayCarrusel()"
-							(click)="cambiarImagen(1)"
-							aria-label="Imagen siguiente"
-						>
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-								<polyline points="9 18 15 12 9 6"></polyline>
-							</svg>
-						</button>
-						<div class="detalle-imagen__contador" *ngIf="hayCarrusel()">
-							{{ indiceImagenActiva + 1 }} / {{ galeriaImagenes.length }}
-						</div>
-						<div class="estado-badge" [class]="detalle['Estado']?.toLowerCase().replace(' ', '-')">
-							{{ detalle['Estado'] || 'Estado desconocido' }}
-						</div>
-					</div>
-					<div class="detalle-miniaturas" *ngIf="hayCarrusel()">
-						<button
-							type="button"
-							class="detalle-miniaturas__item"
-							*ngFor="let imagen of galeriaImagenes; let i = index"
-							[class.activa]="i === indiceImagenActiva"
-							(click)="irAImagen(i)"
-							[attr.aria-label]="'Ver imagen ' + (i + 1)"
-						>
-							<img
-								src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f5f2eb'/%3E%3C/svg%3E"
-								[src]="imagen"
-								[alt]="detalle.nombre + ' miniatura ' + (i + 1)"
-								(error)="manejarErrorMiniatura(i)"
-								loading="lazy"
-							/>
-						</button>
-					</div>
-				</div>
-				<div class="detalle-resumen">
-					<div class="titulo-calificacion">
-						<h1>{{ detalle.nombre }}</h1>
-						<div class="calificacion" *ngIf="detalle['Calificacion']">
-							<span class="estrellas">
-								<span *ngFor="let estrella of [1,2,3,4,5]; let i = index" [class.activa]="i < detalle['Calificacion']">
-									<svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-								</span>
-							</span>
-							<span class="puntuacion">{{ detalle['Calificacion'] }}/5</span>
-						</div>
-					</div>
+    <div class="cabecera">
+      <h1 class="cabecera__titulo">{{ detalle.nombre }}</h1>
+      <div class="cabecera__meta">
+        <span class="valoracion" *ngIf="detalle['Calificacion']">
+          <span class="estrellas" aria-hidden="true">
+            <svg *ngFor="let estrella of [1, 2, 3, 4, 5]; let i = index" class="estrella" [class.estrella--on]="i < detalle['Calificacion']" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </span>
+          <span class="tabular"><span class="visually-hidden">Calificación: </span>{{ detalle['Calificacion'] }}/5</span>
+        </span>
+        <span class="cabecera__ubicacion" *ngIf="detalle['Direccion'] || detalle['NombreMunicipio']">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>{{ detalle['Direccion'] }}<ng-container *ngIf="detalle['Direccion'] && detalle['NombreMunicipio']"> · </ng-container>{{ detalle['NombreMunicipio'] }}</span>
+        </span>
+        <span class="badge" [ngClass]="detalle['Estado'] === 'Disponible' ? 'badge--success badge--dot' : 'badge--warning'">
+          {{ detalle['Estado'] || 'Estado desconocido' }}
+        </span>
+      </div>
+    </div>
 
-					<p class="detalle-ubicacion" *ngIf="detalle['Direccion'] || detalle['NombreMunicipio']">
-						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 4px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-						{{ detalle['Direccion'] || 'Dirección no disponible' }}
-						<span *ngIf="detalle['NombreMunicipio']"> - {{ detalle['NombreMunicipio'] }}</span>
-					</p>
+    <div class="galeria">
+      <div class="galeria__marco">
+        <img [src]="imagenActualUrl" [alt]="detalle.nombre" (error)="manejarErrorImagen()" decoding="async" />
+        <ng-container *ngIf="hayCarrusel()">
+          <button type="button" class="icon-btn galeria__nav galeria__nav--prev" (click)="cambiarImagen(-1)" aria-label="Imagen anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="icon-btn galeria__nav galeria__nav--next" (click)="cambiarImagen(1)" aria-label="Imagen siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <span class="galeria__contador tabular">{{ indiceImagenActiva + 1 }} / {{ galeriaImagenes.length }}</span>
+        </ng-container>
+      </div>
+      <div class="galeria__miniaturas" *ngIf="hayCarrusel()">
+        <button
+          type="button"
+          class="galeria__mini"
+          *ngFor="let imagen of galeriaImagenes; let i = index"
+          [class.galeria__mini--activa]="i === indiceImagenActiva"
+          [attr.aria-current]="i === indiceImagenActiva ? 'true' : null"
+          [attr.aria-label]="'Ver imagen ' + (i + 1)"
+          (click)="irAImagen(i)"
+        >
+          <img [src]="imagen" alt="" (error)="manejarErrorMiniatura(i)" loading="lazy" decoding="async" />
+        </button>
+      </div>
+    </div>
 
-					<p class="detalle-descripcion" *ngIf="detalle['InformacionAdicional']">
-						{{ detalle['InformacionAdicional'] }}
-					</p>
+    <div class="cuerpo">
+      <section class="cuerpo__principal bloque" aria-labelledby="titulo-sobre">
+        <h2 id="titulo-sobre">Sobre esta finca</h2>
+        <p class="bloque__texto" *ngIf="detalle['InformacionAdicional']">{{ detalle['InformacionAdicional'] }}</p>
+        <ul class="datos">
+          <li class="dato" *ngIf="detalle.precioNoche != null">
+            <span class="dato__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            </span>
+            <span class="dato__label">Precio/noche</span>
+            <span class="dato__valor">{{ detalle.precioNoche | currency:'COP':'symbol':'1.0-0' }}</span>
+          </li>
+          <li class="dato" *ngIf="detalle['Capacidad'] !== null && detalle['Capacidad'] !== undefined">
+            <span class="dato__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <span class="dato__label">Capacidad</span>
+            <span class="dato__valor">{{ detalle['Capacidad'] }} huéspedes</span>
+          </li>
+          <li class="dato" *ngIf="(detalle['NumeroHabitaciones'] !== null && detalle['NumeroHabitaciones'] !== undefined) || detalle.habitaciones !== null">
+            <span class="dato__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/></svg>
+            </span>
+            <span class="dato__label">Habitaciones</span>
+            <span class="dato__valor">{{ detalle['NumeroHabitaciones'] || detalle.habitaciones }}</span>
+          </li>
+          <li class="dato" *ngIf="(detalle['NumeroBanos'] !== null && detalle['NumeroBanos'] !== undefined) || detalle.banos !== null">
+            <span class="dato__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M10 5 8 7"/><path d="M2 12h20"/><path d="M7 19v2"/><path d="M17 19v2"/></svg>
+            </span>
+            <span class="dato__label">Baños</span>
+            <span class="dato__valor">{{ detalle['NumeroBanos'] || detalle.banos }}</span>
+          </li>
+          <li class="dato" *ngIf="detalle['MetrosCuadrados']">
+            <span class="dato__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            </span>
+            <span class="dato__label">Área total</span>
+            <span class="dato__valor">{{ detalle['MetrosCuadrados'] }} m²</span>
+          </li>
+        </ul>
+      </section>
 
-					<div class="detalle-datos-principales">
-						<div class="dato-principal" *ngIf="detalle['Precio'] !== null && detalle['Precio'] !== undefined">
-							<span class="icono" aria-hidden="true">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-							</span>
-							<span class="dato-titulo">Precio/noche</span>
-							<span class="dato-valor">{{ detalle['Precio'] | currency:'COP':'symbol':'1.0-0' }}</span>
-						</div>
-						<div class="dato-principal" *ngIf="detalle['Capacidad'] !== null && detalle['Capacidad'] !== undefined">
-							<span class="icono" aria-hidden="true">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-							</span>
-							<span class="dato-titulo">Capacidad</span>
-							<span class="dato-valor">{{ detalle['Capacidad'] }} huéspedes</span>
-						</div>
-						<div class="dato-principal" *ngIf="(detalle['NumeroHabitaciones'] !== null && detalle['NumeroHabitaciones'] !== undefined) || detalle.habitaciones !== null">
-							<span class="icono" aria-hidden="true">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
-							</span>
-							<span class="dato-titulo">Habitaciones</span>
-							<span class="dato-valor">{{ detalle['NumeroHabitaciones'] || detalle.habitaciones }}</span>
-						</div>
-						<div class="dato-principal" *ngIf="(detalle['NumeroBanos'] !== null && detalle['NumeroBanos'] !== undefined) || detalle.banos !== null">
-							<span class="icono" aria-hidden="true">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 2.5 2.5"/><path d="M13.5 4A5.5 5.5 0 0 0 8 9.5V11h7V9.5A5.5 5.5 0 0 0 9.5 4Z"/><path d="M8 11v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>
-							</span>
-							<span class="dato-titulo">Baños</span>
-							<span class="dato-valor">{{ detalle['NumeroBanos'] || detalle.banos }}</span>
-						</div>
-						<div class="dato-principal" *ngIf="detalle['MetrosCuadrados']">
-							<span class="icono" aria-hidden="true">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3c-.4.4-1 .4-1.4 0l-4.6-4.6c-.4-.4-.4-1 0-1.4L15.3 2.7c.4-.4 1-.4 1.4 0l4.6 4.6c.4.4.4 1 0 1.4Z"/></svg>
-							</span>
-							<span class="dato-titulo">Área total</span>
-							<span class="dato-valor">{{ detalle['MetrosCuadrados'] }} m²</span>
-						</div>
-					</div>
-				</div>
-			</div>
+      <aside class="cuerpo__reserva reserva card" aria-labelledby="titulo-reserva">
+        <h2 id="titulo-reserva" class="visually-hidden">Reserva tu estadía</h2>
+        <div class="reserva__cabecera">
+          <p class="reserva__precio" *ngIf="detalle.precioNoche != null">
+            <strong class="tabular">{{ detalle.precioNoche | currency:'COP':'symbol':'1.0-0' }}</strong>
+            <span>/ noche</span>
+          </p>
+          <span class="valoracion" *ngIf="detalle['Calificacion']">
+            <svg class="estrella estrella--on" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span class="tabular"><span class="visually-hidden">Calificación: </span>{{ detalle['Calificacion'] }}/5</span>
+          </span>
+        </div>
 
-			<section class="detalle-informacion">
-				<article class="detalle-card" *ngIf="detalle['InformacionAdicional']">
-					<h2>Características</h2>
-					<p>{{ detalle['InformacionAdicional'] }}</p>
-				</article>
+        <form *ngIf="puedeReservar(); else solicitarLogin" class="reserva__form" [formGroup]="reservaForm" (ngSubmit)="realizarReserva()" novalidate>
+          <p class="reserva__intro">Selecciona tu fecha de llegada y te llevaremos a la pasarela de pago para completar la reserva.</p>
 
-			<article class="detalle-card" *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario'] || detalle['TelefonoPropietario'] || detalle['CorreoPropietario']">
-				<h2>Información del responsable de la finca</h2>
-				<ul>
-					<li *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario']">
-						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-						{{ detalle['NombrePropietario'] || '' }} {{ detalle['ApellidoPropietario'] || '' }}
-					</li>
-					<li *ngIf="detalle['TelefonoPropietario']">
-						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-						{{ detalle['TelefonoPropietario'] }}
-					</li>
-					<li *ngIf="detalle['CorreoPropietario']">
-						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-						{{ detalle['CorreoPropietario'] }}
-					</li>
-				</ul>
-			</article>				<article class="detalle-card">
-					<h2>Información General</h2>
-					<ul>
-						<li *ngIf="detalle['IdFinca']">
-							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-							ID de la finca: {{ detalle['IdFinca'] }}
-						</li>
-						<li *ngIf="detalle['NombreMunicipio']">
-							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-							Municipio: {{ detalle['NombreMunicipio'] }}
-						</li>
-						<li *ngIf="detalle['Estado']">
-							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-							Estado: {{ detalle['Estado'] }}
-						</li>
-						<li *ngIf="detalle['TipoFinca']">
-							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-							Tipo de finca: {{ detalle['TipoFinca'] }}
-						</li>
-						<li *ngIf="detalle['FechaRegistro']">
-							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-							Fecha de registro: {{ detalle['FechaRegistro'] | date:'longDate' }}
-						</li>
-						<li *ngIf="detalle.reservas !== null && detalle.reservas !== undefined; else sinReservas">
-							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-							Reservas realizadas: {{ detalle.reservas }}
-						</li>
-						<ng-template #sinReservas>
-							<li>
-								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -2px; margin-right: 6px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-								Todavía no hay registros de reservas para esta finca.
-							</li>
-						</ng-template>
-					</ul>
-				</article>
-			</section>
+          <div class="cal" role="group" aria-label="Selecciona la fecha de llegada">
+            <div class="cal__cabecera">
+              <button type="button" class="icon-btn cal__nav" (click)="cambiarMes(-1)" aria-label="Mes anterior">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <span class="cal__mes" aria-live="polite">{{ nombreMesActual }}</span>
+              <button type="button" class="icon-btn cal__nav" (click)="cambiarMes(1)" aria-label="Mes siguiente">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
 
-			<section class="detalle-reserva" aria-label="Reserva tu estadía">
-				<h2>Reserva tu estadía</h2>
-				<p class="detalle-reserva__intro">Selecciona tu fecha de llegada y te llevaremos a la pasarela de pago para completar la reserva.</p>
+            <div class="cal__grid">
+              <span class="cal__dow" *ngFor="let diaNombre of obtenerDiasSemana()">{{ diaNombre }}</span>
+              <ng-container *ngFor="let semana of calendarioSemanas">
+                <button
+                  type="button"
+                  class="cal__dia"
+                  *ngFor="let dia of semana"
+                  [class.cal__dia--ocupado]="dia.estado === 'ocupado'"
+                  [class.cal__dia--hoy]="dia.esHoy"
+                  [class.cal__dia--seleccionado]="dia.esSeleccionado"
+                  [attr.aria-pressed]="dia.esSeleccionado"
+                  [disabled]="dia.estado !== 'disponible' || !dia.esDelMes || !puedeReservar()"
+                  (click)="seleccionarDia(dia)"
+                >{{ dia.numero }}</button>
+              </ng-container>
+            </div>
 
-				<ng-container *ngIf="puedeReservar(); else solicitarLogin">
-					<form [formGroup]="reservaForm" (ngSubmit)="realizarReserva()" novalidate>
-						<div class="detalle-calendario" role="group" aria-label="Selecciona la fecha de llegada">
-							<div class="calendario-header">
-								<button type="button" class="calendario-nav" (click)="cambiarMes(-1)" aria-label="Mes anterior">←</button>
-								<span class="calendario-mes">{{ nombreMesActual }}</span>
-								<button type="button" class="calendario-nav" (click)="cambiarMes(1)" aria-label="Mes siguiente">→</button>
-							</div>
+            <ul class="cal__leyenda" aria-hidden="true">
+              <li><span class="cal__muestra"></span>Disponible</li>
+              <li><span class="cal__muestra cal__muestra--ocupado"></span>Reservado</li>
+              <li><span class="cal__muestra cal__muestra--bloqueado"></span>No disponible</li>
+            </ul>
 
-							<div class="calendario-grid" aria-live="polite">
-								<span class="calendario-dia calendario-dia--encabezado" *ngFor="let diaNombre of obtenerDiasSemana()">{{ diaNombre }}</span>
-								<ng-container *ngFor="let semana of calendarioSemanas">
-									<button
-										type="button"
-										class="calendario-dia"
-										[class.calendario-dia--fuera]="!dia.esDelMes"
-										[class.calendario-dia--ocupado]="dia.estado === 'ocupado'"
-										[class.calendario-dia--bloqueado]="dia.estado === 'bloqueado'"
-										[class.calendario-dia--seleccionado]="dia.esSeleccionado"
-										[class.calendario-dia--hoy]="dia.esHoy"
-										[attr.aria-pressed]="dia.esSeleccionado"
-										[attr.aria-disabled]="dia.estado !== 'disponible' || !dia.esDelMes || !puedeReservar()"
-										(click)="seleccionarDia(dia)"
-										*ngFor="let dia of semana"
-									>
-										{{ dia.numero }}
-									</button>
-								</ng-container>
-							</div>
+            <input type="hidden" formControlName="fechaInicio" />
+            <p class="field__error" *ngIf="campoReservaInvalido('fechaInicio')">Selecciona un día disponible para continuar.</p>
+          </div>
 
-							<div class="calendario-leyenda">
-								<span><span class="leyenda-bullet disponible"></span> Disponible</span>
-								<span><span class="leyenda-bullet ocupado"></span> Reservado</span>
-								<span><span class="leyenda-bullet bloqueado"></span> No disponible</span>
-							</div>
+          <div class="reserva__campos">
+            <div class="field">
+              <label class="field__label" for="reserva-noches">Noches</label>
+              <input id="reserva-noches" type="number" min="1" inputmode="numeric" formControlName="noches" />
+              <p class="field__error" *ngIf="campoReservaInvalido('noches')">Indica al menos una noche de reserva.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="reserva-huespedes">Huéspedes</label>
+              <input id="reserva-huespedes" type="number" min="1" inputmode="numeric" formControlName="huespedes" />
+              <p class="field__error" *ngIf="campoReservaInvalido('huespedes')">
+                <ng-container *ngIf="detalle['Capacidad']; else generico">Capacidad máxima: {{ detalle['Capacidad'] }} huéspedes</ng-container>
+                <ng-template #generico>Ingresa un número válido de huéspedes</ng-template>
+              </p>
+            </div>
+          </div>
 
-							<input type="hidden" formControlName="fechaInicio" />
-							<small class="detalle-reserva__campo-error" *ngIf="campoReservaInvalido('fechaInicio')">Selecciona un día disponible para continuar.</small>
-						</div>
+          <div class="estancia" *ngIf="fechaEntradaSeleccionada">
+            <div class="estancia__fecha">
+              <span class="estancia__label">Entrada</span>
+              <span class="estancia__valor tabular">{{ fechaEntradaSeleccionada | date:'mediumDate' }}</span>
+            </div>
+            <span class="estancia__noches tabular">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              {{ nochesSeleccionadas }} {{ nochesSeleccionadas === 1 ? 'noche' : 'noches' }}
+            </span>
+            <div class="estancia__fecha estancia__fecha--fin">
+              <span class="estancia__label">Salida</span>
+              <span class="estancia__valor tabular">{{ fechaSalidaCalculada ? (fechaSalidaCalculada | date:'mediumDate') : '—' }}</span>
+            </div>
+          </div>
 
-						<div class="detalle-reserva__grid">
-							<label class="detalle-reserva__field">
-								<span>Noches</span>
-								<input type="number" min="1" formControlName="noches" />
-								<small *ngIf="campoReservaInvalido('noches')">Indica al menos una noche de reserva.</small>
-							</label>
-							<label class="detalle-reserva__field">
-								<span>Huéspedes</span>
-								<input type="number" min="1" formControlName="huespedes" />
-								<small *ngIf="campoReservaInvalido('huespedes')">
-									<ng-container *ngIf="detalle['Capacidad']; else generico">
-										Capacidad máxima: {{ detalle['Capacidad'] }} huéspedes
-									</ng-container>
-									<ng-template #generico>Ingresa un número válido de huéspedes</ng-template>
-								</small>
-							</label>
-						</div>
+          <p class="alert alert--warning" *ngIf="fechaEntradaSeleccionada && fechaSalidaCalculada && fechaSalidaCalculada <= fechaEntradaSeleccionada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            La fecha de salida debe ser posterior a la de entrada. Verifica el número de noches.
+          </p>
 
-						<!-- Resumen de fechas -->
-						<div class="detalle-reserva__resumen-fechas" *ngIf="fechaEntradaSeleccionada">
-							<div class="fecha-item">
-								<span class="fecha-label">Entrada</span>
-								<span class="fecha-valor">{{ fechaEntradaSeleccionada | date: 'mediumDate' }}</span>
-							</div>
-							<div class="fecha-separador">
-								<span class="icono-noches">
-									<svg class="inline-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-									{{ nochesSeleccionadas }} {{ nochesSeleccionadas === 1 ? 'noche' : 'noches' }}
-								</span>
-							</div>
-							<div class="fecha-item">
-								<span class="fecha-label">Salida</span>
-								<span class="fecha-valor" *ngIf="fechaSalidaCalculada">{{ fechaSalidaCalculada | date: 'mediumDate' }}</span>
-								<span class="fecha-valor fecha-pendiente" *ngIf="!fechaSalidaCalculada">-</span>
-							</div>
-						</div>
+          <div class="reserva__resumen">
+            <div class="reserva__total">
+              <span>Total estimado</span>
+              <strong class="reserva__monto tabular">{{ totalEstimadoReserva | currency:'COP':'symbol':'1.0-0' }}</strong>
+            </div>
+            <p class="reserva__desglose tabular" *ngIf="detalle.precioNoche != null">
+              {{ detalle.precioNoche | currency:'COP':'symbol':'1.0-0' }} × {{ nochesSeleccionadas }} {{ nochesSeleccionadas === 1 ? 'noche' : 'noches' }}
+            </p>
+            <p class="reserva__nota">El monto puede variar si el propietario modifica el precio antes de confirmar.</p>
+          </div>
 
-						<div class="detalle-reserva__alerta" *ngIf="fechaEntradaSeleccionada && fechaSalidaCalculada && fechaSalidaCalculada <= fechaEntradaSeleccionada">
-							<svg class="inline-svg text-warning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-							La fecha de salida debe ser posterior a la de entrada. Verifica el número de noches.
-						</div>
+          <div>
+            <div class="reserva__feedback" aria-live="polite">
+              <p class="alert alert--success" *ngIf="mensajeReserva">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                {{ mensajeReserva }}
+              </p>
+              <p class="alert alert--error" *ngIf="errorReserva" role="alert">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                {{ errorReserva }}
+              </p>
+            </div>
+            <button type="submit" class="btn btn--primary btn--lg btn--block reserva__enviar" [disabled]="reservaForm.invalid || reservando" [attr.aria-busy]="reservando">
+              <ng-container *ngIf="!reservando; else preparando">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Ir al pago seguro
+              </ng-container>
+              <ng-template #preparando>
+                <span class="spinner" aria-hidden="true"></span>
+                Preparando pasarela…
+              </ng-template>
+            </button>
+          </div>
+        </form>
 
-						<div class="detalle-reserva__total">
-							<span>Total estimado</span>
-							<strong>{{ totalEstimadoReserva | currency:'COP':'symbol':'1.0-0' }}</strong>
-						</div>
-						<p class="detalle-reserva__nota">El monto puede variar si el propietario modifica el precio antes de confirmar.</p>
+        <ng-template #solicitarLogin>
+          <div class="reserva__invitado">
+            <p>Inicia sesión para reservar esta finca y administrar tus estancias.</p>
+            <button type="button" class="btn btn--primary btn--block" (click)="irALogin()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+              Iniciar sesión para reservar
+            </button>
+            <a class="text-link reserva__registro" routerLink="/registrarse">¿No tienes cuenta? Crea una</a>
+          </div>
+        </ng-template>
 
-						<div class="detalle-reserva__feedback" *ngIf="mensajeReserva || errorReserva">
-							<p class="detalle-reserva__success" *ngIf="mensajeReserva" aria-live="polite">{{ mensajeReserva }}</p>
-							<p class="detalle-reserva__error" *ngIf="errorReserva" aria-live="assertive">{{ errorReserva }}</p>
-						</div>
+        <p class="reserva__confianza">
+          <span class="sello" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          Pago protegido · Comprobante oficial de reserva
+        </p>
+      </aside>
 
-						<button type="submit" class="detalle-reserva__submit" [disabled]="reservaForm.invalid || reservando">
-							<span *ngIf="!reservando">Ir al pago seguro</span>
-							<span *ngIf="reservando" class="detalle-reserva__spinner">Preparando pasarela...</span>
-						</button>
-					</form>
-				</ng-container>
+      <div class="cuerpo__extra">
+        <section class="bloque" *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario'] || detalle['Dueno'] || detalle['TelefonoPropietario'] || detalle['CorreoPropietario']" aria-labelledby="titulo-responsable">
+          <h2 id="titulo-responsable">Responsable de la finca</h2>
+          <div class="contacto">
+            <span class="contacto__avatar" aria-hidden="true">
+              <ng-container *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario'] || detalle['Dueno']; else iconoPersona">{{ (detalle['NombrePropietario'] || detalle['ApellidoPropietario'] || detalle['Dueno']).charAt(0) }}</ng-container>
+              <ng-template #iconoPersona>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </ng-template>
+            </span>
+            <div class="contacto__info">
+              <p class="contacto__nombre" *ngIf="detalle['NombrePropietario'] || detalle['ApellidoPropietario']; else nombreDueno">
+                {{ detalle['NombrePropietario'] || '' }} {{ detalle['ApellidoPropietario'] || '' }}
+              </p>
+              <ng-template #nombreDueno><p class="contacto__nombre" *ngIf="detalle['Dueno']">{{ detalle['Dueno'] }}</p></ng-template>
+              <a class="contacto__enlace" *ngIf="detalle['TelefonoPropietario']" [href]="'tel:' + detalle['TelefonoPropietario']">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <span class="tabular">{{ detalle['TelefonoPropietario'] }}</span>
+              </a>
+              <a class="contacto__enlace" *ngIf="detalle['CorreoPropietario']" [href]="'mailto:' + detalle['CorreoPropietario']">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <span>{{ detalle['CorreoPropietario'] }}</span>
+              </a>
+            </div>
+          </div>
+        </section>
 
-				<ng-template #solicitarLogin>
-					<div class="detalle-reserva__login">
-						<p>Inicia sesión para reservar esta finca y administrar tus estancias.</p>
-						<button type="button" class="detalle-reserva__cta" (click)="irALogin()">Iniciar sesión</button>
-					</div>
-				</ng-template>
-			</section>
-
-			<div class="detalle-acciones">
-				<button type="button" class="accion-primary" (click)="volverAlInicio()">Regresar al inicio</button>
-			</div>
-		</div>
-	</section>
+        <section class="bloque" aria-labelledby="titulo-general">
+          <h2 id="titulo-general">Información general</h2>
+          <dl class="ficha">
+            <div *ngIf="detalle['NombreMunicipio']">
+              <dt>Municipio</dt>
+              <dd>{{ detalle['NombreMunicipio'] }}</dd>
+            </div>
+            <div *ngIf="detalle['Estado']">
+              <dt>Estado</dt>
+              <dd>{{ detalle['Estado'] }}</dd>
+            </div>
+            <div *ngIf="detalle['TipoFinca']">
+              <dt>Tipo de finca</dt>
+              <dd>{{ detalle['TipoFinca'] }}</dd>
+            </div>
+            <div *ngIf="detalle['FechaRegistro']">
+              <dt>Fecha de registro</dt>
+              <dd class="tabular">{{ detalle['FechaRegistro'] | date:'longDate' }}</dd>
+            </div>
+            <div>
+              <dt>Reservas realizadas</dt>
+              <dd class="tabular">{{ detalle.reservas ?? 'Todavía no hay registros de reservas para esta finca.' }}</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+    </div>
+  </div>
 </ng-container>
 
 <ng-template #estado>
-	<section class="detalle-page">
-		<div class="detalle-estado">
-			<div class="detalle-spinner" *ngIf="cargando"></div>
-			<p *ngIf="cargando">Cargando información de la finca...</p>
-			<p *ngIf="!cargando && error">{{ error }}</p>
-			<p *ngIf="!cargando && !error">No se encontró la finca seleccionada.</p>
-			<button type="button" class="accion-secondary" (click)="volverAlInicio()">Regresar al inicio</button>
-		</div>
-	</section>
+  <div class="page detalle">
+    <div class="state-block detalle__estado" role="status" *ngIf="cargando; else sinFinca">
+      <span class="spinner spinner--lg" aria-hidden="true"></span>
+      <p>Cargando información de la finca…</p>
+    </div>
+    <ng-template #sinFinca>
+      <div class="state-block detalle__estado">
+        <span class="state-block__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        </span>
+        <h2>{{ error || 'No se encontró la finca seleccionada.' }}</h2>
+        <button type="button" class="btn btn--secondary" (click)="volverAlInicio()">Regresar al inicio</button>
+      </div>
+    </ng-template>
+  </div>
 </ng-template>

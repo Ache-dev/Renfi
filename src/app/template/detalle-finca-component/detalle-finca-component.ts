@@ -3,12 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FincaDetalle, FincaSeleccionadaService, mapearFinca } from '../services/finca-seleccionada.service';
+import { FincaDetalle, FincaSeleccionadaService, PLACEHOLDER_FINCA, mapearFinca } from '../services/finca-seleccionada.service';
 import { AuthStateService } from '../services/auth-state.service';
 import { ReservaCheckoutDraft, ReservaCheckoutService } from '../services/reserva-checkout.service';
 import { ReservaService } from '../services/reserva.service';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
@@ -39,7 +39,7 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
   errorReserva = '';
   calendarioSemanas: DiaCalendario[][] = [];
   nombreMesActual = '';
-  private readonly placeholderUrl = 'https://via.placeholder.com/640x360?text=Sin+Imagen';
+  private readonly placeholderUrl = PLACEHOLDER_FINCA;
   galeriaImagenes: string[] = [this.placeholderUrl];
   indiceImagenActiva = 0;
   imagenActualUrl: string = this.placeholderUrl;
@@ -470,10 +470,6 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
     control?.markAsDirty();
     control?.markAsTouched();
     this.generarCalendario();
-  }
-
-  esDiaSeleccionado(dia: DiaCalendario): boolean {
-    return this.fechaSeleccionada === dia.iso;
   }
 
   hayCarrusel(): boolean {
