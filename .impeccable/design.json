@@ -1,34 +1,629 @@
 {
-  "name": "Renfi",
-  "direction": "La Finca Abierta / Casa de Campo",
-  "tokens": {
-    "colors": {
-      "primary": "#c2410c",
-      "primary-light": "#ea580c",
-      "primary-dark": "#9a3412",
-      "secondary": "#1b4332",
-      "secondary-light": "#2d6a4f",
-      "secondary-dark": "#081c15",
-      "accent": "#d97706",
-      "surface-base": "#f5f2eb",
-      "surface-light": "#fcfbf9",
-      "surface-medium": "#e8e2d5",
-      "surface-dark": "#d6cfc4",
-      "text-primary": "#1f2421",
-      "text-secondary": "#5c645d",
-      "text-tertiary": "#8f9892",
-      "text-inverse": "#ffffff"
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T01:34:33+00:00",
+  "title": "Design System: Renfi",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Terracota arcilla",
+        "canonical": "#c2410c",
+        "tonalRamp": [
+          "oklch(15% 0.174 38.4)",
+          "oklch(26% 0.174 38.4)",
+          "oklch(37% 0.174 38.4)",
+          "oklch(48% 0.174 38.4)",
+          "oklch(59% 0.174 38.4)",
+          "oklch(70% 0.174 38.4)",
+          "oklch(82% 0.174 38.4)",
+          "oklch(95% 0.174 38.4)"
+        ]
+      },
+      "primary-light": {
+        "role": "primary",
+        "displayName": "Terracota viva",
+        "canonical": "#ea580c",
+        "tonalRamp": [
+          "oklch(15% 0.194 41.1)",
+          "oklch(26% 0.194 41.1)",
+          "oklch(37% 0.194 41.1)",
+          "oklch(48% 0.194 41.1)",
+          "oklch(59% 0.194 41.1)",
+          "oklch(70% 0.194 41.1)",
+          "oklch(82% 0.194 41.1)",
+          "oklch(95% 0.194 41.1)"
+        ]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Arcilla quemada",
+        "canonical": "#9a3412",
+        "tonalRamp": [
+          "oklch(15% 0.143 37.3)",
+          "oklch(26% 0.143 37.3)",
+          "oklch(37% 0.143 37.3)",
+          "oklch(48% 0.143 37.3)",
+          "oklch(59% 0.143 37.3)",
+          "oklch(70% 0.143 37.3)",
+          "oklch(82% 0.143 37.3)",
+          "oklch(95% 0.143 37.3)"
+        ]
+      },
+      "primary-surface": {
+        "role": "primary",
+        "displayName": "Barro claro",
+        "canonical": "#fbece2",
+        "tonalRamp": [
+          "oklch(15% 0.021 56.1)",
+          "oklch(26% 0.021 56.1)",
+          "oklch(37% 0.021 56.1)",
+          "oklch(48% 0.021 56.1)",
+          "oklch(59% 0.021 56.1)",
+          "oklch(70% 0.021 56.1)",
+          "oklch(82% 0.021 56.1)",
+          "oklch(95% 0.021 56.1)"
+        ]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Verde cordillera",
+        "canonical": "#1b4332",
+        "tonalRamp": [
+          "oklch(15% 0.055 163.4)",
+          "oklch(26% 0.055 163.4)",
+          "oklch(37% 0.055 163.4)",
+          "oklch(48% 0.055 163.4)",
+          "oklch(59% 0.055 163.4)",
+          "oklch(70% 0.055 163.4)",
+          "oklch(82% 0.055 163.4)",
+          "oklch(95% 0.055 163.4)"
+        ]
+      },
+      "secondary-light": {
+        "role": "secondary",
+        "displayName": "Verde cafetal",
+        "canonical": "#2d6a4f",
+        "tonalRamp": [
+          "oklch(15% 0.078 162.2)",
+          "oklch(26% 0.078 162.2)",
+          "oklch(37% 0.078 162.2)",
+          "oklch(48% 0.078 162.2)",
+          "oklch(59% 0.078 162.2)",
+          "oklch(70% 0.078 162.2)",
+          "oklch(82% 0.078 162.2)",
+          "oklch(95% 0.078 162.2)"
+        ]
+      },
+      "secondary-dark": {
+        "role": "secondary",
+        "displayName": "Sombra de montaña",
+        "canonical": "#081c15",
+        "tonalRamp": [
+          "oklch(15% 0.030 168.2)",
+          "oklch(26% 0.030 168.2)",
+          "oklch(37% 0.030 168.2)",
+          "oklch(48% 0.030 168.2)",
+          "oklch(59% 0.030 168.2)",
+          "oklch(70% 0.030 168.2)",
+          "oklch(82% 0.030 168.2)",
+          "oklch(95% 0.030 168.2)"
+        ]
+      },
+      "secondary-surface": {
+        "role": "secondary",
+        "displayName": "Rocío",
+        "canonical": "#e5efe8",
+        "tonalRamp": [
+          "oklch(15% 0.014 155.6)",
+          "oklch(26% 0.014 155.6)",
+          "oklch(37% 0.014 155.6)",
+          "oklch(48% 0.014 155.6)",
+          "oklch(59% 0.014 155.6)",
+          "oklch(70% 0.014 155.6)",
+          "oklch(82% 0.014 155.6)",
+          "oklch(95% 0.014 155.6)"
+        ]
+      },
+      "accent": {
+        "role": "tertiary",
+        "displayName": "Ámbar atardecer",
+        "canonical": "#d97706",
+        "tonalRamp": [
+          "oklch(15% 0.157 58.3)",
+          "oklch(26% 0.157 58.3)",
+          "oklch(37% 0.157 58.3)",
+          "oklch(48% 0.157 58.3)",
+          "oklch(59% 0.157 58.3)",
+          "oklch(70% 0.157 58.3)",
+          "oklch(82% 0.157 58.3)",
+          "oklch(95% 0.157 58.3)"
+        ]
+      },
+      "surface-base": {
+        "role": "neutral",
+        "displayName": "Arena suave",
+        "canonical": "#f5f2eb",
+        "tonalRamp": [
+          "oklch(15% 0.010 87.5)",
+          "oklch(26% 0.010 87.5)",
+          "oklch(37% 0.010 87.5)",
+          "oklch(48% 0.010 87.5)",
+          "oklch(59% 0.010 87.5)",
+          "oklch(70% 0.010 87.5)",
+          "oklch(82% 0.010 87.5)",
+          "oklch(95% 0.010 87.5)"
+        ]
+      },
+      "surface-light": {
+        "role": "neutral",
+        "displayName": "Blanco cal viva",
+        "canonical": "#fcfbf9",
+        "tonalRamp": [
+          "oklch(15% 0.003 84.6)",
+          "oklch(26% 0.003 84.6)",
+          "oklch(37% 0.003 84.6)",
+          "oklch(48% 0.003 84.6)",
+          "oklch(59% 0.003 84.6)",
+          "oklch(70% 0.003 84.6)",
+          "oklch(82% 0.003 84.6)",
+          "oklch(95% 0.003 84.6)"
+        ]
+      },
+      "surface-medium": {
+        "role": "neutral",
+        "displayName": "Marco de madera",
+        "canonical": "#e8e2d5",
+        "tonalRamp": [
+          "oklch(15% 0.019 86.1)",
+          "oklch(26% 0.019 86.1)",
+          "oklch(37% 0.019 86.1)",
+          "oklch(48% 0.019 86.1)",
+          "oklch(59% 0.019 86.1)",
+          "oklch(70% 0.019 86.1)",
+          "oklch(82% 0.019 86.1)",
+          "oklch(95% 0.019 86.1)"
+        ]
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Piedra de río",
+        "canonical": "#d6cfc4",
+        "tonalRamp": [
+          "oklch(15% 0.017 79.3)",
+          "oklch(26% 0.017 79.3)",
+          "oklch(37% 0.017 79.3)",
+          "oklch(48% 0.017 79.3)",
+          "oklch(59% 0.017 79.3)",
+          "oklch(70% 0.017 79.3)",
+          "oklch(82% 0.017 79.3)",
+          "oklch(95% 0.017 79.3)"
+        ]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Carbón mineral",
+        "canonical": "#1f2421",
+        "tonalRamp": [
+          "oklch(15% 0.009 159.4)",
+          "oklch(26% 0.009 159.4)",
+          "oklch(37% 0.009 159.4)",
+          "oklch(48% 0.009 159.4)",
+          "oklch(59% 0.009 159.4)",
+          "oklch(70% 0.009 159.4)",
+          "oklch(82% 0.009 159.4)",
+          "oklch(95% 0.009 159.4)"
+        ]
+      },
+      "text-secondary": {
+        "role": "neutral",
+        "displayName": "Pizarra de montaña",
+        "canonical": "#5c645d",
+        "tonalRamp": [
+          "oklch(15% 0.015 149.0)",
+          "oklch(26% 0.015 149.0)",
+          "oklch(37% 0.015 149.0)",
+          "oklch(48% 0.015 149.0)",
+          "oklch(59% 0.015 149.0)",
+          "oklch(70% 0.015 149.0)",
+          "oklch(82% 0.015 149.0)",
+          "oklch(95% 0.015 149.0)"
+        ]
+      },
+      "text-tertiary": {
+        "role": "neutral",
+        "displayName": "Ceniza",
+        "canonical": "#8f9892",
+        "tonalRamp": [
+          "oklch(15% 0.014 156.8)",
+          "oklch(26% 0.014 156.8)",
+          "oklch(37% 0.014 156.8)",
+          "oklch(48% 0.014 156.8)",
+          "oklch(59% 0.014 156.8)",
+          "oklch(70% 0.014 156.8)",
+          "oklch(82% 0.014 156.8)",
+          "oklch(95% 0.014 156.8)"
+        ]
+      },
+      "text-inverse": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(37% 0.000 89.9)",
+          "oklch(48% 0.000 89.9)",
+          "oklch(59% 0.000 89.9)",
+          "oklch(70% 0.000 89.9)",
+          "oklch(82% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "text-on-dark": {
+        "role": "neutral",
+        "displayName": "Niebla",
+        "canonical": "#dbe7df",
+        "tonalRamp": [
+          "oklch(15% 0.017 156.9)",
+          "oklch(26% 0.017 156.9)",
+          "oklch(37% 0.017 156.9)",
+          "oklch(48% 0.017 156.9)",
+          "oklch(59% 0.017 156.9)",
+          "oklch(70% 0.017 156.9)",
+          "oklch(82% 0.017 156.9)",
+          "oklch(95% 0.017 156.9)"
+        ]
+      },
+      "text-on-dark-muted": {
+        "role": "neutral",
+        "displayName": "Neblina",
+        "canonical": "#b9cbbf",
+        "tonalRamp": [
+          "oklch(15% 0.026 156.6)",
+          "oklch(26% 0.026 156.6)",
+          "oklch(37% 0.026 156.6)",
+          "oklch(48% 0.026 156.6)",
+          "oklch(59% 0.026 156.6)",
+          "oklch(70% 0.026 156.6)",
+          "oklch(82% 0.026 156.6)",
+          "oklch(95% 0.026 156.6)"
+        ]
+      },
+      "on-dark-accent": {
+        "role": "neutral",
+        "displayName": "Teja clara",
+        "canonical": "#fdba74",
+        "tonalRamp": [
+          "oklch(15% 0.117 66.3)",
+          "oklch(26% 0.117 66.3)",
+          "oklch(37% 0.117 66.3)",
+          "oklch(48% 0.117 66.3)",
+          "oklch(59% 0.117 66.3)",
+          "oklch(70% 0.117 66.3)",
+          "oklch(82% 0.117 66.3)",
+          "oklch(95% 0.117 66.3)"
+        ]
+      },
+      "success": {
+        "role": "status",
+        "displayName": "Éxito",
+        "canonical": "#2d6a4f",
+        "tonalRamp": [
+          "oklch(15% 0.078 162.2)",
+          "oklch(26% 0.078 162.2)",
+          "oklch(37% 0.078 162.2)",
+          "oklch(48% 0.078 162.2)",
+          "oklch(59% 0.078 162.2)",
+          "oklch(70% 0.078 162.2)",
+          "oklch(82% 0.078 162.2)",
+          "oklch(95% 0.078 162.2)"
+        ]
+      },
+      "success-surface": {
+        "role": "status",
+        "displayName": "Éxito (superficie)",
+        "canonical": "#e5efe8",
+        "tonalRamp": [
+          "oklch(15% 0.014 155.6)",
+          "oklch(26% 0.014 155.6)",
+          "oklch(37% 0.014 155.6)",
+          "oklch(48% 0.014 155.6)",
+          "oklch(59% 0.014 155.6)",
+          "oklch(70% 0.014 155.6)",
+          "oklch(82% 0.014 155.6)",
+          "oklch(95% 0.014 155.6)"
+        ]
+      },
+      "warning": {
+        "role": "status",
+        "displayName": "Aviso",
+        "canonical": "#92400e",
+        "tonalRamp": [
+          "oklch(15% 0.125 46.2)",
+          "oklch(26% 0.125 46.2)",
+          "oklch(37% 0.125 46.2)",
+          "oklch(48% 0.125 46.2)",
+          "oklch(59% 0.125 46.2)",
+          "oklch(70% 0.125 46.2)",
+          "oklch(82% 0.125 46.2)",
+          "oklch(95% 0.125 46.2)"
+        ]
+      },
+      "warning-surface": {
+        "role": "status",
+        "displayName": "Aviso (superficie)",
+        "canonical": "#fbf0dc",
+        "tonalRamp": [
+          "oklch(15% 0.029 82.6)",
+          "oklch(26% 0.029 82.6)",
+          "oklch(37% 0.029 82.6)",
+          "oklch(48% 0.029 82.6)",
+          "oklch(59% 0.029 82.6)",
+          "oklch(70% 0.029 82.6)",
+          "oklch(82% 0.029 82.6)",
+          "oklch(95% 0.029 82.6)"
+        ]
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "Peligro",
+        "canonical": "#b42318",
+        "tonalRamp": [
+          "oklch(15% 0.182 29.5)",
+          "oklch(26% 0.182 29.5)",
+          "oklch(37% 0.182 29.5)",
+          "oklch(48% 0.182 29.5)",
+          "oklch(59% 0.182 29.5)",
+          "oklch(70% 0.182 29.5)",
+          "oklch(82% 0.182 29.5)",
+          "oklch(95% 0.182 29.5)"
+        ]
+      },
+      "danger-surface": {
+        "role": "status",
+        "displayName": "Peligro (superficie)",
+        "canonical": "#fbe7e3",
+        "tonalRamp": [
+          "oklch(15% 0.023 31.1)",
+          "oklch(26% 0.023 31.1)",
+          "oklch(37% 0.023 31.1)",
+          "oklch(48% 0.023 31.1)",
+          "oklch(59% 0.023 31.1)",
+          "oklch(70% 0.023 31.1)",
+          "oklch(82% 0.023 31.1)",
+          "oklch(95% 0.023 31.1)"
+        ]
+      }
     },
-    "typography": {
-      "fontFamily": "'Montserrat', sans-serif"
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titular del hero de inicio y de páginas institucionales."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Encabezados de página y de sección."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Nombres de fincas, títulos de tarjeta y bloques de formulario."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descripciones, políticas y textos de apoyo."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Etiquetas de campo, metadatos, capacidad y precios secundarios."
+      }
     },
-    "rounded": {
-      "sm": "8px",
-      "md": "12px",
-      "lg": "16px",
-      "xl": "20px",
-      "2xl": "24px",
-      "full": "9999px"
+    "shadows": [
+      {
+        "name": "alero-leve",
+        "value": "0 1px 2px rgba(27, 67, 50, 0.06), 0 2px 6px rgba(27, 67, 50, 0.04)",
+        "purpose": "Tarjetas en reposo y hover de controles secundarios."
+      },
+      {
+        "name": "alero-medio",
+        "value": "0 6px 18px rgba(27, 67, 50, 0.07)",
+        "purpose": "Indicadores del panel al pasar el cursor."
+      },
+      {
+        "name": "alero-amplio",
+        "value": "0 12px 32px rgba(27, 67, 50, 0.08)",
+        "purpose": "Tarjeta de reserva, fichas en hover y menú móvil."
+      },
+      {
+        "name": "alero-profundo",
+        "value": "0 24px 60px rgba(8, 28, 21, 0.18)",
+        "purpose": "Modales y hojas de búsqueda."
+      },
+      {
+        "name": "sombra-teja",
+        "value": "0 8px 18px -8px rgba(154, 52, 18, 0.6)",
+        "purpose": "Solo bajo el botón primario."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Curva de salida para todas las transiciones."
+      },
+      {
+        "name": "transition-fast",
+        "value": "0.15s",
+        "purpose": "Color, borde y fondo de controles."
+      },
+      {
+        "name": "transition-base",
+        "value": "0.25s",
+        "purpose": "Elevación de botones y fichas, subrayado de navegación, menú móvil."
+      },
+      {
+        "name": "transition-slow",
+        "value": "0.45s",
+        "purpose": "Escala sutil de imágenes en fichas."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "xs",
+        "value": "480px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "960px"
+      },
+      {
+        "name": "xl",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal de cada vista: explorar, reservar, pagar.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>Ir al pago seguro</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 24px;font-family:var(--font-sans,'Montserrat',sans-serif);font-size:0.95rem;font-weight:600;border:1px solid transparent;border-radius:9999px;cursor:pointer;transition:background-color .15s cubic-bezier(.22,1,.36,1),border-color .15s,color .15s,box-shadow .25s,transform .25s cubic-bezier(.22,1,.36,1);background:var(--color-primary,#c2410c);color:#fff;box-shadow:0 8px 18px -8px rgba(154,52,18,.6);} .ds-btn-primary svg{width:18px;height:18px;} .ds-btn-primary:hover{background:var(--color-primary-dark,#9a3412);transform:translateY(-2px);} .ds-btn-primary:active{transform:translateY(0);} .ds-btn-primary:focus-visible{outline:2px solid var(--color-primary,#c2410c);outline-offset:3px;}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción alternativa junto a la primaria.",
+      "html": "<button class=\"ds-btn-secondary\">Cómo funciona</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 24px;font-family:var(--font-sans,'Montserrat',sans-serif);font-size:0.95rem;font-weight:600;border:1px solid transparent;border-radius:9999px;cursor:pointer;transition:background-color .15s cubic-bezier(.22,1,.36,1),border-color .15s,color .15s,box-shadow .25s,transform .25s cubic-bezier(.22,1,.36,1);background:var(--color-surface-light,#fcfbf9);color:var(--color-text-primary,#1f2421);border-color:var(--color-surface-dark,#d6cfc4);} .ds-btn-secondary:hover{color:var(--color-secondary,#1b4332);border-color:var(--color-secondary-light,#2d6a4f);box-shadow:0 1px 2px rgba(27,67,50,.06),0 2px 6px rgba(27,67,50,.04);transform:translateY(-2px);} .ds-btn-secondary:focus-visible{outline:2px solid var(--color-primary,#c2410c);outline-offset:3px;}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo con etiqueta superior e icono de trazo.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field__label\">Correo electrónico</span><span class=\"ds-field__wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\"/><path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\"/></svg><input class=\"ds-input\" type=\"email\" placeholder=\"tu@correo.com\"></span></label>",
+      "css": ".ds-field{display:grid;gap:6px;max-width:320px;font-family:var(--font-sans,'Montserrat',sans-serif);} .ds-field__label{font-size:.875rem;font-weight:600;letter-spacing:.01em;color:var(--color-text-primary,#1f2421);} .ds-field__wrap{position:relative;} .ds-field__wrap svg{position:absolute;left:14px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--color-text-tertiary,#8f9892);pointer-events:none;} .ds-input{width:100%;min-height:46px;padding:10px 14px 10px 42px;font:inherit;font-size:.95rem;color:var(--color-text-primary,#1f2421);background:var(--color-surface-light,#fcfbf9);border:1px solid var(--color-surface-dark,#d6cfc4);border-radius:12px;caret-color:var(--color-primary,#c2410c);transition:border-color .15s,box-shadow .15s;} .ds-input:hover{border-color:var(--color-text-tertiary,#8f9892);} .ds-input:focus{outline:none;border-color:var(--color-primary,#c2410c);box-shadow:0 0 0 3px rgba(194,65,12,.16);} .ds-input::placeholder{color:#7d867f;}"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge-success",
+      "description": "Estado de finca, cuenta o pago.",
+      "html": "<span class=\"ds-badge ds-badge--success\">Disponible</span> <span class=\"ds-badge ds-badge--warning\">Pendiente</span> <span class=\"ds-badge ds-badge--primary\">Cliente</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-family:var(--font-sans,'Montserrat',sans-serif);font-size:.75rem;font-weight:600;letter-spacing:.02em;border-radius:9999px;} .ds-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;} .ds-badge--success{color:var(--color-secondary,#1b4332);background:var(--color-success-surface,#e5efe8);} .ds-badge--warning{color:var(--color-warning,#92400e);background:var(--color-warning-surface,#fbf0dc);} .ds-badge--primary{color:var(--color-primary-dark,#9a3412);background:var(--color-primary-surface,#fbece2);}"
+    },
+    {
+      "name": "Finca Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Ficha navegable del catálogo con precio en terracota.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card__img\"><span class=\"ds-card__badge\">Disponible</span></div><div class=\"ds-card__body\"><h3 class=\"ds-card__title\">Finca Campestre El Paraíso</h3><p class=\"ds-card__meta\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/></svg>Guatapé · 16 huéspedes</p><p class=\"ds-card__price\"><strong>$ 850.000</strong> /noche</p></div></article>",
+      "css": ".ds-card{width:300px;overflow:hidden;font-family:var(--font-sans,'Montserrat',sans-serif);background:var(--color-surface-light,#fcfbf9);border:1px solid var(--color-surface-medium,#e8e2d5);border-radius:20px;box-shadow:0 1px 2px rgba(27,67,50,.06),0 2px 6px rgba(27,67,50,.04);transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s;} .ds-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(27,67,50,.08);} .ds-card__img{position:relative;aspect-ratio:4/3;background:linear-gradient(to bottom,#ece6da 55%,rgba(27,67,50,.18) 55%);} .ds-card__badge{position:absolute;top:12px;left:12px;padding:4px 10px;font-size:.75rem;font-weight:600;color:#1b4332;background:#e5efe8;border-radius:9999px;} .ds-card__body{display:grid;gap:8px;padding:20px 24px 24px;} .ds-card__title{margin:0;font-size:1.125rem;font-weight:600;line-height:1.3;color:var(--color-secondary,#1b4332);} .ds-card__meta{display:flex;align-items:center;gap:6px;margin:0;font-size:.875rem;color:var(--color-text-secondary,#5c645d);} .ds-card__meta svg{width:16px;height:16px;} .ds-card__price{margin:8px 0 0;padding-top:12px;border-top:1px solid var(--color-surface-medium,#e8e2d5);font-size:.875rem;color:var(--color-text-secondary,#5c645d);} .ds-card__price strong{font-size:1.2rem;font-weight:700;color:var(--color-primary,#c2410c);font-variant-numeric:tabular-nums;}"
+    },
+    {
+      "name": "Site Header",
+      "kind": "nav",
+      "refersTo": "site-header",
+      "description": "Barra pública fija con logotipo, enlaces y acciones.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-brand\" href=\"#\"><svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect width=\"32\" height=\"32\" rx=\"9\" fill=\"#1b4332\"/><path d=\"M6 15.5 16 7l10 8.5\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M9.5 14.6V24h13v-9.4\" fill=\"none\" stroke=\"#fcfbf9\" stroke-width=\"2\" stroke-linejoin=\"round\"/><path d=\"M14 24v-3.8a2 2 0 0 1 4 0V24\" fill=\"none\" stroke=\"#fcfbf9\" stroke-width=\"2\"/></svg><span>Renfi</span></a><nav class=\"ds-nav\"><a href=\"#\">Fincas</a><a href=\"#\" class=\"is-active\">Sobre nosotros</a></nav><a class=\"ds-header__cta\" href=\"#\">Crear cuenta</a></header>",
+      "css": ".ds-header{display:flex;align-items:center;gap:24px;min-height:68px;padding:0 24px;font-family:var(--font-sans,'Montserrat',sans-serif);background:var(--color-surface-light,#fcfbf9);border-bottom:1px solid var(--color-surface-medium,#e8e2d5);} .ds-brand{display:inline-flex;align-items:center;gap:10px;margin-right:auto;font-size:1.35rem;font-weight:700;letter-spacing:-.02em;color:var(--color-secondary,#1b4332);text-decoration:none;} .ds-brand svg{width:36px;height:36px;} .ds-nav{display:flex;gap:4px;} .ds-nav a{position:relative;padding:10px 12px;font-size:.925rem;font-weight:600;color:var(--color-text-secondary,#5c645d);text-decoration:none;} .ds-nav a::after{content:'';position:absolute;left:12px;right:12px;bottom:4px;height:2px;background:var(--color-primary,#c2410c);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform .25s cubic-bezier(.22,1,.36,1);} .ds-nav a:hover,.ds-nav a.is-active{color:var(--color-secondary,#1b4332);} .ds-nav a:hover::after,.ds-nav a.is-active::after{transform:scaleX(1);} .ds-nav a:focus-visible,.ds-header__cta:focus-visible{outline:2px solid var(--color-primary,#c2410c);outline-offset:3px;} .ds-header__cta{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;font-size:.85rem;font-weight:600;color:#fff;background:var(--color-primary,#c2410c);border-radius:9999px;text-decoration:none;} .ds-header__cta:hover{background:var(--color-primary-dark,#9a3412);}"
+    },
+    {
+      "name": "Zócalo",
+      "kind": "custom",
+      "refersTo": "zocalo",
+      "description": "Franja firma (verde, cal, teja) que remata la base de bandas y recibos.",
+      "html": "<div class=\"ds-zocalo-demo\"><div class=\"ds-zocalo-band\">Banda verde cordillera</div><div class=\"ds-zocalo\"></div></div>",
+      "css": ".ds-zocalo-demo{width:360px;overflow:hidden;border-radius:24px;font-family:var(--font-sans,'Montserrat',sans-serif);} .ds-zocalo-band{padding:32px 28px;font-weight:700;color:#fff;background:var(--color-secondary,#1b4332);} .ds-zocalo{height:14px;background:linear-gradient(to bottom,var(--color-secondary,#1b4332) 0 2px,var(--color-surface-light,#fcfbf9) 2px 5px,var(--color-primary,#c2410c) 5px 100%);}"
+    },
+    {
+      "name": "Sello de verificación",
+      "kind": "custom",
+      "refersTo": "badge-success",
+      "description": "Escudo con check que respalda fincas verificadas y comprobantes.",
+      "html": "<span class=\"ds-seal\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>Finca verificada</span>",
+      "css": ".ds-seal{display:inline-flex;align-items:center;gap:6px;padding:5px 12px 5px 8px;font-family:var(--font-sans,'Montserrat',sans-serif);font-size:.8rem;font-weight:600;color:var(--color-secondary,#1b4332);background:var(--color-secondary-surface,#e5efe8);border-radius:9999px;} .ds-seal svg{width:16px;height:16px;}"
+    },
+    {
+      "name": "Error Alert",
+      "kind": "custom",
+      "refersTo": "danger-surface",
+      "description": "Mensaje de error con icono y texto, nunca solo color.",
+      "html": "<div class=\"ds-alert\" role=\"alert\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg><span>No pudimos procesar el pago. Revisa los datos e intenta de nuevo.</span></div>",
+      "css": ".ds-alert{display:flex;align-items:flex-start;gap:10px;max-width:420px;padding:12px 14px;font-family:var(--font-sans,'Montserrat',sans-serif);font-size:.9rem;line-height:1.5;color:var(--color-danger,#b42318);background:var(--color-danger-surface,#fbe7e3);border:1px solid rgba(180,35,24,.18);border-radius:12px;} .ds-alert svg{width:18px;height:18px;flex-shrink:0;margin-top:2px;}"
     }
+  ],
+  "narrative": {
+    "northStar": "La Finca Abierta / Casa de Campo",
+    "overview": "Renfi evoca la arquitectura campestre colombiana contemporánea: corredores perimetrales de chambrana, sombras frescas bajo los aleros, tapias encaladas con su zócalo pintado y el contacto directo con la cordillera. La interfaz se comporta como una casa de finca bien cuidada: superficies claras y cálidas, marcos de madera finos que ordenan sin ruido, y un solo color de teja que señala lo que importa.\n\nEl lenguaje visual abandona los gradientes genéricos de software corporativo, el vidrio decorativo y los brillos de color, y abraza una paleta territorial honesta. La densidad es tranquila en las páginas públicas (secciones generosas, una idea por bloque) y más compacta en el panel administrativo, donde la marca vive en los detalles: el riel verde, los iconos de trazo y las cifras tabulares.\n\nLa confianza es parte de la estética. Precios en COP siempre visibles, sellos de verificación, comprobantes con forma de recibo y estados explícitos (cargando, vacío, error) en cada flujo.",
+    "keyCharacteristics": [
+      "Superficies arena y cal; verde cordillera para identidad y bandas oscuras; terracota solo para la acción y el precio.",
+      "Montserrat como única familia; jerarquía por tamaño y peso, nunca por color decorativo.",
+      "Hilos de 1px en tono madera como estructura; sombras largas y difusas con tinte verde.",
+      "Cápsulas táctiles para toda acción, con elevación de 2px al pasar el cursor.",
+      "Firma propia: el zócalo (franja verde, cal y teja) y la silueta de la cordillera dibujada en SVG."
+    ],
+    "rules": [
+      {
+        "name": "The Scarce Clay Rule",
+        "body": "La terracota marca la acción principal y el precio de cada vista, nada más. Si dos elementos terracota compiten en la misma vista, uno sobra.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Floor Rule",
+        "body": "Todo texto pequeño usa text-primary o text-secondary sobre superficies claras, y text-on-dark o text-on-dark-muted sobre verde. Ceniza nunca se usa para texto legible.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Precios, fechas, noches, identificadores y cifras de tablas usan numerales tabulares para que las columnas y los totales se alineen.",
+        "section": "typography"
+      },
+      {
+        "name": "The Balanced Heading Rule",
+        "body": "Los encabezados usan `text-wrap: balance` y los párrafos `pretty`; ningún titular deja una palabra huérfana.",
+        "section": "typography"
+      },
+      {
+        "name": "The Eave Shadow Rule",
+        "body": "Toda sombra tiene desplazamiento vertical y difuminado suave con tinte verde. Un halo de color sin desplazamiento es decoración y no se usa.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No Glass Rule",
+        "body": "No hay vidrio ni desenfoque decorativo. El header, los fondos de modal y los paneles son sólidos.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do usar terracota solo para la acción principal y el precio de cada vista (The Scarce Clay Rule).",
+      "Do dibujar toda la iconografía en SVG de trazo uniforme de 2px, con terminaciones redondeadas y color heredado del texto.",
+      "Do mostrar precios en COP con numerales tabulares y la unidad \"/noche\" en pizarra junto a la cifra.",
+      "Do dar a cada flujo sus estados de carga, vacío, error y éxito, con el icono y el texto de la alerta correspondiente.",
+      "Do mantener objetivos táctiles de al menos 44px y el anillo de foco terracota visible en todos los controles.",
+      "Do personalizar las superficies del navegador: selección en teja clara (#fdba74) con texto arcilla oscura, scrollbars finas en piedra de río con hover terracota, cursor de texto terracota.",
+      "Do respetar `prefers-reduced-motion`: las transiciones y animaciones se reducen al mínimo."
+    ],
+    "donts": [
+      "Don't usar kickers ni etiquetas sobre los encabezados; el título empieza directamente con su mensaje.",
+      "Don't usar emojis ni glifos Unicode (flechas, aspas, estrellas) como iconos de interfaz.",
+      "Don't numerar secciones de forma arbitraria; los números solo aparecen cuando la secuencia importa, como en los pasos de reserva.",
+      "Don't usar texto con degradado, vidrio o desenfoque decorativo, brillos, animaciones infinitas decorativas ni rotaciones de tono.",
+      "Don't usar bordes laterales de color de más de 1px en tarjetas, alertas o ítems de navegación.",
+      "Don't usar sombras de desplazamiento duro ni halos de color sin desplazamiento.",
+      "Don't construir páginas como rejillas de tarjetas iguales de icono, título y texto, ni anidar tarjetas dentro de tarjetas.",
+      "Don't agregar colores fuera de la paleta; los matices se derivan con rgba de los colores existentes.",
+      "Don't animar propiedades de layout (ancho, márgenes, alto); el movimiento usa transform y opacity con curva de salida."
+    ]
   }
 }
