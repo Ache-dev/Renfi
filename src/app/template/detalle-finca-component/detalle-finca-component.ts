@@ -194,7 +194,7 @@ export class DetalleFincaComponent implements OnInit, OnDestroy {
     const draft: ReservaCheckoutDraft = {
       fincaId: this.finca.id,
       fincaNombre: this.finca.nombre,
-      municipio: this.finca.ubicacion,
+      municipio: this.finca['NombreMunicipio'] || this.finca.ubicacion,
       precioNoche,
       fechaEntrada,
       fechaSalida,

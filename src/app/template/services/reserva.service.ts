@@ -192,9 +192,6 @@ export class ReservaService {
               return fechaB - fechaA;
             });
           }),
-          catchError(() => {
-            return of([]);
-          })
         );
     }
 
@@ -267,6 +264,7 @@ export class ReservaService {
                 
                 try {
                   if (!reserva.fechaEntrada || !reserva.fechaSalida) continue;
+                  if (/cancelad/i.test(reserva.estado ?? '')) continue;
                   
                   const rangoFechas = this.expandirRangoFechas(reserva);
                   if (!rangoFechas || rangoFechas.length === 0) continue;
@@ -328,6 +326,7 @@ export class ReservaService {
       FechaEntrada: fechaEntradaISO,
       FechaSalida: fechaSalidaISO,
       MontoReserva: payload.montoReserva,
+      Huespedes: payload.huespedes,
       Estado: 'Activa'
     });
 
@@ -366,94 +365,67 @@ export class ReservaService {
       }),
       catchError((error: HttpErrorResponse) => {
 
-        return throwError(() => new Error(`Error al crear reserva: ${error.error?.message || error.message}`));
+        return throwError(() => new Error(error.error?.message || error.message || 'Error al crear la reserva'));
       })
     );
   }
 
+  /** La API crea la factura junto con la reserva (IdFactura en la respuesta); aquí solo se registra el pago. */
   crearReservaConPago(payload: CrearReservaConPagoPayload): Observable<ReservaConPagoResultado> {
-
     return this.crearReserva(payload.reserva).pipe(
       switchMap((reserva) => {
-        const idReservaNumerico = this.tryParseNumber(reserva.id);
+        const meta = (reserva.meta ?? {}) as any;
+        const idFactura = this.extraerIdDeRespuesta(meta, ['IdFactura', 'idFactura']);
+        const metodoId = this.tryParseNumber(payload.pago.metodoId);
+        const idReserva = this.tryParseNumber(reserva.id);
 
-        if (!idReservaNumerico || idReservaNumerico <= 0) {
-          return throwError(() => new Error(`ID de reserva inválido: ${reserva.id}`));
+        if (!idFactura || !metodoId) {
+          const msg = !idFactura
+            ? 'La reserva se creó pero no se generó su factura. Contacta a soporte.'
+            : 'Método de pago inválido.';
+          return this.cancelarReserva(reserva.id).pipe(switchMap(() => throwError(() => new Error(msg))));
         }
 
-        const facturaPayload = {
-          IdReserva: idReservaNumerico,
-          Total: payload.pago.monto,
-          FechaFactura: new Date().toISOString()
+        const fechaPago = new Date().toISOString();
+        const pagoPayload = {
+          IdFactura: idFactura,
+          IdMetodoDePago: metodoId,
+          Monto: Math.round(payload.pago.monto),
+          FechaPago: fechaPago,
+          EstadoPago: 'Pagado'
         };
 
-        return this.http.post<any>(`${this.baseUrl}/factura`, this.compactPayload(facturaPayload)).pipe(
-          switchMap((respuestaFactura) => {
-            const idFactura = this.extraerIdDeRespuesta(respuestaFactura, ['IdFactura', 'idFactura', 'Id', 'id']);
-
-            if (!idFactura || idFactura <= 0) {
-
-              return throwError(() => new Error('El backend no devolvió un IdFactura válido. Verifica SP_RegistrarFactura.'));
-            }
-
+        return this.http.post<any>(`${this.baseUrl}/pago`, pagoPayload).pipe(
+          map((respuestaPago) => {
+            const idPago = this.extraerIdDeRespuesta(respuestaPago, ['IdPago', 'idPago', 'id']);
+            const pago: Pago = {
+              id: idPago ? String(idPago) : undefined,
+              reservaId: String(idReserva),
+              metodoId: String(metodoId),
+              metodoNombre: payload.pago.metodoNombre,
+              monto: payload.pago.monto,
+              fechaPago,
+              estado: 'Pagado',
+              referencia: idPago ? `PAGO-${idPago}` : null,
+              meta: respuestaPago
+            };
             const factura: Factura = {
               id: String(idFactura),
-              reservaId: String(idReservaNumerico),
-              total: payload.pago.monto,
-              fechaFactura: facturaPayload.FechaFactura,
-              meta: respuestaFactura
+              reservaId: String(idReserva),
+              total: reserva.montoReserva ?? payload.pago.monto,
+              fechaFactura: fechaPago,
+              nombreFinca: reserva.fincaNombre ?? null,
+              municipio: reserva.municipio ?? null,
+              precioNoche: reserva.precioNoche ?? null
             };
-
-            const metodoIdNumerico = this.tryParseNumber(payload.pago.metodoId);
-
-            if (!metodoIdNumerico || metodoIdNumerico <= 0) {
-              return throwError(() => new Error(`ID de método de pago inválido: ${payload.pago.metodoId}`));
-            }
-
-            const pagoPayload = {
-              IdFactura: idFactura,
-              IdMetodoDePago: metodoIdNumerico,
-              Monto: Math.round(payload.pago.monto),
-              FechaPago: new Date().toISOString(),
-              EstadoPago: 'Pagado'
-            };
-
-            return this.http.post<any>(`${this.baseUrl}/pago`, this.compactPayload(pagoPayload)).pipe(
-              map((respuestaPago) => {
-                const idPago = this.extraerIdDeRespuesta(respuestaPago, ['IdPago', 'idPago', 'Id', 'id']);
-
-                const pago: Pago = {
-                  id: idPago ? String(idPago) : undefined,
-                  reservaId: String(idReservaNumerico),
-                  metodoId: String(metodoIdNumerico),
-                  metodoNombre: payload.pago.metodoNombre,
-                  monto: payload.pago.monto,
-                  fechaPago: pagoPayload.FechaPago,
-                  estado: 'Pagado',
-                  meta: respuestaPago
-                };
-
-                return { reserva, factura, pago } satisfies ReservaConPagoResultado;
-              }),
-              catchError((errorPago) => {
-
-                return this.cancelarReserva(idReservaNumerico).pipe(
-                  switchMap(() => throwError(() => new Error(`Error al registrar el pago: ${errorPago.error?.message || errorPago.message}`)))
-                );
-              })
-            );
+            return { reserva, factura, pago } satisfies ReservaConPagoResultado;
           }),
-          catchError((errorFactura) => {
-
-            return this.cancelarReserva(idReservaNumerico).pipe(
-              switchMap(() => throwError(() => new Error(`Error al crear la factura: ${errorFactura.error?.message || errorFactura.message}`)))
-            );
-          })
+          catchError((err) =>
+            this.cancelarReserva(reserva.id).pipe(
+              switchMap(() => throwError(() => new Error(err?.error?.message || err?.message || 'Error al registrar el pago')))
+            )
+          )
         );
-      }),
-      catchError((errorReserva) => {
-
-        return throwError(() => new Error(`Error al crear la reserva: ${errorReserva.error?.message || errorReserva.message}`));
       })
     );
   }
@@ -894,7 +866,8 @@ export class ReservaService {
 
     try {
 
-      const fecha = new Date(valor);
+      // 'yyyy-MM-dd' se interpreta en hora local (new Date lo tomaría como UTC y corre un día).
+      const fecha = /^\d{4}-\d{2}-\d{2}$/.test(valor) ? new Date(`${valor}T00:00:00`) : new Date(valor);
       if (!Number.isNaN(fecha.getTime()) && fecha.getFullYear() > 1900) {
         fecha.setHours(0, 0, 0, 0);
         return fecha;

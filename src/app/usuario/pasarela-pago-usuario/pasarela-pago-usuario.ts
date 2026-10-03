@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ReservaCheckoutDraft, ReservaCheckoutService } from '../../template/services/reserva-checkout.service';
 import { ReservaService } from '../../template/services/reserva.service';
@@ -25,12 +25,12 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  metodosPago = [
-    { id: 1, nombre: 'Tarjeta de Crédito' },
-    { id: 2, nombre: 'Tarjeta de Débito' },
-    { id: 3, nombre: 'Transferencia Bancaria' },
-    { id: 4, nombre: 'PSE' },
-    { id: 5, nombre: 'Efectivo' }
+  // Ids según el seed de MetodoDePago; se reemplaza por GET /metododepago al iniciar.
+  metodosPago: { id: string | number; nombre: string }[] = [
+    { id: 1, nombre: 'Efectivo' },
+    { id: 2, nombre: 'Transferencia Bancaria' },
+    { id: 3, nombre: 'Tarjeta de Crédito' },
+    { id: 4, nombre: 'Nequi / Daviplata' }
   ];
 
   constructor(
@@ -49,6 +49,12 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.draft = this.checkoutService.getDraft();
+    this.reservaService.obtenerMetodosPago().pipe(takeUntil(this.destroy$)).subscribe((m) => {
+      if (m.length) {
+        this.metodosPago = m;
+        this.pagoForm.patchValue({ metodoPago: String(m[0].id) });
+      }
+    });
 
     if (!this.draft) {
       this.error = 'No hay información de reserva disponible. Por favor, inicia el proceso desde la página de la finca.';
@@ -71,7 +77,7 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
   }
 
   confirmarPago(): void {
-    if (this.pagoForm.invalid || !this.draft) {
+    if (this.pagoForm.invalid || !this.draft || this.procesando) {
       this.pagoForm.markAllAsTouched();
       return;
     }
@@ -82,109 +88,76 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
       return;
     }
 
+    const draft = this.draft;
+    if (!parseInt(draft.fincaId, 10)) {
+      this.error = 'ID de finca no válido.';
+      return;
+    }
+
     this.procesando = true;
     this.error = null;
 
-    const idFinca = this.draft.fincaId ? parseInt(this.draft.fincaId, 10) : null;
+    const documento$ = draft.usuarioDocumento ?? usuario.NumeroDocumento ?? (usuario as any).numeroDocumento
+      ? of(draft.usuarioDocumento ?? usuario.NumeroDocumento ?? (usuario as any).numeroDocumento)
+      : this.usuarioService.obtenerDocumentoPorCorreo(usuario.Correo ?? "");
 
-    let documento = this.draft.usuarioDocumento ?? 
-                    usuario.NumeroDocumento ?? 
-                    (usuario as any).numeroDocumento ?? 
-                    (usuario as any).Documento ?? 
-                    (usuario as any).documento;
-    
-    const metodoPagoId = parseInt(this.pagoForm.get('metodoPago')?.value, 10);
-
-    if (!idFinca) {
-      this.error = 'ID de finca no válido.';
-      this.procesando = false;
-      return;
-    }
-
-    if (!documento && usuario.Correo) {
-      this.usuarioService.obtenerDocumentoPorCorreo(usuario.Correo)
-        .pipe(
-          switchMap(doc => {
-            documento = doc;
-            if (!documento) {
-              throw new Error('No se pudo obtener el número de documento del usuario');
-            }
-            return this.crearReservaConDocumento(documento, idFinca, metodoPagoId);
-          }),
-          takeUntil(this.destroy$),
-          finalize(() => {
-            this.procesando = false;
-          })
-        )
-        .subscribe({
-          next: (resultado) => {
-            this.exito = true;
-            this.checkoutService.clearDraft();
-            
-            setTimeout(() => {
-              this.router.navigate(['/mi-cuenta']);
-            }, 2000);
-          },
-          error: (err) => {
-            this.error = err?.message || err?.error?.message || 'Error al procesar la reserva. Por favor, intenta nuevamente.';
-          }
-        });
-      
-      return;
-    }
-
-    this.crearReservaConDocumento(documento, idFinca, metodoPagoId)
+    documento$
       .pipe(
+        switchMap((documento) => {
+          if (!documento) {
+            return throwError(() => new Error('No se pudo obtener el número de documento del usuario'));
+          }
+          return this.pagar(draft, documento);
+        }),
         takeUntil(this.destroy$),
-        finalize(() => {
-          this.procesando = false;
-        })
+        finalize(() => (this.procesando = false))
       )
       .subscribe({
-        next: (resultado) => {
-          this.exito = true;
+        next: ({ reserva, pago, factura }) => {
+          this.checkoutService.setResult({
+            reserva,
+            factura,
+            pago: {
+              id: pago.id,
+              metodoNombre: pago.metodoNombre ?? '',
+              monto: pago.monto ?? 0,
+              fechaPago: pago.fechaPago ?? new Date().toISOString(),
+              referencia: pago.referencia,
+              estado: pago.estado
+            }
+          });
           this.checkoutService.clearDraft();
-          
-          setTimeout(() => {
-            this.router.navigate(['/mi-cuenta']);
-          }, 2000);
+          this.router.navigate(['/reserva/comprobante']);
         },
         error: (err) => {
-          this.error = err?.error?.message || 'Error al procesar la reserva. Por favor, intenta nuevamente.';
+          this.error = err?.error?.message || err?.message || 'Error al procesar la reserva. Por favor, intenta nuevamente.';
         }
       });
   }
 
-  private crearReservaConDocumento(documento: any, idFinca: number | null, metodoPagoId: number) {
+  private pagar(draft: ReservaCheckoutDraft, documento: string | number) {
+    const dia = (f: string) => (f.includes('T') ? f : f + 'T12:00:00.000Z');
+    const metodoId = this.pagoForm.get('metodoPago')?.value;
+    const metodo = this.metodosPago.find((m) => String(m.id) === String(metodoId));
+    const monto = Number(draft.montoTotal) || 0;
 
-    const fincaIdNumerico = typeof this.draft!.fincaId === 'string' 
-      ? parseInt(this.draft!.fincaId, 10) 
-      : this.draft!.fincaId;
-
-    const fechaEntrada = this.draft!.fechaEntrada.includes('T') 
-      ? this.draft!.fechaEntrada 
-      : this.draft!.fechaEntrada + 'T12:00:00.000Z';
-    
-    const fechaSalida = this.draft!.fechaSalida.includes('T') 
-      ? this.draft!.fechaSalida 
-      : this.draft!.fechaSalida + 'T12:00:00.000Z';
-
-    const reservaData = {
-      fincaId: String(fincaIdNumerico),
-      fincaNombre: this.draft!.fincaNombre,
-      municipio: this.draft!.municipio,
-      fechaEntrada: fechaEntrada,
-      fechaSalida: fechaSalida,
-      noches: Number(this.draft!.noches) || 1,
-      huespedes: Number(this.draft!.huespedes) || 1,
-      montoReserva: Number(this.draft!.montoTotal) || 0,
-      usuarioCorreo: this.draft!.usuarioCorreo,
-      usuarioNombre: this.draft!.usuarioNombreCompleto,
-      usuarioDocumento: documento,
-      precioNoche: Number(this.draft!.precioNoche) || 0
-    };
-
-    return this.reservaService.crearReserva(reservaData);
+    return this.reservaService.crearReservaConPago({
+      reserva: {
+        fincaId: String(parseInt(draft.fincaId, 10)),
+        fincaNombre: draft.fincaNombre,
+        municipio: draft.municipio,
+        fechaEntrada: dia(draft.fechaEntrada),
+        fechaSalida: dia(draft.fechaSalida),
+        noches: Number(draft.noches) || 1,
+        huespedes: Number(draft.huespedes) || 1,
+        montoReserva: monto,
+        usuarioCorreo: draft.usuarioCorreo,
+        usuarioNombre: draft.usuarioNombreCompleto,
+        usuarioDocumento: documento,
+        precioNoche: Number(draft.precioNoche) || 0
+      },
+      pago: { monto, metodoId, metodoNombre: metodo?.nombre ?? '' }
+    });
   }
 
   onImageError(): void {
