@@ -19,6 +19,20 @@ export interface FincaDetalle {
   [key: string]: any;
 }
 
+// Ilustración de respaldo cuando una finca no tiene fotos: cordillera, tapia y teja.
+export const PLACEHOLDER_FINCA =
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'>" +
+      "<rect width='400' height='300' fill='#ece6da'/>" +
+      "<path d='M0 196 92 120l58 44 76-74 82 70 92-52v192H0z' fill='#1b4332' fill-opacity='.12'/>" +
+      "<path d='M0 236 118 176l92 46 86-34 104 40v72H0z' fill='#1b4332' fill-opacity='.18'/>" +
+      "<path d='M160 214 200 182l40 32' fill='none' stroke='#c2410c' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/>" +
+      "<path d='M170 210v34h60v-34' fill='#fcfbf9' stroke='#1b4332' stroke-opacity='.45' stroke-width='3' stroke-linejoin='round'/>" +
+      "<path d='M193 244v-14a7 7 0 0 1 14 0v14' fill='none' stroke='#1b4332' stroke-opacity='.45' stroke-width='3'/>" +
+    '</svg>'
+  );
+
 export function mapearFinca(raw: any, index = 0): FincaDetalle {
   const id = pickField(
     raw,
@@ -45,7 +59,7 @@ export function mapearFinca(raw: any, index = 0): FincaDetalle {
   );
   const imagenesColecciones = extraerColeccionesImagenes(raw);
   const imagenesDisponibles = construirGaleriaImagenes(imagenEncontrada, imagenesColecciones);
-  const imagenUrl = imagenesDisponibles[0] ?? 'https://via.placeholder.com/280x200?text=Sin+Imagen';
+  const imagenUrl = imagenesDisponibles[0] ?? PLACEHOLDER_FINCA;
 
   return {
     ...raw,

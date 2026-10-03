@@ -5,6 +5,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Finca, FincaApiRaw } from '../models/finca.model';
 import { ImagenService } from './imagen.service';
+import { PLACEHOLDER_FINCA } from '../../template/services/finca-seleccionada.service';
 
 /**
  * Servicio para la gestión de Fincas en Renfi.
@@ -122,7 +123,7 @@ export class FincaService {
       null
     );
 
-    const imagenUrl = imagenEncontrada ? String(imagenEncontrada) : 'https://via.placeholder.com/640x360?text=Sin+Imagen';
+    const imagenUrl = imagenEncontrada ? String(imagenEncontrada) : PLACEHOLDER_FINCA;
 
     return {
       ...(raw as Record<string, unknown>),
