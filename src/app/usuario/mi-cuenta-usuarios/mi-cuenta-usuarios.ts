@@ -271,7 +271,7 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
 
     obtenerDocumento$
       .pipe(
-        switchMap(() => this.reservaService.obtenerReservasPorUsuario(correo, documento, idUsuario)),
+        switchMap((doc) => this.reservaService.obtenerReservasPorUsuario(correo, doc ?? documento, idUsuario)),
         takeUntil(this.destroy$),
         finalize(() => {
           this.reservasCargando = false;
@@ -285,11 +285,7 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
             return estado !== 'cancelada' && estado !== 'cancelado';
           });
 
-          this.reservas = [...reservasActivas].sort((a, b) => {
-            const fechaA = a.creadoEn ? new Date(a.creadoEn).getTime() : 0;
-            const fechaB = b.creadoEn ? new Date(b.creadoEn).getTime() : 0;
-            return fechaB - fechaA;
-          });
+          this.reservas = reservasActivas; // ya ordenadas por el servicio
 
           if (mensajeExito) {
             this.mensajeReservas = mensajeExito;
@@ -300,7 +296,7 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
           }
         },
         error: (error: unknown) => {
-          this.errorReservas = 'No fue posible cargar tus reservas. Intenta nuevamente en unos minutos.';
+          this.errorReservas = (error as any)?.error?.message || 'No fue posible cargar tus reservas. Intenta nuevamente en unos minutos.';
         }
       });
   }
