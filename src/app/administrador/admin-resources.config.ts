@@ -185,7 +185,7 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       'ApellidoPropietario'
     ],
     preferredFields: [
-      { key: 'NumeroDocumento', label: 'Usuario (Documento)', type: 'number', required: true },
+      { key: 'NumeroDocumentoUsuario', label: 'Usuario (Documento)', type: 'number', required: true },
       { key: 'IdFinca', label: 'Finca (ID)', type: 'number', required: true },
       { key: 'NombreFinca', label: 'Nombre de la finca', type: 'text' },
       { key: 'PrecioFinca', label: 'Precio por noche', type: 'number' },
@@ -194,14 +194,15 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       { key: 'FechaReserva', label: 'Fecha de reserva', type: 'date' },
       { key: 'FechaEntrada', label: 'Fecha de entrada', type: 'date', required: true },
       { key: 'FechaSalida', label: 'Fecha de salida', type: 'date', required: true },
-      { key: 'MontoReserva', label: 'Monto de la reserva', type: 'number' },
+      { key: 'MontoReserva', label: 'Monto de la reserva', type: 'number', required: true },
       { key: 'Estado', label: 'Estado', type: 'text' },
       { key: 'IdPropietario', label: 'Propietario (ID)', type: 'number' },
       { key: 'NombrePropietario', label: 'Nombre del propietario', type: 'text' },
       { key: 'ApellidoPropietario', label: 'Apellido del propietario', type: 'text' }
     ],
     fieldAliases: {
-      NumeroDocumento: [
+      NumeroDocumentoUsuario: [
+        'NumeroDocumento',
         'IdUsuario', 
         'UsuarioId', 
         'usuarioId', 
@@ -209,7 +210,6 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
         'UsuarioID', 
         'numeroDocumento', 
         'Numero_Documento',
-        'NumeroDocumentoUsuario',
         'NumeroDocumentoCliente',
         'numero_documento_usuario',
         'numero_documento_cliente'
@@ -224,7 +224,7 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       'usuarioId'
     ],
     samplePayload: {
-      NumeroDocumento: 123456789,
+      NumeroDocumentoUsuario: 123456789,
       IdFinca: 1,
       NombreFinca: 'Finca El Paraíso',
       PrecioFinca: 500000,
@@ -262,10 +262,16 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       { key: 'Monto', label: 'Monto del pago', type: 'number', required: true },
       { key: 'FechaPago', label: 'Fecha de pago', type: 'date', required: true },
       { key: 'EstadoPago', label: 'Estado del pago', type: 'text' },
-      { key: 'NombreMetodoDePago', label: 'Método de pago', type: 'text' },
-      { key: 'PagoMixto', label: 'Pago mixto', type: 'text' },
-      { key: 'IdReserva', label: 'Reserva (ID)', type: 'number', required: true },
-      { key: 'IdFactura', label: 'Factura (ID)', type: 'number' },
+      {
+        key: 'IdMetodoDePago',
+        label: 'Método de pago',
+        type: 'select',
+        required: true,
+        selectEndpoint: 'metododepago',
+        selectValueKey: 'IdMetodoDePago',
+        selectLabelKey: 'NombreMetodoDePago'
+      },
+      { key: 'IdFactura', label: 'Factura (ID)', type: 'number', required: true },
       { key: 'TotalFactura', label: 'Total facturado', type: 'number' }
     ],
     fieldAliases: {
@@ -274,14 +280,11 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       NombreMetodoDePago: ['Metodo', 'metodo', 'NombreMetodo', 'nombreMetodo']
     },
     samplePayload: {
-      IdReserva: 1,
+      IdFactura: 1,
+      IdMetodoDePago: 1,
       Monto: 1500000,
       FechaPago: '2025-10-21T00:00:00.000Z',
-      EstadoPago: 'Pagado',
-      NombreMetodoDePago: 'Tarjeta de crédito',
-      PagoMixto: false,
-      IdFactura: 1,
-      TotalFactura: 1500000
+      EstadoPago: 'Pagado'
     },
     reports: [
       {
