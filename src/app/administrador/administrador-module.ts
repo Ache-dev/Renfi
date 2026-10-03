@@ -15,7 +15,6 @@ import { MetododepagoAdministrador } from './metododepago-administrador/metodode
 import { MunicipioAdministrador } from './municipio-administrador/municipio-administrador';
 import { HeaderAdministrador } from './header-administrador/header-administrador';
 import { ResourceCrudComponent } from './resource-crud/resource-crud';
-import { DragScrollDirective } from './resource-crud/drag-scroll.directive';
 
 @NgModule({
   declarations: [
@@ -37,8 +36,7 @@ import { DragScrollDirective } from './resource-crud/drag-scroll.directive';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    AdministradorRoutingModule,
-    DragScrollDirective
+    AdministradorRoutingModule
   ],
   exports: [
     Administrador

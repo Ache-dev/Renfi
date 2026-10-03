@@ -1,262 +1,181 @@
-/* ==== Admin Layout - La Finca Abierta ==== */
 :host {
 	display: block;
+}
+
+.admin {
+	display: flex;
 	min-height: 100vh;
-	font-family: 'Montserrat', sans-serif;
-	background-color: var(--color-surface-base, #f5f2eb);
-	color: var(--color-text-primary, #1f2421);
+	min-height: 100dvh;
 }
 
-.admin-layout {
-	min-height: 100vh;
+/* ==== Riel lateral: verde cordillera ==== */
+.admin-nav {
+	--nav-w: 264px;
+	position: fixed;
+	inset: 0 auto 0 0;
+	z-index: 60;
 	display: flex;
 	flex-direction: column;
-}
-
-.admin-layout.sidebar-colapsado .admin-sidebar {
-	width: 0;
-	min-width: 0;
-	max-width: 0;
-	opacity: 0;
-	pointer-events: none;
-	padding: 0;
-	overflow: hidden;
-}
-
-.admin-cuerpo {
-	flex: 1;
-	display: flex;
-	min-height: 0;
-	min-width: 0;
-	align-items: stretch;
-	overflow: hidden;
-}
-
-/* ==== Sidebar Cordillera Forest ==== */
-.admin-sidebar {
-	width: 280px;
-	min-width: 280px;
-	max-width: 280px;
-	background-color: var(--color-secondary-dark, #081c15);
-	color: var(--color-surface-light, #fcfbf9);
-	display: flex;
-	flex-direction: column;
-	transition: all var(--transition-base, 0.25s ease);
-	box-shadow: 4px 0 24px rgba(8, 28, 21, 0.2);
-	overflow: hidden;
-	scrollbar-width: thin;
-	scrollbar-color: var(--color-secondary-light, #2d6a4f) var(--color-secondary-dark, #081c15);
-	flex-shrink: 0;
-	position: relative;
-	border-right: 1px solid rgba(45, 106, 79, 0.3);
-}
-
-.sidebar-encabezado {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 1.4rem 1.6rem;
-	border-bottom: 1px solid rgba(45, 106, 79, 0.25);
-}
-
-.sidebar-logo {
-	font-weight: 700;
-	font-size: 1.05rem;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-	color: var(--color-surface-light, #fcfbf9);
-}
-
-.sidebar-nav {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	padding: 1rem 1rem 2rem;
+	width: min(var(--nav-w), 86vw);
 	overflow-y: auto;
-	overflow-x: hidden;
-	scrollbar-width: thin;
-	scrollbar-color: rgba(45, 106, 79, 0.5) transparent;
-	flex: 1;
+	overscroll-behavior: contain;
+	color: var(--color-text-on-dark-muted);
+	background: var(--color-secondary);
+	box-shadow: var(--shadow-xl);
+	scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+	transition: transform var(--transition-base), visibility 0s;
 }
 
-/* ==== Links del Sidebar ==== */
-.sidebar-link {
-	position: relative;
+.admin--nav-cerrado .admin-nav {
+	transform: translateX(-100%);
+	visibility: hidden;
+	transition: transform var(--transition-base), visibility 0s 0.25s;
+}
+
+.admin-nav__brand {
 	display: flex;
 	align-items: center;
-	gap: 0.85rem;
-	padding: 0.75rem 1rem;
-	border-radius: var(--radius-lg, 16px);
-	color: rgba(245, 242, 235, 0.82);
-	text-decoration: none;
-	background: rgba(27, 67, 50, 0.35);
-	border: 1px solid rgba(45, 106, 79, 0.2);
-	transition: all var(--transition-base, 0.25s ease);
-}
-
-.sidebar-link:hover,
-.sidebar-link:focus-visible {
-	background: rgba(45, 106, 79, 0.45);
-	color: #ffffff;
-	border-color: rgba(194, 65, 12, 0.4);
-	transform: translateX(3px);
-}
-
-.sidebar-link:focus-visible {
-	outline: 2px solid var(--color-primary, #c2410c);
-	outline-offset: 2px;
-}
-
-.sidebar-link.activo {
-	background-color: var(--color-primary, #c2410c);
-	color: #ffffff;
-	border-color: var(--color-primary-light, #ea580c);
-	box-shadow: 0 6px 18px rgba(194, 65, 12, 0.35);
-	transform: translateX(3px);
-}
-
-.sidebar-icon {
-	width: 38px;
-	height: 38px;
-	min-width: 38px;
-	border-radius: 10px;
-	background: rgba(255, 255, 255, 0.08);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: inherit;
+	gap: 12px;
 	flex-shrink: 0;
-	transition: transform 0.2s ease;
+	min-height: 68px;
+	padding: 0 20px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.sidebar-icon svg {
+.admin-nav__mark {
+	width: 36px;
+	height: 36px;
+	flex-shrink: 0;
+}
+
+.admin-nav__brand-copy {
+	display: grid;
+	line-height: 1.2;
+}
+
+.admin-nav__name {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: var(--color-surface-light);
+}
+
+.admin-nav__sub {
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: var(--color-text-on-dark-muted);
+}
+
+.admin-nav__menu {
+	flex: 1;
+	padding: 16px 12px;
+}
+
+.admin-nav__list {
+	display: grid;
+	gap: 2px;
+}
+
+.admin-nav__link,
+.admin-nav__portal {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 44px;
+	padding: 0 12px;
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: var(--color-text-on-dark-muted);
+	border-radius: var(--radius-md);
+	transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-nav__link:hover,
+.admin-nav__portal:hover {
+	color: var(--color-surface-light);
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-nav__link.is-active {
+	font-weight: 600;
+	color: var(--color-surface-light);
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav__link:focus-visible,
+.admin-nav__portal:focus-visible,
+.admin-nav__brand:focus-visible {
+	outline-color: var(--color-on-dark-accent);
+	outline-offset: -2px;
+}
+
+.admin-nav__icon,
+.admin-nav__icon svg,
+.admin-nav__portal svg {
+	display: grid;
 	width: 20px;
 	height: 20px;
+	flex-shrink: 0;
 }
 
-.sidebar-link:hover .sidebar-icon,
-.sidebar-link.activo .sidebar-icon {
-	background: rgba(255, 255, 255, 0.16);
-	transform: scale(1.05);
+.admin-nav__link.is-active .admin-nav__icon {
+	color: var(--color-on-dark-accent);
 }
 
-.sidebar-text {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
+.admin-nav__label {
 	min-width: 0;
-	flex: 1;
-	justify-content: center;
-}
-
-.sidebar-text strong {
-	font-size: 0.92rem;
-	font-weight: 600;
-	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 1.25;
-}
-
-.sidebar-text small {
-	font-size: 0.75rem;
-	color: rgba(245, 242, 235, 0.6);
-	line-height: 1.2;
 	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
-.sidebar-link.activo .sidebar-text small {
-	color: rgba(255, 255, 255, 0.85);
+.admin-nav__foot {
+	flex-shrink: 0;
+	padding: 12px;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ==== Contenido Principal Admin ==== */
-.admin-contenido {
-	flex: 1;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	padding: clamp(20px, 3.5vw, 40px);
-	overflow: auto;
-	scrollbar-width: thin;
-	scrollbar-color: var(--color-surface-medium, #e8e2d5) transparent;
-	background-color: var(--color-surface-base, #f5f2eb);
-}
-
-.admin-contenido__inner {
-	flex: 1;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	gap: clamp(20px, 3vw, 32px);
-	max-width: min(1360px, 100%);
-	width: 100%;
-	margin: 0 auto;
-}
-
-.admin-sidebar.is-dragging {
-	cursor: grabbing;
-}
-
-.sidebar-overlay {
-	display: none;
+.admin-overlay {
 	position: fixed;
 	inset: 0;
-	z-index: 45;
-	background: rgba(8, 28, 21, 0.5);
-	backdrop-filter: blur(4px);
-	border: none;
-	padding: 0;
-	margin: 0;
-	cursor: pointer;
+	z-index: 50;
+	background: rgba(8, 28, 21, 0.45);
+	animation: renfi-fade var(--transition-base);
 }
 
-/* Responsividad */
-@media (max-width: 1024px) {
-	.admin-cuerpo {
-		flex-direction: column;
-		position: relative;
-	}
+/* ==== Columna de trabajo ==== */
+.admin-col {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+}
 
-	.admin-sidebar {
-		position: fixed;
+.admin-content {
+	flex: 1;
+	width: 100%;
+	max-width: 1400px;
+	margin-inline: auto;
+	padding: clamp(16px, 3vw, 32px);
+}
+
+@media (min-width: 1024px) {
+	.admin-nav {
+		position: sticky;
 		top: 0;
-		left: 0;
-		bottom: 0;
-		width: min(300px, 84vw);
-		max-width: 320px;
-		transform: translateX(-110%);
-		opacity: 0;
-		pointer-events: none;
-		flex-direction: column;
-		overflow-y: auto;
-		overflow-x: hidden;
-		box-shadow: 24px 0 48px rgba(8, 28, 21, 0.4);
-		border-radius: 0 24px 24px 0;
-		cursor: grab;
-		z-index: 60;
-		transition: transform 0.3s ease, opacity 0.3s ease;
-	}
-
-	.admin-layout:not(.sidebar-colapsado) .admin-sidebar {
-		transform: translateX(0);
-		opacity: 1;
-		pointer-events: auto;
-	}
-
-	.sidebar-overlay {
-		display: block;
-	}
-
-	.admin-contenido {
-		padding: clamp(16px, 4vw, 24px);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.sidebar-link,
-	.admin-sidebar {
+		height: 100vh;
+		height: 100dvh;
+		width: var(--nav-w);
+		flex-shrink: 0;
+		box-shadow: none;
 		transition: none;
+	}
+
+	/* Escritorio: el riel sale del flujo sin animar el layout */
+	.admin--nav-cerrado .admin-nav {
+		display: none;
+	}
+
+	.admin-overlay {
+		display: none;
 	}
 }

@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+﻿import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -447,6 +447,16 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
     this.mostrarModalEliminacion = false;
     this.registroAEliminar = null;
     this.idRegistroAEliminar = null;
+  }
+
+  // Escape cierra el diálogo abierto (el foco suele quedar fuera del backdrop).
+  @HostListener('document:keydown.escape')
+  cerrarDialogoConEscape(): void {
+    if (this.mostrarModalEliminacion) {
+      this.cancelarEliminacion();
+    } else if (this.formularioVisible && !this.formulario.disabled) {
+      this.cerrarFormulario();
+    }
   }
 
   confirmarEliminacion(): void {

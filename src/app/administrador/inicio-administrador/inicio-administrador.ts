@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { AdminApiService } from '../services/admin-api.service';
@@ -107,10 +106,7 @@ export class InicioAdministrador implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(
-    private readonly api: AdminApiService,
-    private readonly router: Router
-  ) {}
+  constructor(private readonly api: AdminApiService) {}
 
   ngOnInit(): void {
     this.cargarIndicadores();
@@ -120,10 +116,6 @@ export class InicioAdministrador implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  navegar(ruta: string): void {
-    this.router.navigate([ruta]);
   }
 
   refrescar(): void {

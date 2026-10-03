@@ -1,38 +1,38 @@
-<header class="admin-header" role="banner">
-	<div class="header-identidad">
-		<button type="button" class="menu-toggle" (click)="alternar()" [attr.aria-pressed]="sidebarColapsado" aria-label="Alternar menú lateral">
-			<svg class="icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-				<line x1="3" y1="12" x2="21" y2="12"></line>
-				<line x1="3" y1="6" x2="21" y2="6"></line>
-				<line x1="3" y1="18" x2="21" y2="18"></line>
-			</svg>
-		</button>
-		<div class="header-textos">
-			<h1>{{ titulo }}</h1>
-			<p *ngIf="descripcion">{{ descripcion }}</p>
-		</div>
+<header class="admin-header">
+	<button
+		type="button"
+		class="icon-btn"
+		(click)="alternar()"
+		aria-controls="admin-nav"
+		[attr.aria-expanded]="!sidebarColapsado"
+		[attr.aria-label]="sidebarColapsado ? 'Mostrar menú lateral' : 'Ocultar menú lateral'"
+	>
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<line x1="4" y1="7" x2="20" y2="7"></line>
+			<line x1="4" y1="12" x2="20" y2="12"></line>
+			<line x1="4" y1="17" x2="20" y2="17"></line>
+		</svg>
+	</button>
+
+	<div class="admin-header__titles">
+		<h1>{{ titulo }}</h1>
+		<p *ngIf="descripcion" [title]="descripcion">{{ descripcion }}</p>
 	</div>
 
-	<div class="header-acciones">
-		<div class="header-usuario" *ngIf="usuario$ | async as usuario; else invitado">
-			<div class="usuario-avatar" aria-hidden="true">{{ (usuario.NombreUsuario || usuario.Correo || 'A')[0] | uppercase }}</div>
-			<div class="usuario-detalle">
-				<span class="usuario-nombre">{{ usuario.NombreUsuario || 'Administrador' }}</span>
-				<small>{{ usuario.Correo || 'admin@renfi.com' }}</small>
-			</div>
-		</div>
-		<ng-template #invitado>
-			<span class="header-invitado">Invitado</span>
-		</ng-template>
-
-		<a routerLink="/inicio" class="header-link" aria-label="Volver al portal público de Renfi">
-			<svg class="icono-svg icono-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-				<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-				<polyline points="15 3 21 3 21 9"></polyline>
-				<line x1="10" y1="14" x2="21" y2="3"></line>
-			</svg>
-			<span>Ver portal</span>
-		</a>
+	<div class="admin-header__user" *ngIf="usuario$ | async as usuario">
+		<span class="admin-header__avatar" aria-hidden="true">{{ (usuario.NombreUsuario || usuario.Correo || 'A')[0] | uppercase }}</span>
+		<span class="admin-header__who">
+			<span class="admin-header__name">{{ usuario.NombreUsuario || 'Administrador' }}</span>
+			<small>{{ usuario.Correo || 'admin@renfi.com' }}</small>
+		</span>
 	</div>
+
+	<a routerLink="/inicio" class="btn btn--secondary btn--sm admin-header__portal">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+			<polyline points="15 3 21 3 21 9"></polyline>
+			<line x1="10" y1="14" x2="21" y2="3"></line>
+		</svg>
+		Ver portal
+	</a>
 </header>
-
