@@ -1,114 +1,127 @@
-<section class="comprobante" *ngIf="resultado as data; else sinRecibo">
-	<header class="comprobante__encabezado">
-		<div class="icono-exito" aria-hidden="true">
-			<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-		</div>
-		<div>
-			<h1>¡Reserva confirmada!</h1>
-			<p>Hemos registrado tu pago y recibido la reserva. Te enviamos una copia a tu correo electrónico.</p>
-		</div>
-	</header>
+<div class="page comprobante" *ngIf="resultado as data; else sinRecibo">
+  <header class="comprobante__head">
+    <span class="sello" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+    </span>
+    <h1>¡Reserva confirmada!</h1>
+    <p>Hemos registrado tu pago y recibido la reserva. Te enviamos una copia a tu correo electrónico.</p>
+  </header>
 
-	<div class="comprobante__grid">
-		<article class="tarjeta tarjeta--principal">
-			<h2>Detalles de la reserva</h2>
-			<dl>
-				<div>
-					<dt>Finca</dt>
-					<dd>{{ data.reserva.fincaNombre }}</dd>
-				</div>
-				<div *ngIf="data.reserva.municipio">
-					<dt>Municipio</dt>
-					<dd>{{ data.reserva.municipio }}</dd>
-				</div>
-				<div>
-					<dt>Check-in</dt>
-					<dd>{{ data.reserva.fechaEntrada | date: 'fullDate' }}</dd>
-				</div>
-				<div>
-					<dt>Check-out</dt>
-					<dd>{{ data.reserva.fechaSalida | date: 'fullDate' }}</dd>
-				</div>
-				<div *ngIf="data.reserva.noches">
-					<dt>Noches</dt>
-					<dd>{{ data.reserva.noches }}</dd>
-				</div>
-				<div *ngIf="data.reserva.huespedes">
-					<dt>Huéspedes</dt>
-					<dd>{{ data.reserva.huespedes }}</dd>
-				</div>
-				<div *ngIf="data.reserva.usuarioNombre">
-					<dt>A nombre de</dt>
-					<dd>{{ data.reserva.usuarioNombre }}</dd>
-				</div>
-			</dl>
-		</article>
+  <article class="ticket" aria-labelledby="ticket-titulo">
+    <div class="ticket__cuerpo">
+      <h2 id="ticket-titulo">Detalles de la reserva</h2>
+      <dl class="filas">
+        <div *ngIf="data.reserva.id">
+          <dt>Número de reserva</dt>
+          <dd class="tabular">#{{ data.reserva.id }}</dd>
+        </div>
+        <div>
+          <dt>Finca</dt>
+          <dd>{{ data.reserva.fincaNombre }}</dd>
+        </div>
+        <div *ngIf="data.reserva.municipio">
+          <dt>Municipio</dt>
+          <dd>{{ data.reserva.municipio }}</dd>
+        </div>
+        <div>
+          <dt>Entrada</dt>
+          <dd class="tabular">{{ data.reserva.fechaEntrada | date: 'fullDate' }}</dd>
+        </div>
+        <div>
+          <dt>Salida</dt>
+          <dd class="tabular">{{ data.reserva.fechaSalida | date: 'fullDate' }}</dd>
+        </div>
+        <div *ngIf="data.reserva.noches">
+          <dt>Noches</dt>
+          <dd class="tabular">{{ data.reserva.noches }}</dd>
+        </div>
+        <div *ngIf="data.reserva.huespedes">
+          <dt>Huéspedes</dt>
+          <dd class="tabular">{{ data.reserva.huespedes }}</dd>
+        </div>
+        <div *ngIf="data.reserva.usuarioNombre">
+          <dt>A nombre de</dt>
+          <dd>{{ data.reserva.usuarioNombre }}</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="zocalo" aria-hidden="true"></div>
+  </article>
 
-		<article class="tarjeta">
-			<h2>Resumen del pago</h2>
-			<dl>
-				<div>
-					<dt>Método</dt>
-					<dd>{{ data.pago.metodoNombre }}</dd>
-				</div>
-				<div>
-					<dt>Monto pagado</dt>
-					<dd>{{ formatoMoneda(data.pago.monto) }}</dd>
-				</div>
-				<div>
-					<dt>Referencia</dt>
-					<dd>{{ data.pago.referencia || '—' }}</dd>
-				</div>
-				<div>
-					<dt>Fecha de pago</dt>
-					<dd>{{ data.pago.fechaPago | date: 'short' }}</dd>
-				</div>
-						<div *ngIf="data.pago.estado">
-							<dt>Estado</dt>
-							<dd class="badge" [class.badge--exito]="esPagoExitoso()">
-								{{ data.pago.estado }}
-							</dd>
-				</div>
-			</dl>
-		</article>
+  <div class="comprobante__grid">
+    <section class="card bloque" aria-labelledby="pago-titulo">
+      <h2 id="pago-titulo">Resumen del pago</h2>
+      <dl class="filas">
+        <div>
+          <dt>Método</dt>
+          <dd>{{ data.pago.metodoNombre }}</dd>
+        </div>
+        <div>
+          <dt>Monto pagado</dt>
+          <dd class="tabular">{{ formatoMoneda(data.pago.monto) }}</dd>
+        </div>
+        <div>
+          <dt>Referencia</dt>
+          <dd class="tabular">{{ data.pago.referencia || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Fecha de pago</dt>
+          <dd class="tabular">{{ data.pago.fechaPago | date: 'dd/MM/yyyy HH:mm' }}</dd>
+        </div>
+        <div *ngIf="data.pago.estado">
+          <dt>Estado</dt>
+          <dd>
+            <span class="badge" [class.badge--success]="esPagoExitoso()" [class.badge--warning]="!esPagoExitoso()">{{ data.pago.estado }}</span>
+          </dd>
+        </div>
+      </dl>
+    </section>
 
-		<article class="tarjeta" *ngIf="factura">
-			<h2>Factura</h2>
-			<dl>
-				<div *ngIf="factura.id">
-					<dt>Número de factura</dt>
-					<dd>{{ factura.id }}</dd>
-				</div>
-				<div>
-					<dt>Fecha de emisión</dt>
-					<dd>{{ factura.fechaFactura | date: 'medium' }}</dd>
-				</div>
-				<div>
-					<dt>Total facturado</dt>
-					<dd>{{ formatoMoneda(factura.total) }}</dd>
-				</div>
-				<div *ngIf="factura.estadoReserva">
-					<dt>Estado</dt>
-					<dd>{{ factura.estadoReserva }}</dd>
-				</div>
-			</dl>
-		</article>
-	</div>
+    <section class="card bloque" aria-labelledby="factura-titulo" *ngIf="factura">
+      <h2 id="factura-titulo">Factura</h2>
+      <dl class="filas">
+        <div *ngIf="factura.id">
+          <dt>Número de factura</dt>
+          <dd class="tabular">{{ factura.id }}</dd>
+        </div>
+        <div>
+          <dt>Fecha de emisión</dt>
+          <dd class="tabular">{{ factura.fechaFactura | date: 'dd/MM/yyyy HH:mm' }}</dd>
+        </div>
+        <div>
+          <dt>Total facturado</dt>
+          <dd class="tabular">{{ formatoMoneda(factura.total) }}</dd>
+        </div>
+        <div *ngIf="factura.estadoReserva">
+          <dt>Estado</dt>
+          <dd>{{ factura.estadoReserva }}</dd>
+        </div>
+      </dl>
+    </section>
+  </div>
 
-	<footer class="comprobante__acciones">
-		<button type="button" class="btn btn--texto" (click)="imprimir()">Imprimir</button>
-		<button type="button" class="btn btn--primario" (click)="irAMisReservas()">Ver mis reservas</button>
-	</footer>
+  <div class="comprobante__acciones">
+    <button type="button" class="btn btn--secondary" (click)="imprimir()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Imprimir
+    </button>
+    <button type="button" class="btn btn--primary" (click)="irAMisReservas()">Ver mis reservas</button>
+  </div>
 
-	<p class="comprobante__nota">
-		Guardamos tu comprobante con fecha {{ fechaGeneracion | date: 'fullDate' }}. Puedes consultar y gestionar tu reserva desde el panel de "Mi cuenta".
-	</p>
-</section>
+  <p class="comprobante__nota">
+    Guardamos tu comprobante con fecha <span class="tabular">{{ fechaGeneracion | date: 'fullDate' }}</span>. Puedes consultar y gestionar tu reserva desde el panel de “Mi cuenta”.
+  </p>
+</div>
 
 <ng-template #sinRecibo>
-	<section class="comprobante comprobante--sin-datos">
-		<h1>No encontramos una reserva reciente</h1>
-		<p>Si realizaste un pago hace unos minutos, vuelve a intentar desde la finca seleccionada.</p>
-		<button type="button" class="btn btn--primario" (click)="irAMisReservas()">Ir a Mi cuenta</button>
-	</section>
+  <div class="page comprobante">
+    <div class="card state-block">
+      <span class="state-block__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg>
+      </span>
+      <h1>No encontramos una reserva reciente</h1>
+      <p>Si realizaste un pago hace unos minutos, vuelve a intentar desde la finca seleccionada.</p>
+      <button type="button" class="btn btn--primary" (click)="irAMisReservas()">Ir a Mi cuenta</button>
+    </div>
+  </div>
 </ng-template>

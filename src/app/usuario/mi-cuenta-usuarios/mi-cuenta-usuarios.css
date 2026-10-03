@@ -1,670 +1,256 @@
 :host {
-	display: block;
-	min-height: 100vh;
-	font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
-	background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #ffffff 100%);
-}
-
-.cuenta-page {
-	min-height: calc(100vh - 120px);
-	display: flex;
-	justify-content: center;
-	padding: clamp(48px, 8vw, 96px) clamp(20px, 6vw, 72px);
-}
-
-.cuenta-page--guest {
-	align-items: center;
-}
-
-.cuenta-shell {
-	width: min(1100px, 100%);
-	display: flex;
-	flex-direction: column;
-	gap: clamp(24px, 6vw, 40px);
-}
-
-.cuenta-header {
-	display: flex;
-	flex-direction: column;
-	gap: clamp(18px, 4vw, 24px);
-	justify-content: space-between;
-	background: rgba(255, 255, 255, 0.96);
-	border-radius: clamp(22px, 4vw, 28px);
-	box-shadow: 0 24px 48px rgba(15, 23, 42, 0.1);
-	border: 1px solid rgba(226, 232, 240, 0.8);
-	padding: clamp(24px, 4vw, 36px);
-}
-
-.cuenta-identidad {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	color: #0f172a;
-}
-
-.cuenta-kicker {
-	align-self: flex-start;
-	padding: 0.5rem 1.4rem;
-	border-radius: 999px;
-	background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-	border: 1.5px solid transparent;
-	background-clip: padding-box;
-	position: relative;
-	color: #667eea;
-	font-size: 0.85rem;
-	font-weight: 700;
-	letter-spacing: 0.05em;
-	text-transform: none;
-	box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
-}
-
-.cuenta-kicker::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: 999px;
-	padding: 1.5px;
-	background: linear-gradient(135deg, #667eea, #764ba2);
-	-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-	mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-	mask-composite: exclude;
-	pointer-events: none;
-}
-
-.cuenta-identidad h1 {
-	margin: 0;
-	font-size: clamp(2.2rem, 5vw, 3rem);
-	font-weight: 700;
-	line-height: 1.2;
-}
-
-.cuenta-identidad p {
-	margin: 0;
-	color: #475569;
-	font-size: clamp(1rem, 2.5vw, 1.15rem);
-}
-
-.cuenta-badges {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-
-.cuenta-badge {
-	padding: 0.45rem 1.2rem;
-	border-radius: 999px;
-	font-weight: 600;
-	font-size: 0.85rem;
-	letter-spacing: 0.05em;
-}
-
-.estado-activo {
-	background: linear-gradient(135deg, #10b981, #059669);
-	color: #ffffff;
-	box-shadow: 0 12px 26px rgba(16, 185, 129, 0.25);
-}
-
-.cuenta-rol {
-	background: rgba(37, 99, 235, 0.1);
-	color: #1d4ed8;
-	border: 1px solid rgba(37, 99, 235, 0.25);
-}
-
-.cuenta-grid {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: clamp(20px, 5vw, 30px);
-}
-
-@media (min-width: 992px) {
-	.cuenta-grid {
-		grid-template-columns: 1.2fr 0.8fr;
-	}
-
-	.cuenta-header {
-		flex-direction: row;
-		align-items: center;
-	}
-}
-
-.cuenta-card {
-	background: rgba(255, 255, 255, 0.97);
-	border-radius: clamp(20px, 4vw, 26px);
-	box-shadow: 0 22px 44px rgba(15, 23, 42, 0.12);
-	border: 1px solid rgba(226, 232, 240, 0.75);
-	padding: clamp(24px, 4vw, 36px);
-	display: flex;
-	flex-direction: column;
-	gap: clamp(16px, 4vw, 24px);
-}
-
-.cuenta-card h2 {
-	margin: 0;
-	font-size: clamp(1.25rem, 3vw, 1.5rem);
-	font-weight: 700;
-	color: #0f172a;
-}
-
-.cuenta-subtitle {
-	margin: 0;
-	color: #475569;
-	font-size: 0.95rem;
-}
-
-.cuenta-form-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: clamp(14px, 4vw, 20px);
-}
-
-.cuenta-field {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	color: #1f2937;
-}
-
-.cuenta-field span {
-	font-weight: 600;
-	font-size: 0.95rem;
-}
-
-.cuenta-field input {
-	border-radius: 14px;
-	border: 1px solid rgba(148, 163, 184, 0.45);
-	padding: 0.7rem 0.9rem;
-	font-size: 0.95rem;
-	background: #ffffff;
-	color: #0f172a;
-	font-weight: 500;
-	caret-color: #0f172a;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cuenta-field input:focus {
-	border-color: rgba(37, 99, 235, 0.6);
-	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
-	outline: none;
-}
-
-.cuenta-field input[disabled],
-.cuenta-field input[readonly] {
-	background: #f8fafc;
-	border-style: dashed;
-	color: #334155;
-	cursor: default;
-}
-
-.cuenta-field small {
-	color: #dc2626;
-	font-size: 0.78rem;
+  display: block;
 }
 
-.cuenta-feedback {
-	display: grid;
-	gap: 8px;
+.cuenta {
+  --panel-gap: 20px;
+  display: grid;
+  gap: var(--spacing-lg);
+  padding-block: var(--spacing-lg) var(--spacing-xl);
 }
 
-.cuenta-feedback--error,
-.cuenta-feedback--success {
-	margin: 0;
-	padding: 10px 14px;
-	border-radius: 12px;
-	font-size: 0.9rem;
+/* ==== Perfil ==== */
+.perfil {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 20px;
 }
 
-.cuenta-feedback--error {
-	color: #dc2626;
-	background: rgba(254, 226, 226, 0.92);
-	border: 1px solid rgba(254, 202, 202, 0.92);
+.perfil__avatar {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-inverse);
+  background: var(--color-secondary);
+  border-radius: 50%;
 }
 
-.cuenta-feedback--success {
-	color: #166534;
-	background: rgba(220, 252, 231, 0.92);
-	border: 1px solid rgba(187, 247, 208, 0.92);
+.perfil__datos {
+  flex: 1 1 240px;
+  min-width: 0;
 }
 
-.cuenta-actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 12px;
+.perfil__datos h1 {
+  font-size: var(--text-headline);
+  overflow-wrap: anywhere;
 }
 
-.cuenta-submit,
-.cuenta-secondary {
-	border: none;
-	border-radius: 999px;
-	padding: 0.85rem 1.6rem;
-	font-weight: 600;
-	font-size: 0.95rem;
-	cursor: pointer;
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
+.perfil__datos p {
+  margin-top: 2px;
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
 }
 
-.cuenta-submit {
-	background: linear-gradient(135deg, #2563eb, #1d4ed8, #3b82f6);
-	color: #ffffff;
-	box-shadow: 0 20px 40px rgba(37, 99, 235, 0.32);
+.perfil__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.cuenta-submit:hover:enabled,
-.cuenta-submit:focus-visible:enabled {
-	transform: translateY(-2px);
-	box-shadow: 0 28px 52px rgba(37, 99, 235, 0.42);
+/* ==== Paneles ==== */
+.cuenta__grid {
+  display: grid;
+  gap: var(--spacing-md);
+  align-items: start;
 }
 
-.cuenta-submit:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-	box-shadow: none;
+.panel {
+  display: grid;
+  gap: var(--panel-gap);
+  min-width: 0;
+  padding: clamp(20px, 3vw, 32px);
 }
 
-.cuenta-secondary {
-	background: rgba(248, 250, 252, 0.94);
-	color: #1f2937;
-	border: 1px solid rgba(148, 163, 184, 0.45);
-	box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+.panel__head h2 {
+  font-size: var(--text-title);
 }
 
-.cuenta-secondary:hover:enabled,
-.cuenta-secondary:focus-visible:enabled {
-	transform: translateY(-2px);
-	box-shadow: 0 24px 48px rgba(148, 163, 184, 0.2);
+.panel__head p {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
 }
 
-.cuenta-spinner {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
+.campos {
+  display: grid;
+  gap: 18px;
 }
 
-.cuenta-reservas__header h2 {
-	margin: 0;
-	font-size: clamp(1.2rem, 3vw, 1.4rem);
-	font-weight: 700;
+/* Evita que el input se estire cuando el campo vecino tiene pista */
+.campos .field {
+  align-content: start;
 }
 
-.cuenta-reservas__header p {
-	margin: 0;
-	color: #475569;
-	font-size: 0.9rem;
+/* La región aria-live siempre existe; vacía no debe sumar un hueco extra del grid */
+.feedback {
+  display: grid;
+  gap: 10px;
 }
 
-.cuenta-reservas__feedback {
-	display: grid;
-	gap: 10px;
-	margin-bottom: 12px;
+.feedback:empty {
+  margin-top: calc(var(--panel-gap) * -1);
 }
 
-.cuenta-reservas__loader {
-	display: inline-flex;
-	align-items: center;
-	gap: 10px;
-	padding: 10px 14px;
-	border-radius: 14px;
-	background: rgba(219, 234, 254, 0.85);
-	border: 1px solid rgba(191, 219, 254, 0.9);
-	color: #1d4ed8;
-	font-weight: 600;
-	font-size: 0.9rem;
-	margin-bottom: 18px;
+.panel__acciones {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.cuenta-reservas__spinner {
-	width: 18px;
-	height: 18px;
-	border-radius: 50%;
-	border: 3px solid rgba(37, 99, 235, 0.2);
-	border-top-color: #2563eb;
-	animation: cuenta-reservas-spin 0.75s linear infinite;
+/* ==== Reservas ==== */
+.reservas__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
 }
 
-@keyframes cuenta-reservas-spin {
-	to {
-		transform: rotate(360deg);
-	}
+.reservas__head p {
+  grid-column: 1 / -1;
 }
 
-.reserva-lista {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
+.reservas__cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-block: var(--spacing-md);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
 }
 
-.reserva-lista li {
-	border: 1px solid rgba(226, 232, 240, 0.8);
-	border-radius: 16px;
-	padding: 16px;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9));
-	box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+.reservas__cargando .spinner {
+  color: var(--color-primary);
 }
 
-.reserva-titulo {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 8px;
-	margin-bottom: 6px;
+.reservas__lista {
+  border-top: 1px solid var(--color-surface-medium);
 }
 
-.reserva-nombre {
-	font-weight: 600;
-	color: #0f172a;
+.reserva {
+  display: grid;
+  gap: 6px;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--color-surface-medium);
 }
 
-.reserva-id {
-	font-size: 0.78rem;
-	color: #64748b;
+.reserva:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
-.reserva-detalle {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 12px;
-	font-size: 0.88rem;
-	color: #475569;
+.reserva__titulo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.reserva-acciones {
-	margin-top: 14px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 12px;
-	flex-wrap: wrap;
+.reserva__titulo h3 {
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
-.reserva-creada {
-	font-size: 0.82rem;
-	color: #64748b;
+.reserva__titulo span {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
 }
 
-.reserva-cancelar {
-	border: none;
-	border-radius: 999px;
-	padding: 0.55rem 1.4rem;
-	font-weight: 600;
-	font-size: 0.88rem;
-	cursor: pointer;
-	background: linear-gradient(135deg, #ef4444, #dc2626);
-	color: #ffffff;
-	box-shadow: 0 14px 28px rgba(220, 38, 38, 0.28);
-	transition: transform 0.18s ease, box-shadow 0.18s ease;
+.reserva__fechas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  font-size: 0.9rem;
 }
 
-.reserva-cancelar:hover:enabled,
-.reserva-cancelar:focus-visible:enabled {
-	transform: translateY(-2px);
-	box-shadow: 0 20px 38px rgba(220, 38, 38, 0.36);
+.reserva__fechas svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-secondary);
 }
 
-.reserva-cancelar:disabled {
-	opacity: 0.7;
-	cursor: not-allowed;
-	box-shadow: none;
+.reserva__salida {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.reserva-cancelar__spinner {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
+.reserva__fechas .reserva__salida svg {
+  width: 14px;
+  height: 14px;
+  color: var(--color-text-tertiary);
 }
 
-.reserva-empty {
-	margin: 0;
-	color: #6b7280;
-	font-size: 0.92rem;
+.reserva__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
 }
 
-.cuenta-guest {
-	background: rgba(255, 255, 255, 0.95);
-	border-radius: clamp(22px, 5vw, 30px);
-	box-shadow: 0 24px 52px rgba(15, 23, 42, 0.14);
-	border: 1px solid rgba(226, 232, 240, 0.8);
-	padding: clamp(36px, 6vw, 48px);
-	display: grid;
-	gap: clamp(18px, 4vw, 24px);
-	text-align: center;
+.reserva__pie .btn {
+  margin-inline: -14px; /* alinea el texto del botón fantasma con el borde */
 }
 
-.cuenta-guest h1 {
-	margin: 0;
-	font-size: clamp(2rem, 5vw, 2.6rem);
-	color: #0f172a;
+.reserva__pie small {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
 }
 
-.cuenta-guest p {
-	margin: 0;
-	color: #475569;
-	font-size: 1rem;
+.btn--sm .spinner {
+  width: 16px;
+  height: 16px;
 }
 
-.cuenta-loading {
-	min-height: 60vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 16px;
-	color: #475569;
-	font-size: 1rem;
+/* ==== Invitado ==== */
+.invitado {
+  max-width: 560px;
+  width: 100%;
+  margin-inline: auto;
 }
 
-.cuenta-loading .cuenta-spinner {
-	display: inline-block;
-	width: 48px;
-	height: 48px;
-	border-radius: 50%;
-	border: 4px solid rgba(226, 232, 240, 0.7);
-	border-top-color: #2563eb;
-	animation: girar 0.8s linear infinite;
+.invitado h1 {
+  font-size: var(--text-title);
 }
 
-@keyframes girar {
-	to {
-		transform: rotate(360deg);
-	}
+.modal {
+  max-width: 480px;
 }
 
-@media (max-width: 640px) {
-	.cuenta-actions {
-		flex-direction: column;
-	}
-
-	.cuenta-actions button {
-		width: 100%;
-	}
-
-	.cuenta-reservas__header {
-		text-align: center;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	* {
-		transition-duration: 0.01ms !important;
-		animation-duration: 0.01ms !important;
-	}
-}
-
-/* ==================== Modal de Confirmación ==================== */
-.modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(15, 23, 42, 0.75);
-	backdrop-filter: blur(4px);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 9999;
-	padding: 20px;
-	animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-.modal-container {
-	background: white;
-	border-radius: 24px;
-	box-shadow: 0 25px 50px rgba(15, 23, 42, 0.25);
-	max-width: 500px;
-	width: 100%;
-	overflow: hidden;
-	animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-	from {
-		transform: translateY(20px);
-		opacity: 0;
-	}
-	to {
-		transform: translateY(0);
-		opacity: 1;
-	}
-}
-
-.modal-header {
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	padding: 28px 32px;
-	border-bottom: 1px solid rgba(226, 232, 240, 0.3);
-}
-
-.modal-header h3 {
-	margin: 0;
-	font-size: 1.5rem;
-	font-weight: 700;
-	color: white;
-	font-family: 'Montserrat', sans-serif;
-}
-
-.modal-body {
-	padding: 32px;
-	color: #334155;
-	line-height: 1.7;
-}
-
-.modal-body p {
-	margin: 0 0 16px 0;
-	font-size: 1rem;
+.modal__text strong {
+  color: var(--color-text-primary);
 }
 
-.modal-body p:last-child {
-	margin-bottom: 0;
+@media (pointer: coarse) {
+  .btn--tactil {
+    min-height: 44px;
+  }
 }
 
-.modal-body strong {
-	color: #0f172a;
-	font-weight: 600;
+@media (max-width: 639px) {
+  .panel__acciones .btn {
+    width: 100%;
+  }
 }
 
-.modal-warning {
-	margin-top: 20px;
-	padding: 12px 16px;
-	background: var(--color-surface, #fcfbf9);
-	border: 1px solid var(--color-border, #e8e2d5);
-	border-radius: var(--border-radius-md, 8px);
-	font-size: 0.9rem;
-	color: var(--color-primary-dark, #9a3412);
-	font-weight: 500;
-	display: flex;
-	align-items: center;
-	gap: 8px;
+@media (min-width: 640px) {
+  .campos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-
-.modal-actions {
-	display: flex;
-	gap: 12px;
-	padding: 24px 32px;
-	background: #f8fafc;
-	border-top: 1px solid #e2e8f0;
-	justify-content: flex-end;
-}
-
-.modal-btn {
-	padding: 12px 28px;
-	border: none;
-	border-radius: 12px;
-	font-size: 1rem;
-	font-weight: 600;
-	font-family: 'Montserrat', sans-serif;
-	cursor: pointer;
-	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-	min-width: 120px;
-}
-
-.modal-btn--cancel {
-	background: white;
-	color: #64748b;
-	border: 2px solid #e2e8f0;
-}
-
-.modal-btn--cancel:hover {
-	background: #f8fafc;
-	border-color: #cbd5e1;
-	color: #475569;
-	transform: translateY(-1px);
-}
-
-.modal-btn--confirm {
-	background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-	color: white;
-	box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
-
-.modal-btn--confirm:hover {
-	background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-	box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-	transform: translateY(-2px);
-}
-
-.modal-btn:active {
-	transform: translateY(0);
-}
-
-@media (max-width: 640px) {
-	.modal-overlay {
-		padding: 16px;
-	}
-
-	.modal-container {
-		border-radius: 20px;
-	}
-
-	.modal-header {
-		padding: 24px;
-	}
-
-	.modal-header h3 {
-		font-size: 1.25rem;
-	}
-
-	.modal-body {
-		padding: 24px;
-	}
-
-	.modal-actions {
-		flex-direction: column-reverse;
-		padding: 20px 24px;
-	}
 
-	.modal-btn {
-		width: 100%;
-		min-width: auto;
-	}
+@media (min-width: 1024px) {
+  .cuenta__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
 }

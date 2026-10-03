@@ -7,6 +7,7 @@ import { ReservaCheckoutDraft, ReservaCheckoutService } from '../../template/ser
 import { ReservaService } from '../../template/services/reserva.service';
 import { AuthStateService } from '../../template/services/auth-state.service';
 import { UsuarioService } from '../../core/services/usuario.service';
+import { PLACEHOLDER_FINCA } from '../../template/services/finca-seleccionada.service';
 
 @Component({
   selector: 'app-pasarela-pago-usuario',
@@ -15,7 +16,7 @@ import { UsuarioService } from '../../core/services/usuario.service';
   styleUrl: './pasarela-pago-usuario.css'
 })
 export class PasarelaPagoUsuario implements OnInit, OnDestroy {
-  readonly placeholderFinca = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23f5f2eb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%238c827a'%3EFinca Renfi%3C/text%3E%3C/svg%3E";
+  readonly placeholderFinca = PLACEHOLDER_FINCA;
   draft: ReservaCheckoutDraft | null = null;
   pagoForm: FormGroup;
   procesando = false;
@@ -54,9 +55,9 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
       return;
     }
 
-    const usuario = this.authState.getSnapshot();
-
     if (!this.authState.isAuthenticated()) {
+      // Sin sesión no se muestra el formulario mientras se redirige al login.
+      this.draft = null;
       this.error = 'Debes iniciar sesión para completar la reserva.';
       setTimeout(() => {
         this.router.navigate(['/iniciar-sesion']);
@@ -193,12 +194,6 @@ export class PasarelaPagoUsuario implements OnInit, OnDestroy {
   }
 
   volver(): void {
-    this.router.navigate(['/inicio']);
-  }
-
-  get nombreMetodoPago(): string {
-    const id = this.pagoForm.get('metodoPago')?.value;
-    const metodo = this.metodosPago.find(m => m.id.toString() === id);
-    return metodo?.nombre || 'Método de pago';
+    this.router.navigate(this.draft ? ['/fincas', this.draft.fincaId] : ['/inicio']);
   }
 }

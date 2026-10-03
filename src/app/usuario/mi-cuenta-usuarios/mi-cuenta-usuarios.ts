@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, Subject, switchMap, takeUntil, of } from 'rxjs';
 import { AuthStateService } from '../../template/services/auth-state.service';
@@ -157,6 +157,18 @@ export class MiCuentaUsuarios implements OnInit, OnDestroy {
   cerrarModal(): void {
     this.mostrarModalCancelacion = false;
     this.reservaACancelar = null;
+  }
+
+  // Al abrir el diálogo, el foco va a la opción segura ("Mantener reserva").
+  @ViewChild('mantenerBtn') set enfocarMantener(boton: ElementRef<HTMLButtonElement> | undefined) {
+    boton?.nativeElement.focus();
+  }
+
+  @HostListener('document:keydown.escape')
+  cerrarModalConEscape(): void {
+    if (this.mostrarModalCancelacion) {
+      this.cerrarModal();
+    }
   }
 
   confirmarCancelacion(): void {

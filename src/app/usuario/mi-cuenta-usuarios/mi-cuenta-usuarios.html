@@ -1,166 +1,182 @@
 <ng-container *ngIf="!cargando; else cargandoEstado">
-		<section class="cuenta-page" *ngIf="usuarioActual as user; else sinSesion">
-		<div class="cuenta-shell">
-			<header class="cuenta-header">
-				<div class="cuenta-identidad">
-					<h1>{{ user.NombreUsuario }} {{ user.ApellidoUsuario }}</h1>
-					<p>{{ user.Correo }}</p>
-				</div>
-				<div class="cuenta-badges">
-						<span class="cuenta-badge estado-activo">{{ user.Estado || 'Activo' }}</span>
-						<span class="cuenta-badge cuenta-rol">{{ user.Rol || 'Cliente' }}</span>
-				</div>
-			</header>
+  <div class="page cuenta" *ngIf="usuarioActual as user; else sinSesion">
+    <header class="perfil">
+      <span class="perfil__avatar" aria-hidden="true">{{ (user.NombreUsuario || '').charAt(0) }}{{ (user.ApellidoUsuario || '').charAt(0) }}</span>
+      <div class="perfil__datos">
+        <h1>{{ user.NombreUsuario }} {{ user.ApellidoUsuario }}</h1>
+        <p>{{ user.Correo }}</p>
+      </div>
+      <div class="perfil__badges">
+        <span class="badge badge--success badge--dot">{{ user.Estado || 'Activo' }}</span>
+        <span class="badge badge--primary">{{ user.Rol || 'Cliente' }}</span>
+      </div>
+    </header>
 
-			<div class="cuenta-grid">
-				<form class="cuenta-card" [formGroup]="cuentaForm" (ngSubmit)="onSubmit()" novalidate>
-					<h2>Datos personales</h2>
-					<p class="cuenta-subtitle">Actualiza tu información para mantener tu perfil al día.</p>
+    <div class="cuenta__grid">
+      <form class="card panel" [formGroup]="cuentaForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="panel__head">
+          <h2>Datos personales</h2>
+          <p>Actualiza tu información para mantener tu perfil al día.</p>
+        </div>
 
-					<div class="cuenta-form-grid">
-						<label class="cuenta-field">
-							<span>Nombre</span>
-							<input type="text" formControlName="nombre" placeholder="Tu nombre" autocomplete="given-name" />
-							<small *ngIf="campoInvalido('nombre')">Ingresa un nombre válido (mínimo 2 caracteres).</small>
-						</label>
+        <div class="campos">
+          <div class="field">
+            <label class="field__label" for="cuenta-nombre">Nombre</label>
+            <input id="cuenta-nombre" type="text" formControlName="nombre" placeholder="Tu nombre" autocomplete="given-name" aria-describedby="cuenta-nombre-error" />
+            <small id="cuenta-nombre-error" class="field__error" *ngIf="campoInvalido('nombre')">Ingresa un nombre válido (mínimo 2 caracteres).</small>
+          </div>
 
-						<label class="cuenta-field">
-							<span>Apellido</span>
-							<input type="text" formControlName="apellido" placeholder="Tu apellido" autocomplete="family-name" />
-							<small *ngIf="campoInvalido('apellido')">Ingresa un apellido válido.</small>
-						</label>
+          <div class="field">
+            <label class="field__label" for="cuenta-apellido">Apellido</label>
+            <input id="cuenta-apellido" type="text" formControlName="apellido" placeholder="Tu apellido" autocomplete="family-name" aria-describedby="cuenta-apellido-error" />
+            <small id="cuenta-apellido-error" class="field__error" *ngIf="campoInvalido('apellido')">Ingresa un apellido válido.</small>
+          </div>
 
-						<label class="cuenta-field">
-							<span>Correo electrónico</span>
-										<input type="email" formControlName="correo" [readonly]="true" />
-							<small>El correo es tu identificador y no puede modificarse.</small>
-						</label>
+          <div class="field">
+            <label class="field__label" for="cuenta-correo">Correo electrónico</label>
+            <input id="cuenta-correo" type="email" formControlName="correo" readonly aria-describedby="cuenta-correo-hint" />
+            <small id="cuenta-correo-hint" class="field__hint">El correo es tu identificador y no puede modificarse.</small>
+          </div>
 
-						<label class="cuenta-field">
-							<span>Teléfono</span>
-							<input type="tel" formControlName="telefono" placeholder="3001234567" autocomplete="tel" />
-							<small *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (mínimo 7 dígitos).</small>
-						</label>
-					</div>
+          <div class="field">
+            <label class="field__label" for="cuenta-telefono">Teléfono</label>
+            <input id="cuenta-telefono" type="tel" formControlName="telefono" placeholder="3001234567" autocomplete="tel" aria-describedby="cuenta-telefono-error" />
+            <small id="cuenta-telefono-error" class="field__error" *ngIf="campoInvalido('telefono')">Ingresa un teléfono válido (mínimo 7 dígitos).</small>
+          </div>
+        </div>
 
-					<div class="cuenta-feedback" *ngIf="mensajeError || mensajeExito">
-						<p class="cuenta-feedback--error" *ngIf="mensajeError" aria-live="assertive">{{ mensajeError }}</p>
-						<p class="cuenta-feedback--success" *ngIf="mensajeExito" aria-live="polite">{{ mensajeExito }}</p>
-					</div>
+        <div class="feedback" aria-live="polite">
+          <p class="alert alert--error" role="alert" *ngIf="mensajeError">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            {{ mensajeError }}
+          </p>
+          <p class="alert alert--success" *ngIf="mensajeExito">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            {{ mensajeExito }}
+          </p>
+        </div>
 
-					<div class="cuenta-actions">
-						<button type="submit" class="cuenta-submit" [disabled]="guardando || cuentaForm.invalid">
-							<span *ngIf="!guardando">Guardar cambios</span>
-							<span *ngIf="guardando" class="cuenta-spinner">Guardando...</span>
-						</button>
-						<button
-							type="button"
-							class="cuenta-secondary"
-							(click)="refrescarReservas()"
-							[disabled]="guardando || reservasCargando"
-						>
-							Actualizar reservas
-						</button>
-					</div>
-				</form>
+        <div class="panel__acciones">
+          <button type="submit" class="btn btn--primary" [disabled]="guardando || cuentaForm.invalid">
+            <span class="spinner" *ngIf="guardando" aria-hidden="true"></span>
+            {{ guardando ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
 
-				<aside class="cuenta-card cuenta-reservas">
-					<div class="cuenta-reservas__header">
-						<h2>Reservas recientes</h2>
-						<p>Consulta las reservas asociadas a tu cuenta.</p>
-					</div>
-					<div class="cuenta-reservas__feedback" *ngIf="mensajeReservas || errorReservas">
-						<p class="cuenta-feedback--success" *ngIf="mensajeReservas" aria-live="polite">{{ mensajeReservas }}</p>
-						<p class="cuenta-feedback--error" *ngIf="errorReservas" aria-live="assertive">{{ errorReservas }}</p>
-					</div>
-					<div class="cuenta-reservas__loader" *ngIf="reservasCargando">
-						<span class="cuenta-reservas__spinner" aria-hidden="true"></span>
-						<span>Sincronizando tus reservas...</span>
-					</div>
-					<ng-container *ngIf="!reservasCargando && reservas.length > 0; else sinReservas">
-						<ul class="reserva-lista" aria-live="polite">
-							<li *ngFor="let reserva of reservas">
-								<div class="reserva-titulo">
-									<span class="reserva-nombre">{{ reserva.fincaNombre || 'Finca sin nombre' }}</span>
-									<span class="reserva-id">#{{ reserva.id }}</span>
-								</div>
-								<div class="reserva-detalle">
-									<span>
-										<strong>Entrada:</strong> {{ reserva.fechaEntrada ? (reserva.fechaEntrada | date: 'dd/MM/yyyy') : 'Fecha no disponible' }}
-										· 
-										{{ reserva.noches || 'N/A' }} {{ (reserva.noches || 0) === 1 ? 'noche' : 'noches' }}
-									</span>
-								</div>
-								<div class="reserva-detalle" *ngIf="reserva.fechaSalida">
-									<span>
-										<strong>Salida:</strong> {{ reserva.fechaSalida | date: 'dd/MM/yyyy' }}
-									</span>
-								</div>
-								<div class="reserva-acciones">
-									<span class="reserva-creada">Creada el {{ reserva.creadoEn ? (reserva.creadoEn | date: 'dd/MM/yyyy') : (reserva.fechaReserva ? (reserva.fechaReserva | date: 'dd/MM/yyyy') : 'Fecha no disponible') }}</span>
-									<button
-										type="button"
-										class="reserva-cancelar"
-										(click)="cancelarReserva(reserva)"
-										[disabled]="cancelandoReservaId === reserva.id || reservasCargando"
-									>
-										<span *ngIf="cancelandoReservaId !== reserva.id">Cancelar reserva</span>
-										<span *ngIf="cancelandoReservaId === reserva.id" class="reserva-cancelar__spinner">Cancelando...</span>
-									</button>
-								</div>
-							</li>
-						</ul>
-					</ng-container>
-					<ng-template #sinReservas>
-						<ng-container *ngIf="!reservasCargando">
-							<p class="reserva-empty">Aún no tienes reservas registradas. Explora las fincas disponibles y realiza tu primera reserva.</p>
-						</ng-container>
-					</ng-template>
-				</aside>
-			</div>
-		</div>
-	</section>
+      <section class="card panel reservas" aria-labelledby="reservas-titulo">
+        <div class="panel__head reservas__head">
+          <h2 id="reservas-titulo">Reservas recientes</h2>
+          <button
+            type="button"
+            class="icon-btn"
+            aria-label="Actualizar reservas"
+            title="Actualizar reservas"
+            (click)="refrescarReservas()"
+            [disabled]="guardando || reservasCargando"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          </button>
+          <p>Consulta las reservas asociadas a tu cuenta.</p>
+        </div>
+
+        <div class="feedback" aria-live="polite">
+          <p class="alert alert--success" *ngIf="mensajeReservas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            {{ mensajeReservas }}
+          </p>
+          <p class="alert alert--error" role="alert" *ngIf="errorReservas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            {{ errorReservas }}
+          </p>
+        </div>
+
+        <p class="reservas__cargando" role="status" *ngIf="reservasCargando">
+          <span class="spinner" aria-hidden="true"></span>
+          Sincronizando tus reservas…
+        </p>
+
+        <ng-container *ngIf="!reservasCargando && reservas.length > 0; else sinReservas">
+          <ul class="reservas__lista">
+            <li class="reserva" *ngFor="let reserva of reservas">
+              <div class="reserva__titulo">
+                <h3>{{ reserva.fincaNombre || 'Finca sin nombre' }}</h3>
+                <span class="tabular">#{{ reserva.id }}</span>
+              </div>
+              <p class="reserva__fechas tabular">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+                <span>Entrada {{ reserva.fechaEntrada ? (reserva.fechaEntrada | date: 'dd/MM/yyyy') : 'Fecha no disponible' }}</span>
+                <span class="reserva__salida" *ngIf="reserva.fechaSalida">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  Salida {{ reserva.fechaSalida | date: 'dd/MM/yyyy' }}
+                </span>
+                <span *ngIf="reserva.noches">· {{ reserva.noches }} {{ reserva.noches === 1 ? 'noche' : 'noches' }}</span>
+              </p>
+              <div class="reserva__pie">
+                <small class="tabular">Creada el {{ reserva.creadoEn ? (reserva.creadoEn | date: 'dd/MM/yyyy') : (reserva.fechaReserva ? (reserva.fechaReserva | date: 'dd/MM/yyyy') : 'fecha no disponible') }}</small>
+                <button
+                  type="button"
+                  class="btn btn--danger-ghost btn--sm btn--tactil"
+                  (click)="cancelarReserva(reserva)"
+                  [disabled]="cancelandoReservaId === reserva.id || reservasCargando"
+                >
+                  <span class="spinner" *ngIf="cancelandoReservaId === reserva.id" aria-hidden="true"></span>
+                  {{ cancelandoReservaId === reserva.id ? 'Cancelando…' : 'Cancelar reserva' }}
+                </button>
+              </div>
+            </li>
+          </ul>
+        </ng-container>
+
+        <ng-template #sinReservas>
+          <div class="state-block" *ngIf="!reservasCargando && !errorReservas">
+            <span class="state-block__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+            </span>
+            <p>Aún no tienes reservas registradas. Explora las fincas disponibles y realiza tu primera reserva.</p>
+            <a class="btn btn--primary" routerLink="/inicio" fragment="portafolio">Explorar fincas</a>
+          </div>
+        </ng-template>
+      </section>
+    </div>
+  </div>
 </ng-container>
 
 <ng-template #sinSesion>
-	<section class="cuenta-page cuenta-page--guest">
-		<div class="cuenta-shell">
-			<div class="cuenta-guest">
-				<h1>Tu cuenta Renfi</h1>
-				<p>Inicia sesión para ver y actualizar la información de tu perfil, además de gestionar tus reservas.</p>
-				<button class="cuenta-submit" routerLink="/iniciar-sesion">Ir al inicio de sesión</button>
-			</div>
-		</div>
-	</section>
+  <div class="page cuenta">
+    <div class="card state-block invitado">
+      <span class="state-block__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+      </span>
+      <h1>Tu cuenta Renfi</h1>
+      <p>Inicia sesión para ver y actualizar la información de tu perfil, además de gestionar tus reservas.</p>
+      <a class="btn btn--primary" routerLink="/iniciar-sesion">Ir al inicio de sesión</a>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #cargandoEstado>
-	<div class="cuenta-loading">
-		<div class="cuenta-spinner"></div>
-		<p>Cargando tu información...</p>
-	</div>
+  <div class="page cuenta">
+    <div class="state-block" role="status">
+      <span class="spinner spinner--lg" aria-hidden="true"></span>
+      <p>Cargando tu información…</p>
+    </div>
+  </div>
 </ng-template>
 
-<!-- Modal de confirmación para cancelar reserva -->
-<div class="modal-overlay" *ngIf="mostrarModalCancelacion" (click)="cerrarModal()">
-	<div class="modal-container" (click)="$event.stopPropagation()">
-		<div class="modal-header">
-			<h3>Cancelar Reserva</h3>
-		</div>
-		<div class="modal-body">
-			<p>¿Estás seguro de que deseas cancelar la reserva <strong>#{{ reservaACancelar?.id }}</strong> de <strong>"{{ reservaACancelar?.fincaNombre || 'esta finca' }}"</strong>?</p>
-			<p class="modal-warning">
-				<svg class="inline-svg text-warning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-				Esta acción no se puede deshacer.
-			</p>
-		</div>
-		<div class="modal-actions">
-			<button type="button" class="modal-btn modal-btn--cancel" (click)="cerrarModal()">
-				Cancelar
-			</button>
-			<button type="button" class="modal-btn modal-btn--confirm" (click)="confirmarCancelacion()">
-				Aceptar
-			</button>
-		</div>
-	</div>
+<div class="modal-backdrop" *ngIf="mostrarModalCancelacion" (click)="cerrarModal()">
+  <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="cancelar-titulo" aria-describedby="cancelar-texto" (click)="$event.stopPropagation()">
+    <span class="modal__icon modal__icon--danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    </span>
+    <h2 class="modal__title" id="cancelar-titulo">¿Cancelar esta reserva?</h2>
+    <p class="modal__text" id="cancelar-texto">
+      Vas a cancelar la reserva <strong class="tabular">#{{ reservaACancelar?.id }}</strong> de
+      <strong>{{ reservaACancelar?.fincaNombre || 'esta finca' }}</strong>. Esta acción no se puede deshacer.
+    </p>
+    <div class="modal__actions">
+      <button #mantenerBtn type="button" class="btn btn--secondary" (click)="cerrarModal()">Mantener reserva</button>
+      <button type="button" class="btn btn--danger" (click)="confirmarCancelacion()">Sí, cancelar reserva</button>
+    </div>
+  </div>
 </div>
