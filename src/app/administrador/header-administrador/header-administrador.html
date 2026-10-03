@@ -1,11 +1,13 @@
 <header class="admin-header" role="banner">
 	<div class="header-identidad">
-			<button type="button" class="menu-toggle" (click)="alternar()" [attr.aria-pressed]="sidebarColapsado">
-			<span aria-hidden="true">☰</span>
-			<span class="sr-only">Alternar menú lateral</span>
+		<button type="button" class="menu-toggle" (click)="alternar()" [attr.aria-pressed]="sidebarColapsado" aria-label="Alternar menú lateral">
+			<svg class="icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<line x1="3" y1="12" x2="21" y2="12"></line>
+				<line x1="3" y1="6" x2="21" y2="6"></line>
+				<line x1="3" y1="18" x2="21" y2="18"></line>
+			</svg>
 		</button>
 		<div class="header-textos">
-			<span class="header-kicker pad-">Panel administrador</span>
 			<h1>{{ titulo }}</h1>
 			<p *ngIf="descripcion">{{ descripcion }}</p>
 		</div>
@@ -23,6 +25,14 @@
 			<span class="header-invitado">Invitado</span>
 		</ng-template>
 
-		<a routerLink="/inicio" class="header-link" aria-label="Ir al inicio del sitio">Ver sitio</a>
+		<a routerLink="/inicio" class="header-link" aria-label="Volver al portal público de Renfi">
+			<svg class="icono-svg icono-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+				<polyline points="15 3 21 3 21 9"></polyline>
+				<line x1="10" y1="14" x2="21" y2="3"></line>
+			</svg>
+			<span>Ver portal</span>
+		</a>
 	</div>
 </header>
+

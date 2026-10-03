@@ -1,27 +1,126 @@
-<div class="container mt-4">
-  <h2>Lista de Usuarios</h2>
-  <div *ngIf="loading" class="alert alert-info">Cargando...</div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <table *ngIf="!loading && !error" class="table table-bordered table-striped mt-3">
-    <thead class="table-light">
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Teléfono</th>
-        <th>Correo</th>
-        <th>Rol</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let usuario of usuarios">
-        <td>{{ usuario.IdUsuario }}</td>
-        <td>{{ usuario.NombreUsuario }}</td>
-        <td>{{ usuario.ApellidoUsuario }}</td>
-        <td>{{ usuario.Telefono }}</td>
-        <td>{{ usuario.Correo }}</td>
-        <td>{{ usuario.Rol }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<main class="usuarios-pagina">
+  <div class="usuarios-container">
+    <header class="usuarios-hero">
+      <div class="usuarios-hero__textos">
+        <h1>Directorio de usuarios</h1>
+        <p>Cuentas registradas en la plataforma Renfi y roles asignados dentro del sistema.</p>
+      </div>
+      <div class="usuarios-hero__meta" *ngIf="!loading && !error">
+        <span class="usuarios-badge-total">{{ usuariosFiltrados.length }} de {{ usuarios.length }} usuarios</span>
+        <button type="button" class="btn-refrescar" (click)="cargarUsuarios()" aria-label="Actualizar listado">
+          <svg class="icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          Actualizar
+        </button>
+      </div>
+    </header>
+
+    <div class="usuarios-busqueda-wrap" *ngIf="!loading && !error && usuarios.length">
+      <div class="usuarios-busqueda">
+        <svg class="icono-svg icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          class="busqueda-input"
+          placeholder="Buscar por nombre, correo, teléfono o rol..."
+          (input)="onBusqueda($any($event.target).value)"
+          aria-label="Buscar usuarios"
+        />
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="usuarios-estado usuarios-estado--loading" role="status">
+      <div class="spinner-cordillera" aria-hidden="true"></div>
+      <p>Cargando información del directorio...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="usuarios-alerta usuarios-alerta--error" role="alert">
+      <svg class="icono-svg alerta-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <div class="alerta-contenido">
+        <strong>Error de carga</strong>
+        <p>{{ error }}</p>
+      </div>
+      <button type="button" class="btn-reintentar" (click)="cargarUsuarios()">Reintentar</button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && usuariosFiltrados.length === 0" class="usuarios-vacio">
+      <div class="vacio-icono-wrap">
+        <svg class="vacio-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+      <h2>No se encontraron usuarios</h2>
+      <p *ngIf="busqueda">No hay coincidencias para el criterio "{{ busqueda }}". Intenta con otro término.</p>
+      <p *ngIf="!busqueda">Aún no hay usuarios registrados en el sistema.</p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div *ngIf="!loading && !error && usuariosFiltrados.length > 0" class="usuarios-grid">
+      <article class="usuario-tarjeta" *ngFor="let u of usuariosFiltrados">
+        <div class="tarjeta-cabecera">
+          <div class="tarjeta-avatar" aria-hidden="true">
+            {{ getInicial(u) }}
+          </div>
+          <div class="tarjeta-titulos">
+            <h2 class="tarjeta-nombre">{{ u.NombreUsuario }} {{ u.ApellidoUsuario }}</h2>
+            <span
+              class="tarjeta-rol"
+              [class.tarjeta-rol--admin]="getRolTexto(u).toLowerCase().includes('admin')"
+            >
+              {{ getRolTexto(u) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="tarjeta-detalles">
+          <div class="detalle-fila" *ngIf="u.Correo">
+            <svg class="icono-svg detalle-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <span class="detalle-texto" [title]="u.Correo">{{ u.Correo }}</span>
+          </div>
+
+          <div class="detalle-fila" *ngIf="u.Telefono">
+            <svg class="icono-svg detalle-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span class="detalle-texto">{{ u.Telefono }}</span>
+          </div>
+
+          <div class="detalle-fila" *ngIf="u.NumeroDocumento">
+            <svg class="icono-svg detalle-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <line x1="7" y1="8" x2="17" y2="8"></line>
+              <line x1="7" y1="12" x2="13" y2="12"></line>
+            </svg>
+            <span class="detalle-texto">Doc: {{ u.NumeroDocumento }}</span>
+          </div>
+        </div>
+
+        <div class="tarjeta-pie" *ngIf="u.IdUsuario">
+          <span class="usuario-id">ID #{{ u.IdUsuario }}</span>
+          <span class="usuario-estado" [class.usuario-estado--inactivo]="u.Estado === 'Inactivo'">
+            {{ u.Estado || 'Activo' }}
+          </span>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
