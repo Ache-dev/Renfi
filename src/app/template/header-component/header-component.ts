@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthStateService } from '../services/auth-state.service';
@@ -12,42 +12,32 @@ import { UsuarioNormalizado } from '../services/auth.service';
 })
 export class HeaderComponent {
   readonly esAdmin$: Observable<boolean>;
+  readonly usuario$: Observable<UsuarioNormalizado | null>;
+  menuAbierto = false;
 
   constructor(private router: Router, private authState: AuthStateService) {
     this.esAdmin$ = this.authState.esAdmin$;
+    this.usuario$ = this.authState.currentUser$;
   }
 
-  get usuario$() {
-    return this.authState.currentUser$;
+  alternarMenu() {
+    this.menuAbierto = !this.menuAbierto;
   }
 
-  goToHome() {
-    this.navigateTo('/inicio');
-  }
-
-  goToLogin() {
-    this.navigateTo('/iniciar-sesion');
-  }
-
-  goToRegister() {
-    this.navigateTo('/registrarse');
-  }
-
-  goToAbout() {
-    this.navigateTo('/sobre-nosotros');
-  }
-
-  goToAccount() {
-    this.navigateTo('/mi-cuenta');
-  }
-
-  goToAdmin() {
-    this.navigateTo('/administrador');
+  @HostListener('document:keydown.escape')
+  cerrarMenu() {
+    this.menuAbierto = false;
   }
 
   logout() {
+    this.cerrarMenu();
     this.authState.clearSession();
-    this.navigateTo('/inicio');
+    void this.router.navigate(['/inicio']);
+  }
+
+  getInicial(usuario: UsuarioNormalizado | null): string {
+    const base = String(usuario?.NombreUsuario || usuario?.Correo || 'R').trim();
+    return base.charAt(0).toUpperCase();
   }
 
   getNombreCorto(usuario: UsuarioNormalizado | null): string {
@@ -55,30 +45,13 @@ export class HeaderComponent {
       return 'Invitado';
     }
 
-    const nombre = usuario.NombreUsuario ?? '';
-    const apellido = usuario.ApellidoUsuario ?? '';
-
-    const nombreLimpio = String(nombre).trim();
-    const apellidoLimpio = String(apellido).trim();
+    const nombreLimpio = String(usuario.NombreUsuario ?? '').trim();
+    const apellidoLimpio = String(usuario.ApellidoUsuario ?? '').trim();
 
     if (!nombreLimpio && !apellidoLimpio) {
       return usuario.Correo ?? 'Usuario Renfi';
     }
 
     return `${nombreLimpio}${apellidoLimpio ? ` ${apellidoLimpio.charAt(0).toUpperCase()}.` : ''}`.trim();
-  }
-
-  private navigateTo(path: string) {
-    this.closeMenu();
-    void this.router.navigate([path]);
-  }
-
-  private closeMenu() {
-    const navbar = document.getElementById('mainNavbar');
-    if (navbar && navbar.classList.contains('show')) {
-
-      const collapse = new (window as any).bootstrap.Collapse(navbar, { toggle: false });
-      collapse.hide();
-    }
   }
 }

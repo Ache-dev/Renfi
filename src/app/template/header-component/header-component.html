@@ -1,68 +1,74 @@
+<header class="site-header" [class.is-open]="menuAbierto">
+  <div class="site-header__bar page">
+    <a routerLink="/inicio" class="brand" (click)="cerrarMenu()" aria-label="Renfi, ir al inicio">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="#1b4332" />
+        <path d="M6 15.5 16 7l10 8.5" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.5 14.6V24h13v-9.4" fill="none" stroke="#fcfbf9" stroke-width="2" stroke-linejoin="round" />
+        <path d="M14 24v-3.8a2 2 0 0 1 4 0V24" fill="none" stroke="#fcfbf9" stroke-width="2" />
+      </svg>
+      <span class="brand__copy">
+        <span class="brand__name">Renfi</span>
+        <span class="brand__tagline">Fincas de recreo en Colombia</span>
+      </span>
+    </a>
 
-<header class="sticky-top">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
-    <div class="container-fluid ps-2 ps-lg-4 pe-2 pe-lg-4">
-      <button class="navbar-brand cta-logo btn btn-link p-0" (click)="goToHome()" tabindex="0">
-        <span class="cta-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 11.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1v-9.5a1 1 0 0 0-.293-.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 11.5zm2 0L12 4.5l7 7v8.5h-3v-6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6H5v-8.5z"></path>
+    <button
+      type="button"
+      class="icon-btn site-header__toggle"
+      (click)="alternarMenu()"
+      [attr.aria-expanded]="menuAbierto"
+      aria-controls="menu-principal"
+      [attr.aria-label]="menuAbierto ? 'Cerrar menú' : 'Abrir menú'"
+    >
+      <svg *ngIf="!menuAbierto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+      <svg *ngIf="menuAbierto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <nav class="site-nav" id="menu-principal" aria-label="Navegación principal">
+      <ul class="site-nav__links">
+        <li><a routerLink="/inicio" fragment="portafolio" (click)="cerrarMenu()">Fincas</a></li>
+        <li><a routerLink="/inicio" fragment="procesos" (click)="cerrarMenu()">Cómo funciona</a></li>
+        <li><a routerLink="/sobre-nosotros" routerLinkActive="is-active" (click)="cerrarMenu()">Sobre nosotros</a></li>
+      </ul>
+
+      <div class="site-nav__auth" *ngIf="usuario$ | async as usuario; else invitado">
+        <a *ngIf="esAdmin$ | async" routerLink="/administrador" class="btn btn--ghost btn--sm" (click)="cerrarMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+            <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+            <rect x="3" y="16" width="7" height="5" rx="1"></rect>
           </svg>
-        </span>
-        <span class="cta-copy">
-          <span class="cta-title">Renfi</span>
-          <span class="cta-subtitle">Reserva tu próxima finca</span>
-        </span>
-      </button>
-
-      <button 
-        class="navbar-toggler border-0 ps-0" 
-        type="button" 
-        data-bs-toggle="collapse" 
-        data-bs-target="#mainNavbar" 
-        aria-controls="mainNavbar" 
-        aria-expanded="false" 
-        aria-label="Abrir navegación">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="mainNavbar">
-        <div class="navbar-nav-container">
-          <ul class="navbar-nav primary-nav me-lg-4 mb-3 mb-lg-0">
-            <li class="nav-item">
-              <button class="nav-link btn btn-link p-10" (click)="goToAbout()">Sobre nosotros</button>
-            </li>
-          </ul>
-
-          <div class="nav-separator d-lg-none"></div>
-
-          <ng-container *ngIf="usuario$ | async as usuario; else authLinks">
-            <ul class="navbar-nav auth-nav ms-lg-auto mb-0">
-              <li class="nav-item">
-                <span class="nav-link auth-link auth-link--label">¡Hola, {{ getNombreCorto(usuario) }}!</span>
-              </li>
-              <li class="nav-item" *ngIf="esAdmin$ | async">
-                <button class="nav-link auth-link btn btn-link p-10" (click)="goToAdmin()">Panel admin</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link auth-link btn btn-link p-10" (click)="goToAccount()">Mi cuenta</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link auth-link auth-link--highlight btn btn-link p-10" (click)="logout()">Cerrar sesión</button>
-              </li>
-            </ul>
-          </ng-container>
-          <ng-template #authLinks>
-            <ul class="navbar-nav auth-nav ms-lg-auto mb-0">
-              <li class="nav-item">
-                <button class="nav-link auth-link btn btn-link p-10" (click)="goToLogin()">Iniciar sesión</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link auth-link auth-link--highlight btn btn-link p-10" (click)="goToRegister()">Registrarse</button>
-              </li>
-            </ul>
-          </ng-template>
-        </div>
+          Panel admin
+        </a>
+        <a routerLink="/mi-cuenta" routerLinkActive="is-active" class="account-chip" (click)="cerrarMenu()" title="Mi cuenta">
+          <span class="account-chip__avatar" aria-hidden="true">{{ getInicial(usuario) }}</span>
+          <span class="account-chip__name">{{ getNombreCorto(usuario) }}</span>
+        </a>
+        <button type="button" class="btn btn--ghost btn--sm site-nav__logout" (click)="logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Cerrar sesión</span>
+        </button>
       </div>
-    </div>
-  </nav>
+
+      <ng-template #invitado>
+        <div class="site-nav__auth">
+          <a routerLink="/iniciar-sesion" class="btn btn--ghost btn--sm" (click)="cerrarMenu()">Iniciar sesión</a>
+          <a routerLink="/registrarse" class="btn btn--primary btn--sm" (click)="cerrarMenu()">Crear cuenta</a>
+        </div>
+      </ng-template>
+    </nav>
+  </div>
 </header>

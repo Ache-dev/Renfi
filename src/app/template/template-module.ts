@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { UsuarioModule } from '../usuario/usuario-module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +28,7 @@ import { SobreNosotrosComponent } from './sobre-nosotros-component/sobre-nosotro
   ],
   imports: [
   CommonModule,
+  RouterModule,
   HttpClientModule,
   FormsModule,
   ReactiveFormsModule,
