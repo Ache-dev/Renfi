@@ -2,7 +2,11 @@
 	<section class="detalle-page">
 		<div class="detalle-container">
 			<button type="button" class="volver-btn" (click)="volverAlInicio()">
-				← Volver
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<line x1="19" y1="12" x2="5" y2="12"></line>
+					<polyline points="12 19 5 12 12 5"></polyline>
+				</svg>
+				<span>Volver</span>
 			</button>
 
 			<div class="detalle-header">
@@ -15,7 +19,9 @@
 							(click)="cambiarImagen(-1)"
 							aria-label="Imagen anterior"
 						>
-							‹
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<polyline points="15 18 9 12 15 6"></polyline>
+							</svg>
 						</button>
 						<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f5f2eb'/%3E%3C/svg%3E" [src]="imagenActualUrl" [alt]="detalle.nombre" (error)="manejarErrorImagen()" loading="lazy" />
 						<button
@@ -25,7 +31,9 @@
 							(click)="cambiarImagen(1)"
 							aria-label="Imagen siguiente"
 						>
-							›
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<polyline points="9 18 15 12 9 6"></polyline>
+							</svg>
 						</button>
 						<div class="detalle-imagen__contador" *ngIf="hayCarrusel()">
 							{{ indiceImagenActiva + 1 }} / {{ galeriaImagenes.length }}
