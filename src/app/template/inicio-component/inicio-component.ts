@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-import { FincaDetalle, FincaSeleccionadaService } from '../services/finca-seleccionada.service';
+import { FincaDetalle, FincaSeleccionadaService, PLACEHOLDER_FINCA } from '../services/finca-seleccionada.service';
 import { FincaService } from '../../core/services/finca.service';
 
 @Component({
@@ -96,7 +96,7 @@ export class InicioComponent implements OnInit, OnDestroy {
       quote: 'Espacios verdes amplios, tranquilidad absoluta y la certeza de que la finca era exactamente como se mostraba en la plataforma.'
     }
   ];
-  readonly placeholderFinca = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f5f2eb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%238c827a'%3EFinca Renfi%3C/text%3E%3C/svg%3E";
+  readonly placeholderFinca = PLACEHOLDER_FINCA;
 
   onImageError(item: { imagenUrl?: string | null }): void {
     if (item) {
@@ -106,6 +106,7 @@ export class InicioComponent implements OnInit, OnDestroy {
 
   private readonly maxResultadosInicial = 12;
   private previousBodyOverflow = '';
+  private focoPrevio: HTMLElement | null = null;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -121,7 +122,7 @@ export class InicioComponent implements OnInit, OnDestroy {
       capacidad: [null],
       precioMin: [null],
       precioMax: [null],
-      calificacion: [null],
+      calificacion: [0],
       ordenarPor: ['relevancia']
     });
   }
@@ -147,11 +148,11 @@ export class InicioComponent implements OnInit, OnDestroy {
   openSearch(): void {
     if (!this.searchOpen) {
       this.searchOpen = true;
+      this.focoPrevio = document.activeElement as HTMLElement | null;
       this.previousBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-      if (!this.filteredFincas.length) {
-        this.aplicarFiltros();
-      }
+      // Siempre filtrar: la búsqueda rápida del hero abre el diálogo ya filtrado.
+      this.aplicarFiltros();
       setTimeout(() => this.queryInput?.nativeElement.focus(), 120);
     }
   }
@@ -161,11 +162,8 @@ export class InicioComponent implements OnInit, OnDestroy {
       this.searchOpen = false;
       this.mostrarTodosResultados = false;
       this.restaurarScroll();
+      this.focoPrevio?.focus();
     }
-  }
-
-  toggleSearch(): void {
-    this.searchOpen ? this.closeSearch() : this.openSearch();
   }
 
   scrollToSection(id: string): void {
@@ -186,7 +184,7 @@ export class InicioComponent implements OnInit, OnDestroy {
       capacidad: null,
       precioMin: null,
       precioMax: null,
-      calificacion: null,
+      calificacion: 0,
       ordenarPor: 'relevancia'
     }, { emitEvent: false });
     this.mostrarTodosResultados = false;
@@ -229,9 +227,12 @@ export class InicioComponent implements OnInit, OnDestroy {
       next: (fincas) => {
         this.fincas = fincas as FincaDetalle[];
         this.prepararOpciones();
-        this.filteredFincas = [...this.fincas];
-        this.actualizarDisplay(this.fincas);
         this.loadingSearch = false;
+        if (this.searchOpen) {
+          this.aplicarFiltros();
+        } else {
+          this.actualizarDisplay(this.fincas);
+        }
       },
       error: () => {
         this.fincas = [];
@@ -457,114 +458,4 @@ export class InicioComponent implements OnInit, OnDestroy {
     const numero = Number(valor);
     return Number.isFinite(numero) ? numero : null;
   }
-
-  private aplicarImagenes(finca: FincaDetalle, urls: string[]): FincaDetalle {
-    if (!urls.length) {
-      return finca;
-    }
-
-    const principal = urls[0];
-    const existentes = Array.isArray(finca.imagenesDisponibles) ? finca.imagenesDisponibles : [];
-    const combinadas = this.deduplicarImagenes([...urls, ...existentes]);
-
-    const necesitaPrincipal = principal && finca.imagenUrl !== principal;
-    const necesitaGaleria = !this.sonArraysIguales(combinadas, existentes);
-
-    if (!necesitaPrincipal && !necesitaGaleria) {
-      return finca;
-    }
-
-    return {
-      ...finca,
-      imagenUrl: necesitaPrincipal ? principal : finca.imagenUrl,
-      imagenesDisponibles: combinadas
-    };
-  }
-
-  private deduplicarImagenes(urls: string[]): string[] {
-    const unicas: string[] = [];
-    urls.forEach((url) => {
-      const limpia = typeof url === 'string' ? url.trim() : '';
-      if (limpia && !unicas.includes(limpia)) {
-        unicas.push(limpia);
-      }
-    });
-    return unicas;
-  }
-
-  private extraerUrlsImagenes(imagenes: any[]): string[] {
-    if (!Array.isArray(imagenes)) {
-      return [];
-    }
-
-    const claves = ['UrlImagen', 'urlImagen', 'Imagen', 'imagen', 'Url', 'url', 'Foto', 'foto'];
-    const urls: string[] = [];
-
-    imagenes.forEach((entrada) => {
-      if (typeof entrada === 'string') {
-        const limpia = entrada.trim();
-        if (limpia && !urls.includes(limpia)) {
-          urls.push(limpia);
-        }
-        return;
-      }
-
-      if (!entrada || typeof entrada !== 'object') {
-        return;
-      }
-
-      for (const clave of claves) {
-        const valor = (entrada as Record<string, unknown>)[clave];
-        if (typeof valor === 'string') {
-          const limpia = valor.trim();
-          if (limpia && !urls.includes(limpia)) {
-            urls.push(limpia);
-          }
-          break;
-        }
-      }
-    });
-
-    return urls;
-  }
-
-  private obtenerIdFincaParaConsulta(finca: FincaDetalle | undefined, raw: any): string | null {
-    const candidatos = [
-      raw?.IdFinca,
-      raw?.Idfinca,
-      raw?.idFinca,
-      raw?.FincaId,
-      raw?.fincaId,
-      raw?.Id,
-      raw?.id,
-      finca?.id
-    ];
-
-    for (const candidato of candidatos) {
-      if (candidato !== undefined && candidato !== null) {
-        const texto = String(candidato).trim();
-        if (texto) {
-          return texto;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  private normalizarColeccion<T>(entrada: T | T[] | null | undefined): T[] {
-    if (!entrada) {
-      return [];
-    }
-    return Array.isArray(entrada) ? entrada : [entrada];
-  }
-
-  private sonArraysIguales(actual: string[], comparador: string[]): boolean {
-    if (actual.length !== comparador.length) {
-      return false;
-    }
-
-    return actual.every((valor, index) => valor === comparador[index]);
-  }
-
 }

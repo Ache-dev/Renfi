@@ -1,301 +1,369 @@
-<div class="inicio-landing">
-  <section class="hero">
-    <div class="hero-background" aria-hidden="true"></div>
-    <div class="hero-container">
-      <div class="hero-content" role="presentation">
-        <h1 class="hero-title">Encuentra y reserva fincas de recreo en toda Colombia</h1>
-        <p class="hero-subtitle">Disfruta de espacios campestres auténticos para tus vacaciones o fines de semana con tarifas transparentes en COP y reserva directa garantizada.</p>
-        <div class="hero-actions">
-          <button type="button" class="btn btn-primary" (click)="openSearch()" aria-haspopup="dialog" [attr.aria-expanded]="searchOpen">Explorar fincas</button>
-          <button type="button" class="btn btn-secondary" (click)="scrollToSection('procesos')">Cómo funciona</button>
+<div class="inicio">
+  <!-- ==== Hero: banda verde cordillera ==== -->
+  <section class="hero" aria-labelledby="hero-title">
+    <svg class="hero__ridges" viewBox="0 0 1440 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <path class="ridge ridge--far" d="M0 150 70 118l60 16 80-50 64 30 76-46 70 40 60-14 84-60 66 52 74-22 60 30 82-62 72 40 66-28 74 36 86-54 70 34 80-30 46 18 100-8V240H0Z"></path>
+      <path class="ridge ridge--mid" d="M0 182c110-34 200-30 300-52s180 18 280 8 170-46 270-30 170 46 280 30 190-34 310-20V240H0Z"></path>
+      <path class="ridge ridge--near" d="M0 214c140-22 250-18 380-28s230 18 380 12 250-28 380-18 210 16 300 10V240H0Z"></path>
+    </svg>
+
+    <div class="page hero__inner">
+      <div class="hero__copy">
+        <h1 id="hero-title" class="hero__title">Encuentra y reserva fincas de recreo en toda Colombia</h1>
+        <p class="hero__lead">Disfruta de espacios campestres auténticos para tus vacaciones o fines de semana con tarifas transparentes en COP y reserva directa garantizada.</p>
+
+        <div class="hero__actions">
+          <button type="button" class="btn btn--primary btn--lg" (click)="openSearch()" aria-haspopup="dialog" [attr.aria-expanded]="searchOpen">Explorar fincas</button>
+          <button type="button" class="btn btn--on-dark btn--lg" (click)="scrollToSection('procesos')">Cómo funciona</button>
         </div>
-        <ul class="hero-stats" aria-label="Indicadores de confianza Renfi">
-          <li class="hero-stat" *ngFor="let stat of heroHighlights">
-            <span class="stat-value">{{ stat.value }}</span>
-            <span class="stat-label">{{ stat.label }}</span>
+
+        <form class="quick-search" [formGroup]="searchForm" (ngSubmit)="openSearch()" role="search" aria-label="Búsqueda rápida de fincas">
+          <div class="field">
+            <label class="field__label" for="hero-municipio">Municipio</label>
+            <select id="hero-municipio" formControlName="municipio">
+              <option value="">Todos los municipios</option>
+              <option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="hero-capacidad">Huéspedes</label>
+            <input id="hero-capacidad" type="number" min="1" inputmode="numeric" formControlName="capacidad" placeholder="¿Cuántos?" />
+          </div>
+          <button type="submit" class="btn btn--primary" aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+            Buscar
+          </button>
+        </form>
+
+        <ul class="hero__stats" aria-label="Indicadores de confianza Renfi">
+          <li *ngFor="let stat of heroHighlights">
+            <strong class="tabular">{{ stat.value }}</strong>
+            {{ stat.label }}
           </li>
         </ul>
       </div>
-      <div class="hero-showcase" aria-label="Finca campestre destacada">
-        <div class="hero-card" *ngIf="displayedFincas[0] as destacada; else heroPlaceholder">
-          <div class="hero-card-image" aria-hidden="true">
+
+      <div class="hero__showcase">
+        <article class="card feature" *ngIf="displayedFincas[0] as destacada; else heroPlaceholder" aria-labelledby="feature-title">
+          <div class="feature__media">
             <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f5f2eb'/%3E%3C/svg%3E"
               [src]="destacada.imagenUrl || placeholderFinca"
               [alt]="destacada.nombre || 'Finca destacada'"
-              (error)="onImageError(destacada)"
-              loading="lazy" />
+              (error)="onImageError(destacada)" />
+            <span class="badge badge--success feature__seal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+              Finca verificada
+            </span>
           </div>
-          <div class="hero-card-body">
-            <span class="hero-card-tag">Finca destacada</span>
-            <h3>{{ destacada.nombre }}</h3>
-            <p>{{ destacada['InformacionAdicional'] || destacada.descripcion || 'Espacio campestre ideal para vacaciones y eventos de descanso.' }}</p>
-            <div class="hero-card-meta">
+          <div class="feature__body">
+            <h2 id="feature-title" class="feature__name">{{ destacada.nombre }}</h2>
+            <p class="feature__meta">
               <span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 {{ destacada['NombreMunicipio'] || destacada.ubicacion || 'Colombia' }}
               </span>
               <span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                {{ destacada.capacidad || destacada['Capacidad'] || '—' }} huéspedes
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span class="tabular">{{ destacada.capacidad || destacada['Capacidad'] || '—' }}</span> huéspedes
               </span>
-              <span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
-                {{ (destacada.precioNoche || destacada['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}
-              </span>
+            </p>
+            <div class="feature__foot">
+              <p class="feature__price">
+                <strong class="tabular">{{ (destacada.precioNoche || destacada['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}</strong> /noche
+              </p>
+              <button type="button" class="btn btn--secondary" (click)="seleccionarFinca(destacada)">
+                Ver detalle
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </button>
             </div>
           </div>
-          <button type="button" class="hero-card-cta" (click)="seleccionarFinca(destacada)">Ver detalle de la finca</button>
-        </div>
+        </article>
+
         <ng-template #heroPlaceholder>
-          <div class="hero-card hero-card-placeholder">
-            <div class="hero-card-body">
-              <span class="hero-card-tag">Experiencia Renfi</span>
-              <h3>Fincas campestres con todo incluido</h3>
-              <p>Espacios privados con piscina, zonas verdes y áreas para asados en los mejores climas de Colombia.</p>
-              <div class="hero-card-meta">
+          <article class="card feature" aria-labelledby="feature-title">
+            <div class="feature__media">
+              <img [src]="placeholderFinca" alt="" />
+              <span class="badge feature__seal">Experiencia Renfi</span>
+            </div>
+            <div class="feature__body">
+              <h2 id="feature-title" class="feature__name">Fincas campestres con todo incluido</h2>
+              <p class="feature__text">Espacios privados con piscina, zonas verdes y áreas para asados en los mejores climas de Colombia.</p>
+              <p class="feature__meta">
                 <span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                   Antioquia · Cundinamarca · Eje Cafetero
                 </span>
                 <span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></svg>
                   Tarifas directas en COP
                 </span>
                 <span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
                   Reserva 100% verificada
                 </span>
+              </p>
+              <div class="feature__foot">
+                <button type="button" class="btn btn--secondary" (click)="openSearch()" aria-haspopup="dialog">Explorar fincas</button>
               </div>
             </div>
-            <button type="button" class="hero-card-cta" (click)="openSearch()">Explorar fincas</button>
-          </div>
+          </article>
         </ng-template>
+      </div>
+    </div>
+
+    <div class="zocalo" aria-hidden="true"></div>
+  </section>
+
+  <!-- ==== Fincas destacadas ==== -->
+  <section class="section" id="portafolio" aria-labelledby="portafolio-title">
+    <div class="page">
+      <app-fincas-relevantes-component>
+        <div class="section-head section-head--flush">
+          <h2 id="portafolio-title">Fincas campestres destacadas</h2>
+          <p>Encuentra el lugar ideal para relajarte con tu familia o amigos en los mejores destinos rurales de Colombia.</p>
+        </div>
+      </app-fincas-relevantes-component>
+    </div>
+  </section>
+
+  <!-- ==== Beneficios ==== -->
+  <section class="section section--cal" id="ventajas" aria-labelledby="ventajas-title">
+    <div class="page benefits">
+      <div class="section-head benefits__intro">
+        <h2 id="ventajas-title">Descanso auténtico con total tranquilidad</h2>
+        <p>Propiedades seleccionadas, verificación rigurosa y pagos seguros para que tus escapadas al campo sean memorables.</p>
+      </div>
+      <ul class="benefits__list">
+        <li class="benefit" *ngFor="let benefit of beneficios">
+          <span class="benefit__icon" aria-hidden="true" [ngSwitch]="benefit.icon">
+            <svg *ngSwitchCase="'shield-check'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            <svg *ngSwitchCase="'credit-card'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></svg>
+            <svg *ngSwitchCase="'home'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
+            <svg *ngSwitchCase="'sparkles'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+          </span>
+          <div>
+            <h3>{{ benefit.title }}</h3>
+            <p>{{ benefit.description }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==== Proceso ==== -->
+  <section class="section" id="procesos" aria-labelledby="procesos-title">
+    <div class="page">
+      <div class="section-head">
+        <h2 id="procesos-title">Tu escapada en 4 sencillos pasos</h2>
+        <p>Desde la búsqueda del destino hasta la llegada a la finca, hacemos que reservar sea transparente y confiable.</p>
+      </div>
+      <ol class="steps">
+        <li class="step" *ngFor="let step of pasosInversion; index as i">
+          <span class="step__num tabular">0{{ i + 1 }}</span>
+          <div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+            <ul class="step__checks">
+              <li *ngFor="let highlight of step.highlights">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                {{ highlight }}
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==== Testimonios ==== -->
+  <section class="section section--cal" id="testimonios" aria-labelledby="testimonios-title">
+    <div class="page">
+      <div class="section-head">
+        <h2 id="testimonios-title">Experiencias de nuestros huéspedes</h2>
+        <p>Descanso, naturaleza y momentos memorables compartidos en el campo.</p>
+      </div>
+      <div class="quotes">
+        <figure class="quote" *ngFor="let testimonial of testimonios">
+          <svg class="quote__mark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V14C0 6.3 4.2 1.4 12.6 0L14 3.2C9.4 4.6 7.2 7.4 7 11h6v13H0Zm18 0V14c0-7.7 4.2-12.6 12.6-14L32 3.2c-4.6 1.4-6.8 4.2-7 7.8h6v13H18Z"></path></svg>
+          <blockquote>{{ testimonial.quote }}</blockquote>
+          <figcaption>
+            <span class="quote__name">{{ testimonial.name }}</span>
+            <span class="quote__role">{{ testimonial.role }}</span>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <ng-container *ngIf="searchOpen">
-    <div class="busqueda-overlay" role="dialog" aria-modal="true" aria-label="Buscador avanzado de fincas" (click)="closeSearch()">
-      <div class="busqueda-panel" (click)="$event.stopPropagation()">
-        <header class="busqueda-header">
-          <div>
-            <h2>Encuentra tu finca perfecta</h2>
-            <p>Filtra por municipio, capacidad, precio, estado y más.</p>
-          </div>
-          <button type="button" class="busqueda-close" (click)="closeSearch()" aria-label="Cerrar búsqueda">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  <!-- ==== CTA final ==== -->
+  <section class="section" id="asesoria" aria-labelledby="asesoria-title">
+    <div class="page">
+      <div class="cta">
+        <div>
+          <h2 id="asesoria-title">¿Listo para tu próxima escapada al campo?</h2>
+          <p>Explora nuestras fincas campestres verificadas o comunícate con nosotros para brindarte asistencia personalizada.</p>
+        </div>
+        <div class="cta__actions">
+          <button type="button" class="btn btn--primary btn--lg" (click)="openSearch()" aria-haspopup="dialog">Explorar fincas</button>
+          <button type="button" class="btn btn--secondary btn--lg" (click)="openWhatsapp()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>
+            Contactar por WhatsApp
           </button>
-        </header>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <form [formGroup]="searchForm" class="busqueda-form" (ngSubmit)="submitSearch()">
-          <div class="busqueda-grid">
-            <label class="busqueda-field busqueda-field-query">
-              <span>¿Qué estás buscando?</span>
-              <div class="busqueda-input-wrapper">
-                <span class="busqueda-icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </span>
-                <input #queryInput id="search-query" type="search" formControlName="query" placeholder="Nombre, dirección o amenidades" autocomplete="off" />
-              </div>
-            </label>
+  <!-- ==== Buscador avanzado ==== -->
+  <div class="search-overlay" *ngIf="searchOpen" (click)="closeSearch()">
+    <div class="search-sheet" role="dialog" aria-modal="true" aria-labelledby="search-title" (click)="$event.stopPropagation()">
+      <header class="search-sheet__head">
+        <div>
+          <h2 id="search-title">Encuentra tu finca perfecta</h2>
+          <p>Filtra por municipio, capacidad, precio, estado y más.</p>
+        </div>
+        <button type="button" class="icon-btn" (click)="closeSearch()" aria-label="Cerrar búsqueda">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </header>
 
-            <label class="busqueda-field">
-              <span>Municipio</span>
-              <select formControlName="municipio">
-                <option value="">Todos</option>
-                <option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</option>
-              </select>
-            </label>
-
-            <label class="busqueda-field">
-              <span>Estado</span>
-              <select formControlName="estado">
-                <option value="">Todos</option>
-                <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
-              </select>
-            </label>
-
-            <label class="busqueda-field">
-              <span>Capacidad mínima</span>
-              <input type="number" min="0" [max]="maxCapacidad" formControlName="capacidad" placeholder="Ej. 6" />
-            </label>
-
-            <div class="busqueda-field busqueda-field-precio">
-              <span>Rango de precio (COP)</span>
-              <div class="busqueda-precio-group">
-                <input type="number" min="0" formControlName="precioMin" placeholder="Desde" />
-                <span class="busqueda-precio-separador">—</span>
-                <input type="number" min="0" [max]="maxPrecio" formControlName="precioMax" placeholder="Hasta" />
-              </div>
+      <div class="search-sheet__body">
+        <form class="filters" [formGroup]="searchForm" (ngSubmit)="submitSearch()" aria-label="Filtros de búsqueda">
+          <div class="field field--wide">
+            <label class="field__label" for="search-query">¿Qué estás buscando?</label>
+            <div class="input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <input #queryInput id="search-query" type="search" formControlName="query" placeholder="Nombre, dirección o amenidades" autocomplete="off" />
             </div>
-
-            <div class="busqueda-field busqueda-field-calificacion">
-              <span>Calificación mínima: {{ searchForm.value.calificacion || 0 }}/5</span>
-              <input type="range" min="0" max="5" step="0.5" formControlName="calificacion" />
-            </div>
-
-            <label class="busqueda-field">
-              <span>Ordenar por</span>
-              <select formControlName="ordenarPor">
-                <option value="relevancia">Mejor coincidencia</option>
-                <option value="precio-menor">Precio más bajo</option>
-                <option value="precio-mayor">Precio más alto</option>
-                <option value="capacidad">Mayor capacidad</option>
-                <option value="municipio">Municipio (A-Z)</option>
-              </select>
-            </label>
           </div>
 
-          <div class="busqueda-actions">
-            <button type="button" class="btn-reset" (click)="resetFiltros()">Restablecer filtros</button>
-            <button type="submit" class="btn-apply">Aplicar filtros</button>
+          <div class="field">
+            <label class="field__label" for="search-municipio">Municipio</label>
+            <select id="search-municipio" formControlName="municipio">
+              <option value="">Todos</option>
+              <option *ngFor="let municipio of municipios" [value]="municipio">{{ municipio }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="search-estado">Estado</label>
+            <select id="search-estado" formControlName="estado">
+              <option value="">Todos</option>
+              <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="search-capacidad">Capacidad mínima</label>
+            <input id="search-capacidad" type="number" min="1" [max]="maxCapacidad" inputmode="numeric" formControlName="capacidad" placeholder="Ej. 6" />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="search-orden">Ordenar por</label>
+            <select id="search-orden" formControlName="ordenarPor">
+              <option value="relevancia">Mejor coincidencia</option>
+              <option value="precio-menor">Precio más bajo</option>
+              <option value="precio-mayor">Precio más alto</option>
+              <option value="capacidad">Mayor capacidad</option>
+              <option value="municipio">Municipio (A-Z)</option>
+            </select>
+          </div>
+
+          <fieldset class="field field--wide">
+            <legend class="field__label">Precio por noche (COP)</legend>
+            <div class="price-range">
+              <label class="visually-hidden" for="search-precio-min">Precio desde</label>
+              <input id="search-precio-min" type="number" min="0" inputmode="numeric" formControlName="precioMin" placeholder="Desde" />
+              <span class="price-range__sep" aria-hidden="true"></span>
+              <label class="visually-hidden" for="search-precio-max">Precio hasta</label>
+              <input id="search-precio-max" type="number" min="0" [max]="maxPrecio" inputmode="numeric" formControlName="precioMax" placeholder="Hasta" />
+            </div>
+          </fieldset>
+
+          <div class="field field--wide">
+            <label class="field__label range-label" for="search-calificacion">
+              Calificación mínima
+              <span class="tabular">{{ searchForm.value.calificacion || 0 }}/5</span>
+            </label>
+            <input id="search-calificacion" type="range" min="0" max="5" step="0.5" formControlName="calificacion" />
+          </div>
+
+          <div class="filters__actions field--wide">
+            <button type="button" class="btn btn--ghost" (click)="resetFiltros()">Restablecer</button>
+            <button type="submit" class="btn btn--primary">Aplicar filtros</button>
           </div>
         </form>
 
-        <section class="busqueda-resultados" aria-live="polite">
-          <div class="busqueda-resultados-header">
-            <span *ngIf="!loadingSearch">{{ totalResultados }} {{ totalResultados === 1 ? 'resultado' : 'resultados' }}</span>
-            <span *ngIf="loadingSearch">Buscando fincas disponibles...</span>
-            <button *ngIf="!mostrarTodosResultados && totalResultados > displayedFincas.length" type="button" class="btn-show-more" (click)="mostrarMasResultados()">
+        <section class="results" aria-label="Resultados de búsqueda">
+          <div class="results__head">
+            <p aria-live="polite">
+              <ng-container *ngIf="!loadingSearch; else buscando">
+                <strong class="tabular">{{ totalResultados }}</strong> {{ totalResultados === 1 ? 'resultado' : 'resultados' }}
+              </ng-container>
+              <ng-template #buscando>Buscando fincas disponibles...</ng-template>
+            </p>
+            <button *ngIf="!mostrarTodosResultados && totalResultados > displayedFincas.length" type="button" class="btn btn--ghost" (click)="mostrarMasResultados()">
               Ver todos los resultados
             </button>
           </div>
 
           <ng-container *ngIf="!loadingSearch; else estadoBusqueda">
-            <div class="busqueda-cards" *ngIf="displayedFincas.length; else sinCoincidencias">
-              <article class="busqueda-card" *ngFor="let finca of displayedFincas" (click)="seleccionarFinca(finca)">
-                <div class="busqueda-card-imagen" aria-hidden="true">
+            <ul class="results__grid" *ngIf="displayedFincas.length; else sinCoincidencias">
+              <li class="card finca" *ngFor="let finca of displayedFincas">
+                <div class="finca__media">
                   <img
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'%3E%3Crect width='320' height='200' fill='%23f5f2eb'/%3E%3C/svg%3E"
                     [src]="finca.imagenUrl || placeholderFinca"
                     [alt]="finca.nombre || 'Finca de recreo'"
                     (error)="onImageError(finca)"
                     loading="lazy" />
+                  <span class="badge finca__estado" *ngIf="finca['Estado']" [ngClass]="finca['Estado'] === 'Disponible' ? 'badge--success' : 'badge--warning'">{{ finca['Estado'] }}</span>
                 </div>
-                <div class="busqueda-card-body">
-                  <div class="busqueda-card-header">
-                    <h3>{{ finca.nombre }}</h3>
-                    <span class="busqueda-card-estado" *ngIf="finca['Estado']">{{ finca['Estado'] }}</span>
-                  </div>
-                  <p class="busqueda-card-lugar">
-                    {{ finca['Direccion'] || finca.ubicacion || 'Ubicación sin especificar' }}
-                    <span *ngIf="finca['NombreMunicipio']"> · {{ finca['NombreMunicipio'] }}</span>
+                <div class="finca__body">
+                  <h3 class="finca__title">
+                    <button type="button" (click)="seleccionarFinca(finca)"><span>{{ finca.nombre }}</span></button>
+                  </h3>
+                  <p class="finca__place">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span><strong *ngIf="finca['NombreMunicipio']">{{ finca['NombreMunicipio'] }} · </strong>{{ finca['Direccion'] || finca.ubicacion || 'Ubicación sin especificar' }}</span>
                   </p>
-                  <p class="busqueda-card-descripcion" *ngIf="finca['InformacionAdicional']">{{ finca['InformacionAdicional'] }}</p>
-                  <div class="busqueda-card-meta">
+                  <p class="finca__desc" *ngIf="finca['InformacionAdicional']">{{ finca['InformacionAdicional'] }}</p>
+                  <p class="finca__meta">
                     <span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      {{ finca.capacidad || finca['Capacidad'] || '—' }} huéspedes
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span class="tabular">{{ finca.capacidad || finca['Capacidad'] || '—' }}</span> huéspedes
                     </span>
                     <span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
-                      {{ (finca.precioNoche || finca['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}
+                      <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                      <span class="tabular">{{ finca['Calificacion'] || 'Sin calificar' }}</span>
                     </span>
-                    <span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2410c" stroke="#c2410c" stroke-width="1.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                      {{ finca['Calificacion'] || 'Sin calificar' }}
-                    </span>
-                  </div>
+                  </p>
+                  <p class="finca__price">
+                    <strong class="tabular">{{ (finca.precioNoche || finca['Precio'] || 0) | currency:'COP':'symbol':'1.0-0' }}</strong> /noche
+                  </p>
                 </div>
-              </article>
-            </div>
+              </li>
+            </ul>
           </ng-container>
 
           <ng-template #estadoBusqueda>
-            <div class="busqueda-loading">
-              <span class="busqueda-spinner" aria-hidden="true"></span>
+            <div class="state-block">
+              <span class="spinner spinner--lg" aria-hidden="true"></span>
               <p>Cargando fincas disponibles...</p>
             </div>
           </ng-template>
 
           <ng-template #sinCoincidencias>
-            <div class="busqueda-empty">
+            <div class="state-block">
+              <span class="state-block__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path><path d="m8.5 8.5 5 5"></path><path d="m13.5 8.5-5 5"></path></svg>
+              </span>
               <h3>No encontramos resultados para tu búsqueda</h3>
               <p>Prueba usando menos filtros o amplía el rango de precios y capacidad.</p>
-              <button type="button" class="btn-reset" (click)="resetFiltros()">Limpiar filtros</button>
+              <button type="button" class="btn btn--secondary" (click)="resetFiltros()">Limpiar filtros</button>
             </div>
           </ng-template>
         </section>
       </div>
     </div>
-  </ng-container>
-
-  <main class="inicio-main">
-    <section class="section benefits" id="ventajas">
-      <div class="section-header">
-        <h2>Descanso auténtico con total tranquilidad</h2>
-        <p>Propiedades seleccionadas, verificación rigurosa y pagos seguros para que tus escapadas al campo sean memorables.</p>
-      </div>
-      <div class="benefits-grid">
-        <article class="benefit-card" *ngFor="let benefit of beneficios">
-          <div class="benefit-icon" aria-hidden="true">
-            <svg *ngIf="benefit.icon === 'shield-check'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
-            <svg *ngIf="benefit.icon === 'credit-card'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
-            <svg *ngIf="benefit.icon === 'home'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <svg *ngIf="benefit.icon === 'sparkles'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
-          </div>
-          <h3>{{ benefit.title }}</h3>
-          <p>{{ benefit.description }}</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section portfolio" id="portafolio">
-      <div class="section-header">
-        <h2>Fincas campestres destacadas</h2>
-        <p>Encuentra el lugar ideal para relajarte con tu familia o amigos en los mejores destinos rurales de Colombia.</p>
-      </div>
-      <div class="portfolio-content">
-        <app-fincas-relevantes-component></app-fincas-relevantes-component>
-      </div>
-    </section>
-
-    <section class="section process" id="procesos">
-      <div class="section-header">
-        <h2>Tu escapada en 4 sencillos pasos</h2>
-        <p>Desde la búsqueda del destino hasta la llegada a la finca, hacemos que reservar sea transparente y confiable.</p>
-      </div>
-      <div class="process-timeline" role="list">
-        <article class="process-step" role="listitem" *ngFor="let step of pasosInversion; index as i">
-          <div class="step-number">0{{ i + 1 }}</div>
-          <h3>{{ step.title }}</h3>
-          <p>{{ step.description }}</p>
-          <ul class="step-highlights">
-            <li *ngFor="let highlight of step.highlights">{{ highlight }}</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section testimonials" id="testimonios">
-      <div class="section-header">
-        <h2>Experiencias de nuestros huéspedes</h2>
-        <p>Descanso, naturaleza y momentos memorables compartidos en el campo.</p>
-      </div>
-      <div class="testimonials-grid">
-        <figure class="testimonial-card" *ngFor="let testimonial of testimonios">
-          <blockquote>“{{ testimonial.quote }}”</blockquote>
-          <figcaption>
-            <span class="testimonial-name">{{ testimonial.name }}</span>
-            <span class="testimonial-role">{{ testimonial.role }}</span>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="section cta-final" id="asesoria">
-      <div class="cta-card">
-        <div class="cta-content">
-          <h2>¿Listo para tu próxima escapada al campo?</h2>
-          <p>Explora nuestras fincas campestres verificadas o comunícate con nosotros para brindarte asistencia personalizada.</p>
-        </div>
-        <div class="cta-actions">
-          <button type="button" class="btn btn-primary" (click)="openSearch()">Explorar fincas</button>
-          <button type="button" class="btn btn-secondary" (click)="openWhatsapp()">Contactar por WhatsApp</button>
-        </div>
-      </div>
-    </section>
-  </main>
+  </div>
 </div>
-<app-footer-component></app-footer-component>

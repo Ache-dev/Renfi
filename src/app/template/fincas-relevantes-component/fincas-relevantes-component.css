@@ -1,192 +1,107 @@
-/* ========== CARRUSEL RENOVADO - BASE RENFI ========== */
+:host {
+  display: block;
+}
 
-/* Spinner personalizado Renfi */
-.fincas-spinner-wrapper {
+/* ==== Cabecera: encabezado proyectado desde inicio + controles ==== */
+.relevantes__head {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  width: 100%;
-  padding: clamp(16px, 4vw, 24px);
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
-.fincas-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.fincas-spinner-circle {
-  width: clamp(40px, 8vw, 64px);
-  height: clamp(40px, 8vw, 64px);
-  border: clamp(4px, 1vw, 8px) solid #ea2a33;
-  border-top: clamp(4px, 1vw, 8px) solid #f7c948;
-  border-radius: 50%;
-  animation: fincas-spin 1s linear infinite;
-  margin-bottom: clamp(12px, 3vw, 16px);
-}
-
-@keyframes fincas-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.fincas-spinner-text {
-  color: #ea2a33;
-  font-size: clamp(1rem, 3vw, 1.2rem);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-align: center;
-}
-
-.carousel-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: auto;
-  padding: clamp(20px, 4vw, 40px) clamp(8px, 2vw, 20px);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.carousel-wrapper {
-  overflow: hidden;
-  width: 100%;
-  max-width: clamp(320px, 95vw, 1500px);
-  margin: 0 auto;
-}
-
-.carousel-track {
-  display: flex;
-  flex-direction: row;
-  gap: clamp(20px, 4vw, 32px);
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  will-change: transform;
-  padding: 0 clamp(4px, 2vw, 12px);
-  cursor: grab;
-}
-
-.carousel-track:active {
-  cursor: grabbing;
-}
-
-/* ========== TARJETAS RENOVADAS ========== */
-.carousel-card {
-  flex-shrink: 0;
-  width: clamp(290px, 29vw, 450px);
-  background: white;
-  border-radius: clamp(8px, 2vw, 12px);
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10), 0 4px 16px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  height: auto;
-}
-
-.carousel-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(234, 42, 51, 0.18);
-}
-
-.carousel-card:focus-within {
-  outline: 2px solid #ea2a33;
-  outline-offset: 2px;
-}
-
-.carousel-card-image {
-  position: relative;
-  width: 100%;
-  height: clamp(150px, 35vw, 280px);
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-  overflow: hidden;
+.relevantes__nav {
+  display: none;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.carousel-card-image img {
+/* ==== Riel con scroll-snap nativo ==== */
+.track {
+  --gap: var(--spacing-md);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(320px, 82%);
+  gap: var(--gap);
+  /* Móvil: el riel sangra hasta el borde de la pantalla */
+  --bleed: var(--page-gutter);
+  margin-inline: calc(-1 * var(--bleed));
+  padding: 6px var(--bleed) var(--spacing-lg);
+  scroll-padding-inline: var(--bleed);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==== Tarjeta de finca ==== */
+.finca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  scroll-snap-align: start;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.finca:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.finca__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-medium);
+  border-radius: calc(var(--radius-xl) - 1px) calc(var(--radius-xl) - 1px) 0 0;
+}
+
+.finca__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s var(--ease-out);
 }
 
-.carousel-card:hover .carousel-card-image img {
-  transform: scale(1.05);
+.finca:hover .finca__media img {
+  transform: scale(1.03);
 }
 
-.carousel-card-badge {
+.finca__estado {
   position: absolute;
-  top: clamp(6px, 2vw, 12px);
-  right: clamp(6px, 2vw, 12px);
-  z-index: 1;
+  top: 12px;
+  left: 12px;
 }
 
-.carousel-card-badge span {
-  display: inline-block;
-  padding: clamp(4px, 1vw, 6px) clamp(10px, 2vw, 14px);
-  border-radius: 20px;
-  font-size: clamp(10px, 2vw, 12px);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.badge-disponible {
-  background: #2ecc40;
-  color: white;
-}
-
-.badge-ocupado {
-  background: #ea2a33;
-  color: white;
-}
-
-.carousel-card-body {
-  padding: clamp(14px, 3vw, 24px);
+.finca__body {
   display: flex;
-  flex-direction: column;
-  gap: clamp(12px, 2vw, 16px);
   flex: 1;
-  overflow: visible;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--spacing-md);
 }
 
-.carousel-card-body::-webkit-scrollbar {
-  width: 6px;
-}
-
-.carousel-card-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.carousel-card-body::-webkit-scrollbar-thumb {
-  background: #ea2a33;
-  border-radius: 10px;
-}
-
-.carousel-card-body::-webkit-scrollbar-thumb:hover {
-  background: #c81e28;
-}
-
-.carousel-card-title {
-  font-size: clamp(18px, 4vw, 26px);
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0;
+.finca__title {
+  font-size: min(var(--text-title), 1.25rem);
+  font-weight: 600;
   line-height: 1.3;
+}
+
+/* Enlace estirado: el botón del título cubre toda la tarjeta */
+.finca__title button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-weight: inherit;
+}
+
+.finca__title button span {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -194,419 +109,140 @@
   overflow: hidden;
 }
 
-/* ========== RATING Y PRECIO ========== */
-.carousel-rating-price {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: clamp(8px, 2vw, 12px);
-  padding: clamp(8px, 2vw, 12px) 0;
-  border-bottom: 2px solid #f3f4f6;
-  flex-wrap: wrap;
-}
-
-.carousel-rating {
-  display: flex;
-  align-items: center;
-  gap: clamp(4px, 1vw, 8px);
-}
-
-.star-icon {
-  color: #f7c948;
-  font-size: clamp(16px, 4vw, 24px);
-  font-weight: bold;
-}
-
-.rating-value {
-  font-size: clamp(14px, 3vw, 18px);
-  font-weight: 600;
-  color: #374151;
-}
-
-.carousel-price {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  white-space: nowrap;
-}
-
-.price-value {
-  font-size: clamp(16px, 4vw, 22px);
-  font-weight: 700;
-  color: #ea2a33;
-}
-
-.price-label {
-  font-size: clamp(11px, 2vw, 14px);
-  color: #6b7280;
-  font-weight: 500;
-}
-
-/* ========== DETALLES DE LA FINCA ========== */
-.carousel-card-details {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(10px, 2vw, 14px);
-}
-
-.detail-item {
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(8px, 2vw, 12px);
-  font-size: clamp(13px, 2vw, 15px);
-  line-height: 1.5;
-}
-
-.detail-icon {
-  font-size: clamp(16px, 3vw, 20px);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.detail-text {
-  color: #4b5563;
-  flex: 1;
-  word-break: break-word;
-}
-
-.detail-text strong {
-  color: #1f2937;
-  font-weight: 600;
-}
-
-.location-highlight {
-  background: var(--color-surface, #fcfbf9);
-  padding: clamp(8px, 2vw, 12px);
-  border-radius: var(--border-radius-md, 8px);
-  border: 1px solid var(--color-border, #e8e2d5);
-}
-
-.address-detail {
-  font-size: clamp(11px, 2vw, 13px);
-  color: #6b7280;
-  display: block;
-  margin-top: 2px;
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(8px, 2vw, 10px);
-}
-
-.detail-item-mini {
-  display: flex;
-  align-items: center;
-  gap: clamp(6px, 1vw, 8px);
-  padding: clamp(8px, 1.5vw, 10px);
-  background: var(--color-surface, #fcfbf9);
-  border-radius: var(--border-radius-sm, 6px);
-  border: 1px solid var(--color-border, #e8e2d5);
-  font-size: clamp(12px, 2vw, 14px);
-  color: #4b5563;
-}
-
-.services-mini {
-  background: var(--color-surface, #fcfbf9);
-  border: 1px solid var(--color-border, #e8e2d5);
-}
-
-.mini-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--color-primary, #c2410c);
-}
-
-.mini-text {
-  font-size: clamp(12px, 2vw, 14px);
-  line-height: 1.4;
-  word-break: break-word;
-}
-
-.mini-services {
-  color: var(--color-primary-dark, #9a3412);
-  font-weight: 500;
-}
-
-.mini-text strong {
-  color: #1f2937;
-  font-weight: 600;
-}
-
-.services-highlight {
-  background: var(--color-surface, #fcfbf9);
-  padding: clamp(8px, 2vw, 12px);
-  border-radius: var(--border-radius-md, 8px);
-  border: 1px solid var(--color-border, #e8e2d5);
-}
-
-.highlight-services {
-  color: #92400e;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-.detail-separator {
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, #e5e7eb 50%, transparent 100%);
-  margin: 4px 0;
-}
-
-/* ========== SECCIÓN PROPIETARIO ========== */
-.propietario-section {
-  background: #f9fafb;
-  padding: clamp(8px, 2vw, 12px);
-  border-radius: 8px;
-  margin-top: 4px;
-}
-
-.owner-icon {
-  color: #ea2a33;
-  font-size: clamp(16px, 3vw, 20px);
-}
-
-.owner-name {
-  font-weight: 700;
-  color: #1f2937;
-  font-size: clamp(13px, 2vw, 15px);
-  margin-bottom: clamp(6px, 1vw, 8px);
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(4px, 1vw, 6px);
-  margin-top: clamp(4px, 1vw, 6px);
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: clamp(11px, 1.5vw, 13px);
-  color: #6b7280;
-  padding: 4px 0;
-}
-
-.contact-icon {
-  font-size: clamp(12px, 2vw, 14px);
-}
-
-.contact-value {
-  font-weight: 500;
-  color: #374151;
-  word-break: break-word;
-}
-
-/* ========== BOTÓN DE ACCIÓN ========== */
-.carousel-card-actions {
-  margin-top: auto;
-  padding-top: clamp(8px, 2vw, 12px);
-}
-
-.detalle-btn {
-  width: 100%;
-  border: none;
-  background: #ea2a33;
-  color: white;
-  font-size: clamp(12px, 2vw, 14px);
-  font-weight: 600;
-  padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 20px);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.detalle-btn:hover {
-  background: #c81e28;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(234, 42, 51, 0.3);
-}
-
-.detalle-btn:active {
-  transform: translateY(0);
-}
-
-.detalle-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(234, 42, 51, 0.3);
-}
-
-/* ========== BOTONES DE NAVEGACIÓN ========== */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  width: clamp(40px, 8vw, 56px);
-  height: clamp(40px, 8vw, 56px);
-  border-radius: 50%;
-  background-color: #ea2a33;
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(18px, 4vw, 28px);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 4px 12px rgba(234, 42, 51, 0.4);
-}
-
-.carousel-btn:hover {
-  background-color: #c81e28;
-  transform: translateY(-50%) scale(1.15);
-  box-shadow: 0 6px 16px rgba(234, 42, 51, 0.5);
-}
-
-.carousel-btn:active {
-  transform: translateY(-50%) scale(1.05);
-}
-
-.carousel-btn:focus {
-  outline: 2px solid #ea2a33;
-  outline-offset: 2px;
-}
-
-.carousel-btn-prev {
-  left: clamp(4px, 2vw, 10px);
-}
-
-.carousel-btn-next {
-  right: clamp(4px, 2vw, 10px);
-}
-
-@media (max-width: 576px) {
-  .carousel-btn {
-    display: none;
-  }
-}
-
-/* ========== TÍTULO DEL CARRUSEL ========== */
-.carousel-title {
-  font-size: clamp(1.5rem, 6vw, 2rem);
-  font-weight: 800;
-  color: #1f2937;
-  text-align: center;
-  letter-spacing: -0.5px;
-}
-
-/* ========== MENSAJES VACÍOS ========== */
-.fincas-empty-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border-radius: clamp(12px, 3vw, 18px);
-  box-shadow: 0 8px 32px rgba(234, 42, 51, 0.12);
-  padding: clamp(24px, 5vw, 48px);
-  margin: 0 auto;
-  max-width: 420px;
-  width: 100%;
-  color: #1f2937;
-  text-align: center;
-  min-height: clamp(250px, 50vh, 350px);
-}
-
-.fincas-empty-icon {
-  margin-bottom: clamp(12px, 3vw, 18px);
-}
-
-.fincas-empty-title {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
-  font-weight: 700;
-  color: #dc2626;
-  margin-bottom: clamp(6px, 2vw, 10px);
-}
-
-.fincas-empty-text {
-  font-size: clamp(0.9rem, 3vw, 1.1rem);
-  color: #475569;
-  margin-bottom: clamp(12px, 3vw, 22px);
-  text-align: center;
-  line-height: 1.6;
-}
-
-.fincas-empty-message .btn-danger {
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  font-weight: 600;
-  border-radius: 9999px;
-  padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 32px);
-  box-shadow: 
-    0 4px 14px rgba(239, 68, 68, 0.35),
-    0 2px 6px rgba(220, 38, 38, 0.2);
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  border: none;
-  color: #fff;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.fincas-empty-message .btn-danger::before {
+.finca__title button::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
+  z-index: 1;
+  border-radius: var(--radius-xl);
 }
 
-.fincas-empty-message .btn-danger:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 6px 20px rgba(239, 68, 68, 0.4),
-    0 3px 8px rgba(220, 38, 38, 0.25);
+.finca__title button:focus-visible {
+  outline: none;
 }
 
-.fincas-empty-message .btn-danger:hover::before {
-  opacity: 1;
+.finca__title button:focus-visible::after {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
-.fincas-empty-message .btn-danger:active {
-  transform: translateY(0);
-  box-shadow: 
-    0 2px 8px rgba(239, 68, 68, 0.3),
-    0 1px 3px rgba(220, 38, 38, 0.2);
+.finca__place,
+.finca__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
 }
 
-.fincas-empty-message .btn-danger:focus {
-  outline: 2px solid #ef4444;
-  outline-offset: 2px;
+.finca__place span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-/* Media queries para mejor responsividad */
-@media (max-width: 576px) {
-  .carousel-container {
-    min-height: auto;
+.finca__place strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.finca__place svg,
+.finca__meta svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.finca__desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.finca__meta {
+  gap: 16px;
+}
+
+.finca__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.star {
+  fill: var(--color-accent);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.finca__price {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-surface-medium);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.finca__price strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ==== Carga ==== */
+.skeleton {
+  overflow: hidden;
+  padding-bottom: var(--spacing-md);
+}
+
+.skeleton span {
+  display: block;
+  height: 14px;
+  margin: 0 var(--spacing-md) 10px;
+  background: var(--color-surface-medium);
+  border-radius: var(--radius-sm);
+  animation: pulso 1.2s ease-in-out infinite alternate;
+}
+
+.skeleton .skeleton__img {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  margin: 0 0 var(--spacing-md);
+  border-radius: 0;
+}
+
+.skeleton .skeleton__line--short {
+  width: 45%;
+}
+
+@keyframes pulso {
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* ==== Breakpoints ==== */
+@media (min-width: 640px) {
+  .relevantes__nav {
+    display: flex;
   }
 
-  .carousel-wrapper {
-    width: 100%;
+  /* Sin sangrado al borde: solo margen para la sombra y el foco */
+  .track {
+    --bleed: 8px;
+    grid-auto-columns: calc((100% - var(--gap)) / 2);
   }
 }
 
-@media (max-width: 768px) {
-  .carousel-track {
-    gap: clamp(10px, 2vw, 16px);
+@media (min-width: 1024px) {
+  .track {
+    grid-auto-columns: calc((100% - 2 * var(--gap)) / 3);
   }
 }
-
-/* Mejoras de accesibilidad */
-@media (prefers-reduced-motion: reduce) {
-  .fincas-spinner-circle,
-  .carousel-card,
-  .carousel-btn,
-  .detalle-btn {
-    animation: none;
-    transition: none;
-  }
-}
-
