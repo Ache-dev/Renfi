@@ -214,7 +214,7 @@
           <p class="modal__text">
             {{ usaFormularioEstructurado
               ? 'Completa los campos del registro. Los marcados con * son obligatorios.'
-              : 'Usa el JSON para registrar todos los campos requeridos por la API.' }}
+              : 'Completa los datos del registro.' }}
           </p>
         </div>
         <button type="button" class="icon-btn" (click)="cerrarFormulario()" aria-label="Cerrar">
@@ -247,9 +247,6 @@
                 <input *ngSwitchDefault type="text" [id]="campo.key" [formControlName]="campo.key" [attr.aria-required]="campo.required || null" />
               </ng-container>
 
-              <small class="field__hint" *ngIf="campo.type === 'number'">Ingresa solo valores numéricos.</small>
-              <small class="field__hint" *ngIf="campo.type === 'email'">Se recomienda un correo válido.</small>
-              <small class="field__hint" *ngIf="campo.type === 'password'">La contraseña será encriptada con SHA-512.</small>
               <small class="field__hint" *ngIf="campo.type === 'select' && cargandoOpcionesSelect">Cargando opciones…</small>
               <small class="field__error" *ngIf="formulario.get(campo.key)?.errors?.['required'] && formulario.get(campo.key)?.touched">Este campo es obligatorio.</small>
             </div>
@@ -257,9 +254,8 @@
 
           <ng-template #crudJsonFormulario>
             <div class="field">
-              <label class="field__label" for="payload">Contenido JSON</label>
+              <label class="field__label" for="payload">Contenido</label>
               <textarea id="payload" class="crud-modal__json" formControlName="payload" spellcheck="false" rows="16" placeholder="{ 'campo': 'valor' }"></textarea>
-              <small class="field__hint">Puedes incluir campos adicionales según la estructura que maneje el servicio REST.</small>
             </div>
           </ng-template>
 
@@ -297,7 +293,7 @@
       </svg>
     </div>
     <h2 class="modal__title" id="crud-eliminar-titulo">¿Eliminar el registro <span class="tabular">{{ idRegistroAEliminar }}</span>?</h2>
-    <p class="modal__text" id="crud-eliminar-texto">Esta acción no se puede deshacer. El registro será eliminado permanentemente de la base de datos.</p>
+    <p class="modal__text" id="crud-eliminar-texto">Esta acción no se puede deshacer. El registro se eliminará de forma permanente.</p>
     <div class="modal__actions">
       <button type="button" class="btn btn--secondary" (click)="cancelarEliminacion()">Cancelar</button>
       <button type="button" class="btn btn--danger" (click)="confirmarEliminacion()">

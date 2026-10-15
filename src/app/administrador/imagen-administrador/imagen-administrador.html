@@ -11,7 +11,6 @@
 				<select id="img-finca" [value]="idFinca" (change)="elegir($any($event.target).value)">
 					<option *ngFor="let f of fincas" [value]="f.IdFinca" [selected]="f.IdFinca === idFinca">{{ f.NombreFinca }} · {{ f.NombreMunicipio }}</option>
 				</select>
-				<small class="field__hint">Las fotos se alojan en Supabase Storage y se optimizan automáticamente a WebP.</small>
 			</div>
 
 			<app-galeria-finca *ngIf="idFinca" [idFinca]="idFinca"></app-galeria-finca>
