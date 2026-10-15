@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 export interface RegistroUsuarioRequest {
   IdRol: number;
@@ -64,18 +64,13 @@ export class AuthService {
       Contrasena: contrasena
     };
 
+    // Sin plan B: la API valida la contraseña (bcrypt) y entrega el token. Un error de login es un error de login.
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, apiPayload).pipe(
       map((respuesta) => ({
         ...respuesta,
         usuario: this.normalizarUsuario((respuesta?.usuario ?? respuesta?.user ?? null) as UsuarioApiDto | null),
         message: respuesta?.message
-      })),
-      catchError((error) => {
-        if (error?.status === 404 || error?.status === 500) {
-          return this.fallbackLogin(correo, contrasena);
-        }
-        return throwError(() => error);
-      })
+      }))
     );
   }
 
@@ -83,28 +78,6 @@ export class AuthService {
     return this.http
       .put<UsuarioApiDto>(`${this.apiUrl}/${idUsuario}`, payload)
       .pipe(map((respuesta) => this.normalizarUsuario(respuesta) ?? this.mapearDesdePayload(idUsuario, payload)));
-  }
-
-  private fallbackLogin(correo: string, contrasena: string): Observable<LoginResponse> {
-    return this.http.get<UsuarioApiDto[]>(`${this.apiUrl}`).pipe(
-      map((usuarios) => {
-        const candidato = usuarios.find((usuario) => {
-          const correoUsuario = this.pickString(usuario, ['Correo', 'correo', 'CorreoElectronico', 'correoElectronico'])?.trim().toLowerCase() ?? '';
-          const passwordUsuario = this.pickString(usuario, ['Contrasena', 'Contraseña', 'Password', 'password']) ?? '';
-          return correoUsuario === correo && passwordUsuario === contrasena;
-        });
-
-        if (!candidato) {
-          throw { status: 401, error: { message: 'Credenciales incorrectas. Verifica tu correo y contraseña.' } };
-        }
-
-        return {
-          token: undefined,
-          usuario: this.normalizarUsuario(candidato),
-          message: 'Inicio de sesión exitoso.'
-        } satisfies LoginResponse;
-      })
-    );
   }
 
   private normalizarUsuario(usuario: UsuarioApiDto | null | undefined): UsuarioNormalizado | null {
