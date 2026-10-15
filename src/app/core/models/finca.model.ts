@@ -16,6 +16,17 @@ export interface Finca {
   reservas: number | null;
   imagenUrl: string | null;
   imagenesDisponibles?: string[];
+  /** Ficha completa (campos nuevos de la API) */
+  camas?: number | null;
+  nochesMinimas?: number | null;
+  comodidades?: string[];
+  reglas?: string | null;
+  horaEntrada?: string | null;
+  horaSalida?: string | null;
+  permiteMascotas?: boolean | null;
+  permiteEventos?: boolean | null;
+  latitud?: number | null;
+  longitud?: number | null;
   [key: string]: unknown;
 }
 

@@ -655,3 +655,36 @@
     top: calc(var(--header-h) + 24px);
   }
 }
+
+.bloque__subtitulo {
+  margin: var(--spacing-md) 0 var(--spacing-xs);
+  font-size: 1.0625rem;
+  color: var(--color-secondary);
+}
+
+.comodidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ficha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0 0;
+}
+
+.ficha dt {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.ficha dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}

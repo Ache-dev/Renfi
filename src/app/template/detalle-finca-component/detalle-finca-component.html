@@ -93,6 +93,34 @@
             <span class="dato__valor">{{ detalle['MetrosCuadrados'] }} m²</span>
           </li>
         </ul>
+
+        <ng-container *ngIf="detalle['Comodidades']?.length">
+          <h3 class="bloque__subtitulo">Comodidades</h3>
+          <ul class="comodidades">
+            <li class="badge" *ngFor="let comodidad of detalle['Comodidades']">{{ comodidad }}</li>
+          </ul>
+        </ng-container>
+
+        <ng-container *ngIf="detalle['Reglas']">
+          <h3 class="bloque__subtitulo">Reglas de la casa</h3>
+          <p class="bloque__texto">{{ detalle['Reglas'] }}</p>
+        </ng-container>
+
+        <dl class="ficha" *ngIf="detalle['HoraEntrada'] || detalle['HoraSalida'] || detalle['PermiteMascotas'] != null || detalle['PermiteEventos'] != null || (detalle['NochesMinimas'] > 1)">
+          <div *ngIf="detalle['HoraEntrada']"><dt>Hora de entrada</dt><dd class="tabular">{{ detalle['HoraEntrada'] }}</dd></div>
+          <div *ngIf="detalle['HoraSalida']"><dt>Hora de salida</dt><dd class="tabular">{{ detalle['HoraSalida'] }}</dd></div>
+          <div *ngIf="detalle['NochesMinimas'] > 1"><dt>Estadía mínima</dt><dd class="tabular">{{ detalle['NochesMinimas'] }} noches</dd></div>
+          <div *ngIf="detalle['PermiteMascotas'] != null"><dt>Mascotas</dt><dd>{{ detalle['PermiteMascotas'] ? 'Permitidas' : 'No permitidas' }}</dd></div>
+          <div *ngIf="detalle['PermiteEventos'] != null"><dt>Eventos</dt><dd>{{ detalle['PermiteEventos'] ? 'Permitidos' : 'No permitidos' }}</dd></div>
+        </dl>
+
+        <a
+          class="btn btn--secondary btn--sm"
+          *ngIf="detalle['Latitud'] != null && detalle['Longitud'] != null"
+          [href]="'https://www.google.com/maps/search/?api=1&query=' + detalle['Latitud'] + ',' + detalle['Longitud']"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Ver ubicación en el mapa</a>
       </section>
 
       <aside class="cuerpo__reserva reserva card" aria-labelledby="titulo-reserva">

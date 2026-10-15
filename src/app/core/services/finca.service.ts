@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, forkJoin } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Finca, FincaApiRaw } from '../models/finca.model';
-import { ImagenService } from './imagen.service';
 import { PLACEHOLDER_FINCA } from '../../template/services/finca-seleccionada.service';
 
 /**
@@ -16,10 +15,7 @@ import { PLACEHOLDER_FINCA } from '../../template/services/finca-seleccionada.se
 export class FincaService {
   private readonly baseUrl = `${environment.apiUrl}/finca`;
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly imagenService: ImagenService
-  ) {}
+  constructor(private readonly http: HttpClient) {}
 
   /**
    * Obtiene la lista completa de fincas.
@@ -48,38 +44,11 @@ export class FincaService {
   }
 
   /**
-   * Obtiene las fincas enriquecidas con sus imágenes desde la API multimedia.
+   * Obtiene las fincas con sus imágenes. La API ya incluye la galería (portada primero) en cada
+   * finca, así que no hace falta una consulta de imágenes por finca.
    */
   getFincasConImagenes(): Observable<Finca[]> {
-    return this.getFincas().pipe(
-      switchMap((fincas) => {
-        if (!fincas.length) {
-          return of([]);
-        }
-
-        const consultas$ = fincas.map((finca) => {
-          if (!finca.id || finca.id === 'sin-id') {
-            return of(finca);
-          }
-
-          return this.imagenService.getImagenesPorFinca(finca.id).pipe(
-            map((imagenes) => {
-              if (imagenes.length > 0) {
-                return {
-                  ...finca,
-                  imagenUrl: imagenes[0],
-                  imagenesDisponibles: imagenes
-                };
-              }
-              return finca;
-            }),
-            catchError(() => of(finca))
-          );
-        });
-
-        return forkJoin(consultas$);
-      })
-    );
+    return this.getFincas();
   }
 
   /**
@@ -117,13 +86,9 @@ export class FincaService {
     const serviciosRaw = this.pickField(raw, ['Servicios', 'servicios', 'Amenidades', 'amenidades', 'Caracteristicas']);
     const reservasRaw = this.pickField(raw, ['Reservas', 'reservas', 'NumeroReservas', 'numeroReservas'], 0);
 
-    const imagenEncontrada = this.pickField(
-      raw,
-      ['Imagen', 'imagen', 'ImagenUrl', 'imagenUrl', 'UrlImagen', 'urlImagen', 'Url', 'url', 'Foto', 'foto'],
-      null
-    );
-
-    const imagenUrl = imagenEncontrada ? String(imagenEncontrada) : PLACEHOLDER_FINCA;
+    const galeria = this.extraerGaleria(raw);
+    const imagenUrl = galeria[0] ?? PLACEHOLDER_FINCA;
+    const comodidades = Array.isArray(raw['Comodidades']) ? (raw['Comodidades'] as unknown[]).map(String) : [];
 
     return {
       ...(raw as Record<string, unknown>),
@@ -140,8 +105,33 @@ export class FincaService {
       servicios: Array.isArray(serviciosRaw) ? serviciosRaw.join(', ') : serviciosRaw ? String(serviciosRaw) : null,
       reservas: this.parseNumber(reservasRaw) ?? 0,
       imagenUrl,
-      imagenesDisponibles: [imagenUrl]
+      imagenesDisponibles: galeria.length ? galeria : [imagenUrl],
+      camas: this.parseNumber(raw['Camas']),
+      nochesMinimas: this.parseNumber(raw['NochesMinimas']),
+      comodidades,
+      reglas: typeof raw['Reglas'] === 'string' && raw['Reglas'] ? String(raw['Reglas']) : null,
+      horaEntrada: typeof raw['HoraEntrada'] === 'string' ? String(raw['HoraEntrada']) : null,
+      horaSalida: typeof raw['HoraSalida'] === 'string' ? String(raw['HoraSalida']) : null,
+      permiteMascotas: typeof raw['PermiteMascotas'] === 'boolean' ? (raw['PermiteMascotas'] as boolean) : null,
+      permiteEventos: typeof raw['PermiteEventos'] === 'boolean' ? (raw['PermiteEventos'] as boolean) : null,
+      latitud: this.parseNumber(raw['Latitud']),
+      longitud: this.parseNumber(raw['Longitud'])
     };
+  }
+
+  /**
+   * URLs de la galería de la finca: Imagenes (portada primero) o, si no vienen, UrlPortada.
+   */
+  private extraerGaleria(raw: FincaApiRaw): string[] {
+    const imagenes = Array.isArray(raw['Imagenes']) ? (raw['Imagenes'] as Array<{ UrlImagen?: unknown }>) : [];
+    const urls = imagenes
+      .map((i) => (typeof i?.UrlImagen === 'string' ? i.UrlImagen.trim() : ''))
+      .filter((u) => u.length > 0);
+    if (urls.length) {
+      return urls;
+    }
+    const portada = raw['UrlPortada'];
+    return typeof portada === 'string' && portada.trim() ? [portada.trim()] : [];
   }
 
   private normalizarColeccion<T>(respuesta: unknown): T[] {
