@@ -80,8 +80,29 @@ describe('ReservaService', () => {
       .subscribe({ error: (e) => (err = e) });
     http.expectOne(`${api}/reserva`).flush({ IdReserva: 7, IdFactura: 11 });
     http.expectOne(`${api}/pago`).flush({ message: 'Pago rechazado' }, { status: 400, statusText: 'Bad Request' });
-    http.expectOne(`${api}/reserva/7`).flush({});
+    // un cliente no puede borrar reservas (solo el administrador): se cancela con PUT de estado
+    const cancelacion = http.expectOne(`${api}/reserva/7`);
+    expect(cancelacion.request.method).toBe('PUT');
+    expect(cancelacion.request.body).toEqual({ Estado: 'Cancelada' });
+    cancelacion.flush({});
     expect(err.message).toBe('Pago rechazado');
+  });
+
+  it('cancelarReserva usa PUT con estado Cancelada y nunca DELETE', () => {
+    let ok: boolean | undefined;
+    service.cancelarReserva(12).subscribe((r) => (ok = r));
+    const req = http.expectOne(`${api}/reserva/12`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual({ Estado: 'Cancelada' });
+    req.flush({});
+    expect(ok).toBeTrue();
+  });
+
+  it('cancelarReserva devuelve false si la API la rechaza (reserva ajena)', () => {
+    let ok: boolean | undefined;
+    service.cancelarReserva(12).subscribe((r) => (ok = r));
+    http.expectOne(`${api}/reserva/12`).flush({ message: 'No tienes permisos' }, { status: 403, statusText: 'Forbidden' });
+    expect(ok).toBeFalse();
   });
 
   it('obtenerReservasPorUsuario usa /reserva/usuario/:doc y mapea campos', () => {
@@ -103,14 +124,27 @@ describe('ReservaService', () => {
     expect(err.error.message).toBe('Número de documento inválido');
   });
 
-  it('obtenerFechasOcupadas marca las noches de reservas de la finca y omite canceladas', () => {
+  it('obtenerFechasOcupadas usa el endpoint público de fechas ocupadas (sin listar reservas)', () => {
     let fechas: string[] = [];
     service.obtenerFechasOcupadas(2).subscribe((f) => (fechas = f));
-    const req = http.expectOne((r) => r.url === `${api}/reserva` && r.params.get('IdFinca') === '2');
+    const req = http.expectOne(`${api}/reserva/finca/2/ocupadas`);
+    expect(req.request.method).toBe('GET');
+    // la API solo devuelve fechas de reservas activas, sin datos personales
     req.flush([
-      { IdReserva: 1, IdFinca: 2, FechaEntrada: '2030-03-10T12:00:00.000Z', FechaSalida: '2030-03-12T12:00:00.000Z', Estado: 'Activa' },
-      { IdReserva: 2, IdFinca: 2, FechaEntrada: '2030-03-20T12:00:00.000Z', FechaSalida: '2030-03-22T12:00:00.000Z', Estado: 'Cancelada' }
+      { IdFinca: 2, FechaEntrada: '2030-03-10T00:00:00', FechaSalida: '2030-03-12T00:00:00' },
+      { IdFinca: 2, FechaEntrada: '2030-03-20T00:00:00', FechaSalida: '2030-03-21T00:00:00' }
     ]);
-    expect(fechas).toEqual(['2030-03-10', '2030-03-11']);
+    expect(fechas).toEqual(['2030-03-10', '2030-03-11', '2030-03-20']);
+  });
+
+  it('obtenerFechasOcupadas devuelve [] si la API falla o no hay finca', () => {
+    let fechas: string[] | undefined;
+    service.obtenerFechasOcupadas(2).subscribe((f) => (fechas = f));
+    http.expectOne(`${api}/reserva/finca/2/ocupadas`).flush({}, { status: 500, statusText: 'Error' });
+    expect(fechas).toEqual([]);
+
+    let sinFinca: string[] | undefined;
+    service.obtenerFechasOcupadas('').subscribe((f) => (sinFinca = f));
+    expect(sinFinca).toEqual([]);
   });
 });

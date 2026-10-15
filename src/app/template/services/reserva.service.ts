@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, timeout } from 'rxjs/operators';
 
 export interface MetodoPago {
   id: string;
@@ -223,88 +223,30 @@ export class ReservaService {
     );
   }
 
+  /**
+   * Días ocupados de una finca para el calendario. Usa el endpoint público de la API, que solo
+   * devuelve las fechas de las reservas activas (sin datos personales ni sesión).
+   */
   obtenerFechasOcupadas(fincaId: string | number): Observable<string[]> {
-    return new Observable<string[]>(observer => {
-      try {
-        if (!fincaId || 
-            fincaId === '' || 
-            fincaId === 'undefined' || 
-            fincaId === 'null' ||
-            fincaId === null ||
-            fincaId === undefined) {
+    const id = String(fincaId ?? '').trim();
+    if (!id || id === 'undefined' || id === 'null') {
+      return of([]);
+    }
 
-          observer.next([]);
-          observer.complete();
-          return;
-        }
-
-        const timeoutId = setTimeout(() => {
-
-          observer.next([]);
-          observer.complete();
-        }, 10000);
-        
-        this.listarReservas({ fincaId }).subscribe({
-          next: (reservas) => {
-            clearTimeout(timeoutId);
-            
-            try {
-
-              if (!reservas || !Array.isArray(reservas) || reservas.length === 0) {
-
-                observer.next([]);
-                observer.complete();
-                return;
-              }
-              
-              const fechas = new Set<string>();
-              
-              for (const reserva of reservas) {
-                if (!reserva) continue;
-                
-                try {
-                  if (!reserva.fechaEntrada || !reserva.fechaSalida) continue;
-                  if (/cancelad/i.test(reserva.estado ?? '')) continue;
-                  
-                  const rangoFechas = this.expandirRangoFechas(reserva);
-                  if (!rangoFechas || rangoFechas.length === 0) continue;
-                  
-                  rangoFechas.forEach((fecha) => {
-                    if (fecha && typeof fecha === 'string') {
-                      fechas.add(fecha);
-                    }
-                  });
-                } catch (error) {
-
-                }
-              }
-              
-              const fechasArray = Array.from(fechas).sort();
-
-              observer.next(fechasArray);
-              observer.complete();
-            } catch (error) {
-
-              observer.next([]);
-              observer.complete();
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            clearTimeout(timeoutId);
-
-            observer.next([]);
-            observer.complete();
-          },
-          complete: () => {
-            clearTimeout(timeoutId);
+    return this.http
+      .get<Array<{ FechaEntrada?: string; FechaSalida?: string }>>(`${this.baseUrl}/reserva/finca/${encodeURIComponent(id)}/ocupadas`)
+      .pipe(
+        timeout(10000),
+        map((ocupadas) => {
+          const fechas = new Set<string>();
+          for (const o of Array.isArray(ocupadas) ? ocupadas : []) {
+            this.expandirRangoFechas({ fechaEntrada: String(o?.FechaEntrada ?? ''), fechaSalida: String(o?.FechaSalida ?? '') })
+              .forEach((fecha) => fechas.add(fecha));
           }
-        });
-      } catch (error) {
-
-        observer.next([]);
-        observer.complete();
-      }
-    });
+          return Array.from(fechas).sort();
+        }),
+        catchError(() => of([]))
+      );
   }
 
   crearReserva(payload: CrearReservaPayload): Observable<Reserva> {
@@ -335,7 +277,7 @@ export class ReservaService {
         const idReserva = this.extraerIdDeRespuesta(respuesta, ['IdReserva', 'idReserva', 'Id', 'id']);
 
         if (!idReserva || idReserva <= 0) {
-          throw new Error('El backend no devolvió un IdReserva válido. Verifica SP_RegistrarReserva.');
+          throw new Error('El servidor no devolvió el identificador de la reserva. Inténtalo nuevamente.');
         }
 
         const reserva: Reserva = {
@@ -430,6 +372,10 @@ export class ReservaService {
     );
   }
 
+  /**
+   * Cancela la reserva (estado "Cancelada"). Un cliente solo puede cancelar la suya; borrar reservas
+   * es exclusivo del administrador, por eso no se usa DELETE.
+   */
   cancelarReserva(reservaId: string | number): Observable<boolean> {
     if (!reservaId) {
       return of(false);
@@ -437,14 +383,9 @@ export class ReservaService {
 
     const id = encodeURIComponent(String(reservaId));
 
-
-    return this.http.delete<any>(`${this.baseUrl}/reserva/${id}`).pipe(
-      map((respuesta) => {
-        return true;
-      }),
-      catchError((error: HttpErrorResponse) => {
-        return of(false);
-      })
+    return this.http.put<any>(`${this.baseUrl}/reserva/${id}`, { Estado: 'Cancelada' }).pipe(
+      map(() => true),
+      catchError(() => of(false))
     );
   }
 
