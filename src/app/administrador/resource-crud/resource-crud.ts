@@ -272,7 +272,9 @@ export class ResourceCrudComponent implements OnInit, OnChanges, OnDestroy {
       const valorInicial = (this.modoFormulario === 'editar' && origen && Object.prototype.hasOwnProperty.call(origen, campo.key)) 
         ? origen[campo.key] 
         : '';
-      const control = this.fb.control(valorInicial ?? '', campo.required ? [Validators.required] : []);
+      // Al editar, la contraseña vacía significa "conservar la actual" (la API no devuelve contraseñas)
+      const obligatorio = campo.required && !(campo.type === 'password' && this.modoFormulario === 'editar');
+      const control = this.fb.control(valorInicial ?? '', obligatorio ? [Validators.required] : []);
       this.formulario.addControl(campo.key, control);
 
       if (campo.readOnly || (this.modoFormulario === 'editar' && this.config?.idField && campo.key === this.config.idField)) {

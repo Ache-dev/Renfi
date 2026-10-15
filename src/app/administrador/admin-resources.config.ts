@@ -105,6 +105,8 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       'Precio',
       'Capacidad',
       'Estado',
+      'Habitaciones',
+      'Banos',
       'Calificacion',
       'NombrePropietario',
       'ApellidoPropietario',
@@ -114,30 +116,67 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
     preferredFields: [
       { key: 'NombreFinca', label: 'Nombre de la finca', required: true },
       { key: 'Direccion', label: 'Dirección', required: true },
-      { key: 'NombreMunicipio', label: 'Municipio' },
-      { key: 'Precio', label: 'Precio por noche', type: 'number' },
-      { key: 'Capacidad', label: 'Capacidad', type: 'number' },
-      { key: 'Estado', label: 'Estado' },
+      {
+        key: 'IdMunicipio',
+        label: 'Municipio',
+        type: 'select',
+        required: true,
+        selectEndpoint: 'municipio',
+        selectValueKey: 'IdMunicipio',
+        selectLabelKey: 'NombreMunicipio'
+      },
+      {
+        key: 'NumeroDocumentoUsuario',
+        label: 'Propietario',
+        type: 'select',
+        required: true,
+        selectEndpoint: 'usuario',
+        selectValueKey: 'NumeroDocumento',
+        selectLabelKey: 'NombreUsuario'
+      },
+      { key: 'Precio', label: 'Precio por noche', type: 'number', required: true },
+      { key: 'Capacidad', label: 'Capacidad (huéspedes)', type: 'number', required: true },
+      { key: 'Habitaciones', label: 'Habitaciones', type: 'number' },
+      { key: 'Banos', label: 'Baños', type: 'number' },
+      { key: 'Camas', label: 'Camas', type: 'number' },
+      { key: 'NochesMinimas', label: 'Noches mínimas', type: 'number' },
+      {
+        key: 'Estado',
+        label: 'Estado',
+        type: 'select',
+        selectOptions: [
+          { value: 'Disponible', label: 'Disponible' },
+          { value: 'Ocupada', label: 'Ocupada' },
+          { value: 'Mantenimiento', label: 'Mantenimiento' }
+        ]
+      },
       { key: 'InformacionAdicional', label: 'Información adicional', type: 'textarea' },
-      { key: 'Calificacion', label: 'Calificación', type: 'number' },
-      { key: 'NombrePropietario', label: 'Nombre del propietario' },
-      { key: 'ApellidoPropietario', label: 'Apellido del propietario' },
-      { key: 'TelefonoPropietario', label: 'Teléfono del propietario', type: 'text' },
-      { key: 'CorreoPropietario', label: 'Correo del propietario', type: 'email' }
+      { key: 'Comodidades', label: 'Comodidades (separadas por comas)', type: 'textarea' },
+      { key: 'Reglas', label: 'Reglas de la casa', type: 'textarea' },
+      { key: 'HoraEntrada', label: 'Hora de entrada (HH:MM)', type: 'text' },
+      { key: 'HoraSalida', label: 'Hora de salida (HH:MM)', type: 'text' },
+      { key: 'PermiteMascotas', label: 'Permite mascotas', type: 'select', selectOptions: [{ value: true, label: 'Sí' }, { value: false, label: 'No' }] },
+      { key: 'PermiteEventos', label: 'Permite eventos', type: 'select', selectOptions: [{ value: true, label: 'Sí' }, { value: false, label: 'No' }] },
+      { key: 'Latitud', label: 'Latitud (ej. 6.244203)', type: 'number' },
+      { key: 'Longitud', label: 'Longitud (ej. -75.581212)', type: 'number' },
+      { key: 'Calificacion', label: 'Calificación', type: 'number' }
     ],
     samplePayload: {
       NombreFinca: 'Finca de ejemplo',
       Direccion: 'Vereda el Paraíso',
-      NombreMunicipio: 'Manizales',
+      IdMunicipio: 1,
+      NumeroDocumentoUsuario: 1,
       Precio: 250000,
       Capacidad: 12,
+      Habitaciones: 5,
+      Banos: 3,
+      Camas: 8,
       Estado: 'Disponible',
       InformacionAdicional: 'Piscina climatizada y zona BBQ.',
-      Calificacion: 5,
-      NombrePropietario: 'Laura',
-      ApellidoPropietario: 'Gomez',
-      TelefonoPropietario: '3001234567',
-      CorreoPropietario: 'laura@renfi.com'
+      Comodidades: 'Piscina, BBQ, WiFi',
+      HoraEntrada: '15:00',
+      HoraSalida: '11:00',
+      Calificacion: 5
     },
     reports: [
       {
@@ -365,29 +404,6 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
     samplePayload: {
       NombreMetodoDePago: 'Efectivo',
       PagoMixto: false
-    }
-  },
-  imagenes: {
-    id: 'imagenes',
-    title: 'Imágenes',
-    endpoint: 'imagen',
-    description: 'Administra las imágenes asignadas a cada finca.',
-    idField: 'IdImagen',
-    columns: [
-      'IdImagen',
-      'UrlImagen',
-      'IdFinca'
-    ],
-    preferredFields: [
-      { key: 'UrlImagen', label: 'URL de la imagen', type: 'text', required: true },
-      { key: 'IdFinca', label: 'Finca (ID)', type: 'number', required: true }
-    ],
-    fieldAliases: {
-      UrlImagen: ['Url', 'url', 'ImagenUrl', 'imagenUrl']
-    },
-    samplePayload: {
-      UrlImagen: 'https://renfi.com/img/paraiso1.jpg',
-      IdFinca: 1
     }
   },
   municipios: {
