@@ -1,0 +1,66 @@
+<div class="panel">
+	<p class="alert alert--error" role="alert" *ngIf="error">{{ error }}</p>
+	<p class="panel__loading" *ngIf="cargando" role="status"><span class="spinner" aria-hidden="true"></span> Cargando tu resumen…</p>
+
+	<ng-container *ngIf="!cargando && !error">
+		<h2 class="saludo">Hola{{ nombre ? ', ' + nombre : '' }} 👋</h2>
+
+		<ul class="tiles">
+			<li>
+				<a class="tile card" routerLink="/mi-finca/fincas">
+					<span class="tile__label">Mis fincas</span>
+					<strong class="tile__valor tabular">{{ fincas.length }}</strong>
+					<span class="tile__desc">{{ fincasDisponibles }} disponibles</span>
+				</a>
+			</li>
+			<li>
+				<a class="tile card" [class.tile--alerta]="porConfirmar > 0" routerLink="/mi-finca/reservas">
+					<span class="tile__label">Por confirmar</span>
+					<strong class="tile__valor tabular">{{ porConfirmar }}</strong>
+					<span class="tile__desc">{{ reservas.length }} reservas en total</span>
+				</a>
+			</li>
+			<li>
+				<a class="tile card" routerLink="/mi-finca/ingresos">
+					<span class="tile__label">Cobrado</span>
+					<strong class="tile__valor tabular">{{ cobrado | currency: 'COP':'symbol-narrow':'1.0-0' }}</strong>
+					<span class="tile__desc">{{ pagos.length }} pagos registrados</span>
+				</a>
+			</li>
+		</ul>
+
+		<section class="card guia" *ngIf="!guiaCompleta" aria-labelledby="guia-titulo">
+			<h2 id="guia-titulo">Pon tu finca a trabajar</h2>
+			<ol class="pasos">
+				<li class="paso" *ngFor="let paso of pasos" [class.paso--hecho]="paso.hecho">
+					<span class="paso__marca" aria-hidden="true">
+						<svg *ngIf="paso.hecho" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+					</span>
+					<span class="paso__texto">
+						<strong>{{ paso.titulo }}</strong>
+						<small>{{ paso.detalle }}</small>
+					</span>
+					<a *ngIf="!paso.hecho" [routerLink]="paso.ruta" class="btn btn--secondary btn--sm">{{ paso.accion }}</a>
+					<span class="visually-hidden" *ngIf="paso.hecho">Completado</span>
+				</li>
+			</ol>
+		</section>
+
+		<section class="card proximas" aria-labelledby="prox-titulo">
+			<h2 id="prox-titulo">Próximas llegadas</h2>
+			<p class="muted" *ngIf="!proximas.length">No tienes llegadas próximas.</p>
+			<ul class="lista" *ngIf="proximas.length">
+				<li *ngFor="let r of proximas">
+					<span class="lista__fecha tabular">{{ r.FechaEntrada | date: 'd MMM' }}</span>
+					<span class="lista__texto">
+						<strong>{{ r.NombreFinca }}</strong>
+						<small>{{ cliente(r) }} · hasta el {{ r.FechaSalida | date: 'd MMM' }}</small>
+					</span>
+					<span class="badge badge--dot" [class.badge--success]="r.Estado === 'Confirmada'" [class.badge--warning]="r.Estado !== 'Confirmada'">
+						{{ r.Estado === 'Confirmada' ? 'Confirmada' : 'Por confirmar' }}
+					</span>
+				</li>
+			</ul>
+		</section>
+	</ng-container>
+</div>

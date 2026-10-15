@@ -9,6 +9,7 @@ import { MiCuentaUsuarios } from './usuario/mi-cuenta-usuarios/mi-cuenta-usuario
 import { ComprovanteReservaUsuario } from './usuario/comprovante-reserva-usuario/comprovante-reserva-usuario';
 import { PasarelaPagoUsuario } from './usuario/pasarela-pago-usuario/pasarela-pago-usuario';
 import { AdminGuard } from './administrador/guards/admin.guard';
+import { DuenoGuard } from './dueno/guards/dueno.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
@@ -25,6 +26,12 @@ const routes: Routes = [
     canActivate: [AdminGuard],
     canMatch: [AdminGuard],
     loadChildren: () => import('./administrador/administrador-module').then((m) => m.AdministradorModule)
+  },
+  {
+    path: 'mi-finca',
+    canActivate: [DuenoGuard],
+    canMatch: [DuenoGuard],
+    loadChildren: () => import('./dueno/dueno-module').then((m) => m.DuenoModule)
   },
   { path: '**', redirectTo: 'inicio' }
 ];

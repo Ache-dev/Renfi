@@ -1,0 +1,126 @@
+.saludo {
+	font-size: var(--text-title);
+}
+
+.tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+	gap: 16px;
+	list-style: none;
+}
+
+.tile {
+	display: grid;
+	gap: 4px;
+	height: 100%;
+	padding: 18px 20px;
+	color: inherit;
+	transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.tile:hover {
+	color: inherit;
+	box-shadow: var(--shadow-md);
+	transform: translateY(-2px);
+}
+
+.tile--alerta {
+	border-color: var(--color-primary-light);
+	background: var(--color-primary-surface);
+}
+
+.tile__label {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--color-text-secondary);
+}
+
+.tile__valor {
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	color: var(--color-secondary);
+}
+
+.tile__desc {
+	font-size: 0.8125rem;
+	color: var(--color-text-secondary);
+}
+
+.guia,
+.proximas {
+	display: grid;
+	gap: 14px;
+	padding: clamp(16px, 3vw, 24px);
+}
+
+.pasos,
+.lista {
+	display: grid;
+	gap: 10px;
+	list-style: none;
+}
+
+.paso {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	background: var(--color-surface-base);
+	border-radius: var(--radius-md);
+}
+
+.paso__marca {
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+	width: 26px;
+	height: 26px;
+	border: 2px solid var(--color-surface-dark);
+	border-radius: 50%;
+}
+
+.paso--hecho .paso__marca {
+	color: #fff;
+	background: var(--color-success);
+	border-color: var(--color-success);
+}
+
+.paso__marca svg {
+	width: 14px;
+	height: 14px;
+}
+
+.paso__texto,
+.lista__texto {
+	display: grid;
+	flex: 1;
+	min-width: 0;
+}
+
+.paso__texto small,
+.lista__texto small {
+	font-size: 0.8125rem;
+	color: var(--color-text-secondary);
+}
+
+.paso--hecho .paso__texto strong {
+	color: var(--color-text-secondary);
+	text-decoration: line-through;
+}
+
+.lista li {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.lista__fecha {
+	flex-shrink: 0;
+	min-width: 54px;
+	padding: 6px 8px;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	text-align: center;
+	color: var(--color-secondary);
+	background: var(--color-secondary-surface);
+	border-radius: var(--radius-sm);
+}

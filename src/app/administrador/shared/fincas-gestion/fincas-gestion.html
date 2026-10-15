@@ -1,0 +1,288 @@
+<div class="panel">
+	<p class="alert alert--success" role="status" *ngIf="aviso">{{ aviso }}</p>
+	<p class="alert alert--error" role="alert" *ngIf="error">{{ error }}</p>
+
+	<!-- ============ LISTA ============ -->
+	<ng-container *ngIf="vista === 'lista'">
+		<div class="panel__toolbar">
+			<p class="panel__count" aria-live="polite" *ngIf="!cargando">
+				<strong class="tabular">{{ fincas.length }}</strong> {{ fincas.length === 1 ? 'finca' : 'fincas' }}
+			</p>
+			<button type="button" class="btn btn--secondary btn--sm" (click)="cargar()" [disabled]="cargando">Actualizar</button>
+			<button type="button" class="btn btn--primary btn--sm" (click)="nuevaFinca()">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<line x1="12" y1="5" x2="12" y2="19"></line>
+					<line x1="5" y1="12" x2="19" y2="12"></line>
+				</svg>
+				{{ esAdmin ? 'Nueva finca' : 'Publicar una finca' }}
+			</button>
+		</div>
+
+		<p class="panel__loading" *ngIf="cargando" role="status"><span class="spinner" aria-hidden="true"></span> Cargando fincas…</p>
+
+		<div class="card empty" *ngIf="!cargando && !fincas.length && !error">
+			<span class="empty__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+			</span>
+			<h2>{{ esAdmin ? 'Todavía no hay fincas' : 'Aún no has publicado ninguna finca' }}</h2>
+			<p *ngIf="!esAdmin">Crea tu primera finca: pon su nombre, precio y capacidad, personaliza comodidades y reglas, y sube las fotos. Después aparece en el catálogo y empieza a recibir reservas.</p>
+			<button type="button" class="btn btn--primary" (click)="nuevaFinca()">{{ esAdmin ? 'Crear la primera finca' : 'Crear mi primera finca' }}</button>
+		</div>
+
+		<ul class="fincas" *ngIf="!cargando && fincas.length">
+			<li class="finca card" *ngFor="let finca of fincas; trackBy: trackFinca">
+				<div class="finca__foto">
+					<img *ngIf="finca.UrlPortada; else sinFoto" [src]="finca.UrlPortada" [alt]="'Portada de ' + finca.NombreFinca" loading="lazy" />
+					<ng-template #sinFoto>
+						<button type="button" class="finca__sin-foto" (click)="editar(finca, 'fotos')">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"></path></svg>
+							Agregar fotos
+						</button>
+					</ng-template>
+					<span class="badge finca__estado" [class.badge--success]="finca.Estado === 'Disponible'" [class.badge--warning]="finca.Estado !== 'Disponible'">{{ finca.Estado }}</span>
+				</div>
+
+				<div class="finca__cuerpo">
+					<h2>{{ finca.NombreFinca }}</h2>
+					<p class="muted finca__lugar">{{ finca.NombreMunicipio || 'Sin municipio' }} · {{ finca.Direccion }}</p>
+					<p class="muted" *ngIf="esAdmin && nombreDueno(finca)">Dueño: {{ nombreDueno(finca) }}</p>
+					<ul class="finca__datos">
+						<li><strong class="tabular">{{ finca.Precio | currency: 'COP':'symbol-narrow':'1.0-0' }}</strong> / noche</li>
+						<li>{{ finca.Capacidad }} huéspedes</li>
+						<li>{{ finca.Habitaciones }} hab. · {{ finca.Banos }} baños</li>
+						<li>{{ finca.Imagenes.length }} fotos</li>
+					</ul>
+				</div>
+
+				<div class="finca__acciones">
+					<button type="button" class="btn btn--primary btn--sm" (click)="editar(finca)">Editar</button>
+					<button type="button" class="btn btn--secondary btn--sm" (click)="editar(finca, 'fotos')">Fotos</button>
+					<button
+						type="button"
+						class="btn btn--ghost btn--sm"
+						(click)="alternarDisponibilidad(finca)"
+						[disabled]="cambiandoEstadoId === finca.IdFinca"
+						[title]="finca.Estado === 'Disponible' ? 'Dejar de recibir reservas nuevas' : 'Volver a recibir reservas'"
+					>
+						{{ finca.Estado === 'Disponible' ? 'Pausar' : 'Reactivar' }}
+					</button>
+					<button type="button" class="btn btn--danger-ghost btn--sm finca__borrar" (click)="pedirEliminar(finca)">Eliminar</button>
+				</div>
+			</li>
+		</ul>
+	</ng-container>
+
+	<!-- ============ EDITOR ============ -->
+	<ng-container *ngIf="vista === 'editor'">
+		<div class="editor__head">
+			<button type="button" class="back-link" (click)="volverALista()">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+				Mis fincas
+			</button>
+			<h2>{{ editando ? editando.NombreFinca : 'Nueva finca' }}</h2>
+		</div>
+
+		<div class="segmented editor__tabs" role="tablist" aria-label="Secciones de la finca">
+			<button
+				type="button"
+				role="tab"
+				class="segmented__item"
+				*ngFor="let s of secciones"
+				[attr.aria-selected]="seccion === s.id"
+				[class.tab--error]="seccionConErrores(s.id)"
+				[disabled]="s.id === 'fotos' && !editando"
+				[title]="s.id === 'fotos' && !editando ? 'Guarda la finca para poder subir fotos' : ''"
+				(click)="irA(s.id)"
+			>
+				{{ s.label }}
+			</button>
+		</div>
+
+		<form class="card editor" [formGroup]="form" (ngSubmit)="guardar()" novalidate [hidden]="seccion === 'fotos'">
+			<!-- Básico -->
+			<div class="form-grid" *ngIf="seccion === 'basico'">
+				<div class="field field--full">
+					<label class="field__label" for="f-nombre">Nombre de la finca <span class="field__req" aria-hidden="true">*</span></label>
+					<input id="f-nombre" type="text" formControlName="NombreFinca" maxlength="300" placeholder="Ej. Finca El Paraíso" />
+					<small class="field__error" *ngIf="campoInvalido('NombreFinca')">Escribe el nombre de la finca.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="f-municipio">Municipio <span class="field__req" aria-hidden="true">*</span></label>
+					<select id="f-municipio" formControlName="IdMunicipio">
+						<option [ngValue]="null" disabled>Selecciona…</option>
+						<option *ngFor="let m of municipios" [ngValue]="m.IdMunicipio">{{ m.NombreMunicipio }}</option>
+					</select>
+					<small class="field__error" *ngIf="campoInvalido('IdMunicipio')">Selecciona el municipio.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="f-direccion">Dirección o vereda <span class="field__req" aria-hidden="true">*</span></label>
+					<input id="f-direccion" type="text" formControlName="Direccion" maxlength="500" placeholder="Km 5 vía a la represa" />
+					<small class="field__error" *ngIf="campoInvalido('Direccion')">Indica cómo llegar a la finca.</small>
+				</div>
+
+				<div class="field field--full">
+					<label class="field__label" for="f-info">Descripción</label>
+					<textarea id="f-info" formControlName="InformacionAdicional" rows="4" maxlength="500" placeholder="Cuenta qué hace especial tu finca: vistas, ambiente, qué incluye…"></textarea>
+					<small class="field__hint">{{ form.get('InformacionAdicional')?.value?.length || 0 }} / 500 caracteres</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="f-precio">Precio por noche (COP) <span class="field__req" aria-hidden="true">*</span></label>
+					<input id="f-precio" type="number" class="tabular" formControlName="Precio" min="1" inputmode="numeric" />
+					<small class="field__error" *ngIf="campoInvalido('Precio')">Ingresa un precio mayor a 0.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="f-capacidad">Capacidad (huéspedes) <span class="field__req" aria-hidden="true">*</span></label>
+					<input id="f-capacidad" type="number" class="tabular" formControlName="Capacidad" min="1" max="500" inputmode="numeric" />
+					<small class="field__error" *ngIf="campoInvalido('Capacidad')">Mínimo 1 huésped.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="f-estado">Disponibilidad</label>
+					<select id="f-estado" formControlName="Estado">
+						<option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+					</select>
+					<small class="field__hint">Una finca "No disponible" no recibe reservas nuevas.</small>
+				</div>
+
+				<div class="field" *ngIf="esAdmin">
+					<label class="field__label" for="f-dueno">Dueño <span class="field__req" aria-hidden="true">*</span></label>
+					<select id="f-dueno" formControlName="NumeroDocumentoUsuario">
+						<option [ngValue]="null" disabled>Selecciona…</option>
+						<option *ngFor="let u of usuarios" [ngValue]="u.NumeroDocumento">{{ etiquetaUsuario(u) }}</option>
+					</select>
+					<small class="field__error" *ngIf="campoInvalido('NumeroDocumentoUsuario')">Selecciona el dueño de la finca.</small>
+				</div>
+			</div>
+
+			<!-- Espacios y horarios -->
+			<div *ngIf="seccion === 'espacios'" class="grupo">
+				<div class="form-grid form-grid--3">
+					<div class="field">
+						<label class="field__label" for="f-hab">Habitaciones</label>
+						<input id="f-hab" type="number" class="tabular" formControlName="Habitaciones" min="0" max="100" />
+					</div>
+					<div class="field">
+						<label class="field__label" for="f-banos">Baños</label>
+						<input id="f-banos" type="number" class="tabular" formControlName="Banos" min="0" max="100" />
+					</div>
+					<div class="field">
+						<label class="field__label" for="f-camas">Camas</label>
+						<input id="f-camas" type="number" class="tabular" formControlName="Camas" min="0" max="200" />
+					</div>
+				</div>
+
+				<div class="form-grid form-grid--3">
+					<div class="field">
+						<label class="field__label" for="f-noches">Noches mínimas</label>
+						<input id="f-noches" type="number" class="tabular" formControlName="NochesMinimas" min="1" max="30" />
+						<small class="field__error" *ngIf="campoInvalido('NochesMinimas')">Entre 1 y 30 noches.</small>
+					</div>
+					<div class="field">
+						<label class="field__label" for="f-entrada">Hora de entrada</label>
+						<input id="f-entrada" type="time" formControlName="HoraEntrada" />
+					</div>
+					<div class="field">
+						<label class="field__label" for="f-salida">Hora de salida</label>
+						<input id="f-salida" type="time" formControlName="HoraSalida" />
+					</div>
+				</div>
+
+				<div class="switch-row">
+					<label class="check-card">
+						<input type="checkbox" formControlName="PermiteMascotas" />
+						<span><strong>Se admiten mascotas</strong><small>Los huéspedes pueden llegar con sus animales.</small></span>
+					</label>
+					<label class="check-card">
+						<input type="checkbox" formControlName="PermiteEventos" />
+						<span><strong>Se permiten eventos</strong><small>Celebraciones, reuniones y encuentros.</small></span>
+					</label>
+				</div>
+			</div>
+
+			<!-- Detalles -->
+			<div *ngIf="seccion === 'detalles'" class="grupo">
+				<div class="field">
+					<label class="field__label" for="f-comodidad">Comodidades</label>
+					<div class="chips" *ngIf="comodidades.length">
+						<span class="chip" *ngFor="let c of comodidades; let i = index">
+							{{ c }}
+							<button type="button" (click)="quitarComodidad(i)" [attr.aria-label]="'Quitar ' + c">×</button>
+						</span>
+					</div>
+					<div class="chips__nueva">
+						<input
+							id="f-comodidad"
+							type="text"
+							maxlength="50"
+							[(ngModel)]="nuevaComodidad"
+							[ngModelOptions]="{ standalone: true }"
+							(keydown.enter)="$event.preventDefault(); agregarComodidad()"
+							placeholder="Escribe una y presiona Enter"
+						/>
+						<button type="button" class="btn btn--secondary btn--sm" (click)="agregarComodidad()" [disabled]="!nuevaComodidad.trim()">Agregar</button>
+					</div>
+					<div class="chips chips--sugeridas" *ngIf="sugerencias.length">
+						<button type="button" class="chip chip--sugerida" *ngFor="let s of sugerencias" (click)="agregarComodidad(s)">+ {{ s }}</button>
+					</div>
+					<small class="field__hint">{{ comodidades.length }} de 30. Aparecen como servicios en la ficha pública.</small>
+				</div>
+
+				<div class="field">
+					<label class="field__label" for="f-reglas">Reglas de la casa</label>
+					<textarea id="f-reglas" formControlName="Reglas" rows="4" maxlength="1000" placeholder="Ej. Silencio después de las 10 p. m., no se permite fumar dentro de la casa…"></textarea>
+					<small class="field__hint">{{ form.get('Reglas')?.value?.length || 0 }} / 1000 caracteres</small>
+				</div>
+
+				<div class="form-grid">
+					<div class="field">
+						<label class="field__label" for="f-lat">Latitud</label>
+						<input id="f-lat" type="number" class="tabular" formControlName="Latitud" step="any" placeholder="Ej. 6.2330" />
+						<small class="field__error" *ngIf="campoInvalido('Latitud')">Debe estar entre -90 y 90.</small>
+					</div>
+					<div class="field">
+						<label class="field__label" for="f-lon">Longitud</label>
+						<input id="f-lon" type="number" class="tabular" formControlName="Longitud" step="any" placeholder="Ej. -75.1530" />
+						<small class="field__error" *ngIf="campoInvalido('Longitud')">Debe estar entre -180 y 180.</small>
+					</div>
+					<small class="field__hint field--full">Opcional. Copia las coordenadas desde Google Maps (clic derecho sobre el lugar). Van las dos o ninguna.</small>
+				</div>
+			</div>
+
+			<p class="alert alert--error" role="alert" *ngIf="errorForm">{{ errorForm }}</p>
+
+			<footer class="editor__pie">
+				<button type="button" class="btn btn--secondary" (click)="volverALista()">Cancelar</button>
+				<button type="submit" class="btn btn--primary" [disabled]="guardando">
+					<span class="spinner" *ngIf="guardando" aria-hidden="true"></span>
+					{{ guardando ? 'Guardando…' : editando ? 'Guardar cambios' : 'Crear finca' }}
+				</button>
+			</footer>
+		</form>
+
+		<div class="card editor" *ngIf="seccion === 'fotos' && editando">
+			<p class="muted">La portada es la foto que ven los visitantes en el catálogo. Puedes cambiarla, ordenar la galería y describir cada foto.</p>
+			<app-galeria-finca [idFinca]="editando.IdFinca" (cambio)="alCambiarGaleria($event)"></app-galeria-finca>
+			<footer class="editor__pie">
+				<button type="button" class="btn btn--primary" (click)="volverALista()">Listo</button>
+			</footer>
+		</div>
+	</ng-container>
+</div>
+
+<div class="modal-backdrop" *ngIf="porEliminar" (click)="cancelarEliminar()">
+	<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="finca-borrar" (click)="$event.stopPropagation()">
+		<div class="modal__icon modal__icon--danger" aria-hidden="true">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+		</div>
+		<h2 class="modal__title" id="finca-borrar">¿Eliminar "{{ porEliminar.NombreFinca }}"?</h2>
+		<p class="modal__text">Se borrarán la finca y todas sus fotos. Si tiene reservas registradas no se podrá eliminar: en ese caso usa "Pausar" para dejar de recibir reservas.</p>
+		<div class="modal__actions">
+			<button type="button" class="btn btn--secondary" (click)="cancelarEliminar()">Cancelar</button>
+			<button type="button" class="btn btn--danger" (click)="confirmarEliminar()" [disabled]="eliminando">{{ eliminando ? 'Eliminando…' : 'Eliminar' }}</button>
+		</div>
+	</div>
+</div>

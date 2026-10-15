@@ -49,6 +49,13 @@
           </svg>
           Panel admin
         </a>
+        <a *ngIf="esDueno$ | async" routerLink="/mi-finca" class="btn btn--ghost btn--sm" (click)="cerrarMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Mi finca
+        </a>
         <a routerLink="/mi-cuenta" routerLinkActive="is-active" class="account-chip" (click)="cerrarMenu()" title="Mi cuenta">
           <span class="account-chip__avatar" aria-hidden="true">{{ getInicial(usuario) }}</span>
           <span class="account-chip__name">{{ getNombreCorto(usuario) }}</span>

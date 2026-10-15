@@ -22,7 +22,7 @@
 	<div class="admin-header__user" *ngIf="usuario$ | async as usuario">
 		<span class="admin-header__avatar" aria-hidden="true">{{ (usuario.NombreUsuario || usuario.Correo || 'A')[0] | uppercase }}</span>
 		<span class="admin-header__who">
-			<span class="admin-header__name">{{ usuario.NombreUsuario || 'Administrador' }}</span>
+			<span class="admin-header__name">{{ usuario.NombreUsuario || usuario.Rol || 'Usuario' }}</span>
 			<small>{{ usuario.Correo || 'admin@renfi.com' }}</small>
 		</span>
 	</div>

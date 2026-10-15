@@ -15,11 +15,13 @@ export class AuthStateService {
   private readonly currentUserSubject = new BehaviorSubject<UsuarioNormalizado | null>(null);
   private readonly tokenSubject = new BehaviorSubject<string | null>(null);
   private readonly adminSubject = new BehaviorSubject<boolean>(false);
+  private readonly duenoSubject = new BehaviorSubject<boolean>(false);
   private recordar = false;
 
   readonly currentUser$: Observable<UsuarioNormalizado | null> = this.currentUserSubject.asObservable();
   readonly token$: Observable<string | null> = this.tokenSubject.asObservable();
   readonly esAdmin$: Observable<boolean> = this.adminSubject.asObservable();
+  readonly esDueno$: Observable<boolean> = this.duenoSubject.asObservable();
 
   constructor() {
     this.restoreSession();
@@ -32,6 +34,7 @@ export class AuthStateService {
     this.currentUserSubject.next(usuario);
     this.tokenSubject.next(token);
     this.adminSubject.next(this.evaluarEsAdmin(usuario));
+    this.duenoSubject.next(this.evaluarEsDueno(usuario));
     this.recordar = recordar;
     this.persistSession({ usuario, token }, recordar);
   }
@@ -40,6 +43,7 @@ export class AuthStateService {
     this.currentUserSubject.next(null);
     this.tokenSubject.next(null);
     this.adminSubject.next(false);
+    this.duenoSubject.next(false);
     this.recordar = false;
     if (this.isBrowser()) {
       window.sessionStorage.removeItem(this.SESSION_KEY);
@@ -59,6 +63,10 @@ export class AuthStateService {
     return this.adminSubject.value;
   }
 
+  esDuenoSnapshot(): boolean {
+    return this.duenoSubject.value;
+  }
+
   esAdminUsuario(usuario: UsuarioNormalizado | null | undefined): boolean {
     return this.evaluarEsAdmin(usuario ?? null);
   }
@@ -70,6 +78,7 @@ export class AuthStateService {
   updateProfile(usuarioActualizado: UsuarioNormalizado, recordar = this.recordar): void {
     this.currentUserSubject.next(usuarioActualizado);
     this.adminSubject.next(this.evaluarEsAdmin(usuarioActualizado));
+    this.duenoSubject.next(this.evaluarEsDueno(usuarioActualizado));
     const data: StoredSession = {
       usuario: usuarioActualizado,
       token: this.tokenSubject.value
@@ -95,6 +104,7 @@ export class AuthStateService {
       this.currentUserSubject.next(data.usuario ?? null);
       this.tokenSubject.next(data.token ?? null);
       this.adminSubject.next(this.evaluarEsAdmin(data.usuario ?? null));
+      this.duenoSubject.next(this.evaluarEsDueno(data.usuario ?? null));
       this.recordar = !!localData;
 
       this.persistSession(data, !!localData);
@@ -155,6 +165,20 @@ export class AuthStateService {
     }
 
     return idRol !== undefined ? idRol === 1 : false;
+  }
+
+  /**
+   * El rol de dueño de finca se reconoce por nombre ("Dueño de finca"; "Propietario" es el nombre anterior),
+   * igual que en la API, porque los Id de rol los genera la base de datos.
+   */
+  private evaluarEsDueno(usuario: UsuarioNormalizado | null): boolean {
+    const rol = (usuario?.Rol ?? usuario?.NombreRol ?? '')
+      .toString()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .trim()
+      .toLowerCase();
+    return rol === 'dueno de finca' || rol === 'propietario';
   }
 
   private parseNumeroDesdeCadena(valor: unknown): number | undefined {

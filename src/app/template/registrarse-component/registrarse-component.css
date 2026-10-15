@@ -239,3 +239,46 @@
   color: var(--color-text-secondary);
   border-top: 1px solid var(--color-surface-medium);
 }
+
+/* Tipo de cuenta: reservar o publicar fincas */
+.tipo-cuenta {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  border: 0;
+}
+
+.tipo-cuenta__opcion {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--color-surface-light);
+  border: 1px solid var(--color-surface-dark);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.tipo-cuenta__opcion:hover {
+  border-color: var(--color-text-tertiary);
+}
+
+.tipo-cuenta__opcion:has(input:checked) {
+  background: var(--color-primary-surface);
+  border-color: var(--color-primary);
+}
+
+.tipo-cuenta__opcion input {
+  margin-top: 3px;
+}
+
+.tipo-cuenta__opcion span {
+  display: grid;
+  gap: 2px;
+}
+
+.tipo-cuenta__opcion small {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}

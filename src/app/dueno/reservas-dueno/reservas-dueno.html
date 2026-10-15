@@ -1,0 +1,81 @@
+<div class="panel">
+	<p class="alert alert--success" role="status" *ngIf="aviso">{{ aviso }}</p>
+	<p class="alert alert--error" role="alert" *ngIf="error">{{ error }}</p>
+
+	<div class="panel__toolbar">
+		<div class="segmented" role="group" aria-label="Filtrar por estado">
+			<button type="button" class="segmented__item" *ngFor="let f of filtros" [attr.aria-pressed]="filtro === f.id" (click)="filtro = f.id">
+				{{ f.label }} <small class="tabular">{{ contar(f.id) }}</small>
+			</button>
+		</div>
+		<button type="button" class="btn btn--secondary btn--sm" (click)="cargar()" [disabled]="cargando">Actualizar</button>
+	</div>
+
+	<p class="panel__loading" *ngIf="cargando" role="status"><span class="spinner" aria-hidden="true"></span> Cargando reservas…</p>
+
+	<div class="card empty" *ngIf="!cargando && !reservas.length && !error">
+		<span class="empty__icon" aria-hidden="true">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+		</span>
+		<h2>Todavía no tienes reservas</h2>
+		<p>Cuando alguien reserve una de tus fincas aparecerá aquí para que la confirmes. Revisa que tus fincas estén "Disponibles" y tengan buenas fotos.</p>
+		<a routerLink="/mi-finca/fincas" class="btn btn--primary">Ir a mis fincas</a>
+	</div>
+
+	<p class="muted" *ngIf="!cargando && reservas.length && !visibles.length">No hay reservas con este estado.</p>
+
+	<div class="table-wrap" *ngIf="!cargando && visibles.length">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Reserva</th>
+					<th scope="col">Finca</th>
+					<th scope="col">Huésped</th>
+					<th scope="col">Estadía</th>
+					<th scope="col" class="num">Monto</th>
+					<th scope="col">Estado</th>
+					<th scope="col" class="col-actions"><span class="visually-hidden">Acciones</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let r of visibles; trackBy: trackReserva" [attr.aria-busy]="ocupadaId === r.IdReserva">
+					<td>
+						<span class="cell-main">#{{ r.IdReserva }}</span>
+						<span class="cell-sub">{{ r.FechaReserva | date: 'd MMM y' }}</span>
+					</td>
+					<td>
+						<span class="cell-main">{{ r.NombreFinca }}</span>
+						<span class="cell-sub">{{ r.NombreMunicipio }}</span>
+					</td>
+					<td>
+						<span class="cell-main">{{ cliente(r) }}</span>
+						<span class="cell-sub" *ngIf="r.TelefonoCliente">{{ r.TelefonoCliente }}</span>
+						<a class="cell-sub" *ngIf="r.CorreoCliente" [href]="'mailto:' + r.CorreoCliente">{{ r.CorreoCliente }}</a>
+					</td>
+					<td>
+						<span class="cell-main">{{ r.FechaEntrada | date: 'd MMM' }} → {{ r.FechaSalida | date: 'd MMM y' }}</span>
+						<span class="cell-sub">{{ noches(r) }} {{ noches(r) === 1 ? 'noche' : 'noches' }}</span>
+					</td>
+					<td class="num">{{ r.MontoReserva | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+					<td><span class="badge badge--dot" [ngClass]="claseEstado(r)">{{ etiqueta(r) }}</span></td>
+					<td class="col-actions">
+						<button type="button" class="btn btn--primary btn--sm" *ngIf="puede(r, 'Confirmada')" (click)="pedir(r, 'Confirmada')" [disabled]="ocupadaId !== null">Confirmar</button>
+						<button type="button" class="btn btn--forest btn--sm" *ngIf="puede(r, 'Finalizada')" (click)="pedir(r, 'Finalizada')" [disabled]="ocupadaId !== null">Finalizar</button>
+						<button type="button" class="btn btn--danger-ghost btn--sm" *ngIf="puede(r, 'Cancelada')" (click)="pedir(r, 'Cancelada')" [disabled]="ocupadaId !== null">Cancelar</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="modal-backdrop" *ngIf="pendiente" (click)="cancelarPendiente()">
+	<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="reserva-cancelar" (click)="$event.stopPropagation()">
+		<h2 class="modal__title" id="reserva-cancelar">¿Cancelar la reserva #{{ pendiente.reserva.IdReserva }}?</h2>
+		<p class="modal__text">Las fechas de {{ pendiente.reserva.NombreFinca }} quedarán libres otra vez. Avisa a {{ cliente(pendiente.reserva) }} si ya había pagado.</p>
+		<div class="modal__actions">
+			<button type="button" class="btn btn--secondary" (click)="cancelarPendiente()">Mantener</button>
+			<button type="button" class="btn btn--danger" (click)="confirmarPendiente()">Cancelar reserva</button>
+		</div>
+	</div>
+</div>

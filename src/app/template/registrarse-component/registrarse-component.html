@@ -192,6 +192,24 @@
 				</div>
 			</div>
 
+			<fieldset class="tipo-cuenta">
+				<legend class="field__label">¿Cómo quieres usar Renfi?</legend>
+				<label class="tipo-cuenta__opcion">
+					<input type="radio" formControlName="tipoCuenta" value="cliente" />
+					<span>
+						<strong>Quiero reservar fincas</strong>
+						<small>Busca, reserva y paga tus estadías.</small>
+					</span>
+				</label>
+				<label class="tipo-cuenta__opcion">
+					<input type="radio" formControlName="tipoCuenta" value="dueno" />
+					<span>
+						<strong>Quiero publicar mi finca</strong>
+						<small>Crea tu finca, personalízala y gestiona sus reservas.</small>
+					</span>
+				</label>
+			</fieldset>
+
 			<div class="field">
 				<label class="check">
 					<input type="checkbox" formControlName="terminos" />

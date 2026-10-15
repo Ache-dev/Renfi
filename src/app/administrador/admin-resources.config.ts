@@ -3,6 +3,8 @@ export interface AdminResourceFieldConfig {
   label: string;
   type?: 'text' | 'number' | 'email' | 'date' | 'textarea' | 'select' | 'password';
   required?: boolean;
+  /** Obligatorio solo al crear (p. ej. la contraseña: al editar, vacío = no cambiarla). */
+  requiredOnCreate?: boolean;
   readOnly?: boolean;
   selectOptions?: { value: any; label: string }[];
   selectEndpoint?: string;
@@ -59,7 +61,7 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
       { key: 'NombreUsuario', label: 'Nombre', required: true },
       { key: 'ApellidoUsuario', label: 'Apellido', required: true },
       { key: 'Correo', label: 'Correo', type: 'email', required: true },
-      { key: 'Contrasena', label: 'Contraseña', type: 'password', required: true },
+      { key: 'Contrasena', label: 'Contraseña', type: 'password', requiredOnCreate: true },
       { key: 'Telefono', label: 'Teléfono', type: 'text' },
       { 
         key: 'IdRol', 
@@ -431,7 +433,7 @@ export const ADMIN_RESOURCES: Record<string, AdminResourceConfig> = {
     id: 'roles',
     title: 'Roles',
     endpoint: 'rol',
-    description: 'Perfiles y permisos disponibles para los usuarios.',
+    description: 'Perfiles de Renfi: Administrador, Cliente y Dueño de finca (publica y gestiona sus propias fincas).',
     idField: 'IdRol',
     columns: ['IdRol', 'NombreRol'],
     preferredFields: [{ key: 'NombreRol', label: 'Nombre del rol', required: true }],

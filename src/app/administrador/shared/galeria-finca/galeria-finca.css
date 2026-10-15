@@ -1,0 +1,106 @@
+.drop {
+	display: grid;
+	justify-items: center;
+	gap: 6px;
+	padding: clamp(20px, 4vw, 32px) 16px;
+	text-align: center;
+	cursor: pointer;
+	background: var(--color-surface-light);
+	border: 2px dashed var(--color-surface-dark);
+	border-radius: var(--radius-lg);
+	transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.drop:hover,
+.drop--activa,
+.drop:focus-within {
+	border-color: var(--color-primary);
+	background: var(--color-primary-surface);
+}
+
+.drop--bloqueada {
+	cursor: not-allowed;
+	opacity: 0.7;
+}
+
+.drop svg {
+	width: 28px;
+	height: 28px;
+	color: var(--color-primary);
+}
+
+.drop__titulo {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+}
+
+.drop__ayuda {
+	font-size: 0.8125rem;
+	color: var(--color-text-secondary);
+}
+
+.avisos {
+	flex-direction: column;
+	gap: 4px;
+	list-style: none;
+}
+
+.fotos {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+	gap: 16px;
+	list-style: none;
+}
+
+.foto {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.foto[aria-busy='true'] {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.foto__marco {
+	position: relative;
+	aspect-ratio: 4 / 3;
+	background: var(--color-surface-medium);
+}
+
+.foto__marco img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.foto__portada {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	box-shadow: var(--shadow-sm);
+}
+
+.foto__cuerpo {
+	display: grid;
+	gap: 10px;
+	padding: 12px;
+}
+
+.foto__acciones {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+}
+
+.foto__orden {
+	display: inline-flex;
+}
+
+.foto__borrar {
+	margin-left: auto;
+}

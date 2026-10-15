@@ -1,0 +1,219 @@
+/* ==== Lista de fincas ==== */
+.fincas {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+	gap: 20px;
+	list-style: none;
+}
+
+.finca {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.finca__foto {
+	position: relative;
+	aspect-ratio: 16 / 10;
+	background: var(--color-surface-medium);
+}
+
+.finca__foto img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.finca__sin-foto {
+	display: grid;
+	place-content: center;
+	justify-items: center;
+	gap: 6px;
+	width: 100%;
+	height: 100%;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--color-secondary);
+	background: var(--color-secondary-surface);
+}
+
+.finca__sin-foto svg {
+	width: 28px;
+	height: 28px;
+}
+
+.finca__sin-foto:hover {
+	background: color-mix(in srgb, var(--color-secondary-surface) 80%, var(--color-secondary-light));
+}
+
+.finca__estado {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	box-shadow: var(--shadow-sm);
+}
+
+.finca__cuerpo {
+	flex: 1;
+	display: grid;
+	align-content: start;
+	gap: 4px;
+	padding: 16px 16px 8px;
+}
+
+.finca__cuerpo h2 {
+	font-size: 1.05rem;
+}
+
+.finca__lugar {
+	font-size: 0.875rem;
+}
+
+.finca__datos {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 14px;
+	margin-top: 8px;
+	font-size: 0.8125rem;
+	color: var(--color-text-secondary);
+	list-style: none;
+}
+
+.finca__datos strong {
+	color: var(--color-text-primary);
+}
+
+.finca__acciones {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding: 12px 16px 16px;
+}
+
+.finca__borrar {
+	margin-left: auto;
+}
+
+/* ==== Editor ==== */
+.editor__head {
+	display: grid;
+	gap: 4px;
+}
+
+.editor__head h2 {
+	font-size: 1.35rem;
+}
+
+.back-link {
+	justify-self: start;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--color-text-secondary);
+}
+
+.back-link:hover {
+	color: var(--color-primary-dark);
+}
+
+.back-link svg {
+	width: 16px;
+	height: 16px;
+}
+
+.editor__tabs {
+	justify-self: start;
+	max-width: 100%;
+}
+
+.segmented__item:disabled {
+	opacity: 0.5;
+}
+
+.tab--error {
+	color: var(--color-danger);
+}
+
+.editor {
+	display: grid;
+	gap: 20px;
+	padding: clamp(16px, 3vw, 28px);
+}
+
+.editor[hidden] {
+	display: none;
+}
+
+.grupo {
+	display: grid;
+	gap: 20px;
+}
+
+.editor__pie {
+	display: flex;
+	flex-wrap: wrap-reverse;
+	justify-content: flex-end;
+	gap: 10px;
+	padding-top: 16px;
+	border-top: 1px solid var(--color-surface-medium);
+}
+
+/* ==== Comodidades ==== */
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 4px;
+}
+
+.chips--sugeridas {
+	margin: 4px 0 0;
+}
+
+.chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 12px;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--color-secondary);
+	background: var(--color-secondary-surface);
+	border-radius: var(--radius-full);
+}
+
+.chip button {
+	font-size: 1.1rem;
+	line-height: 1;
+	color: inherit;
+}
+
+.chip--sugerida {
+	color: var(--color-text-secondary);
+	background: transparent;
+	border: 1px dashed var(--color-surface-dark);
+	cursor: pointer;
+}
+
+.chip--sugerida:hover {
+	color: var(--color-secondary);
+	border-color: var(--color-secondary-light);
+}
+
+.chips__nueva {
+	display: flex;
+	gap: 8px;
+}
+
+.chips__nueva input {
+	flex: 1;
+	min-width: 0;
+}
+
+@media (max-width: 480px) {
+	.editor__pie .btn {
+		flex: 1 1 100%;
+	}
+}

@@ -115,7 +115,7 @@ export class IniciarSesionComponent implements OnDestroy {
           this.authState.setSession(respuesta, !!recordarme);
 
           const esAdmin = this.authState.esAdminSnapshot();
-          const destino = esAdmin ? '/administrador' : '/inicio';
+          const destino = esAdmin ? '/administrador' : this.authState.esDuenoSnapshot() ? '/mi-finca' : '/inicio';
 
           this.mensajeExito = respuesta?.message ?? 'Inicio de sesión exitoso. Te estamos redirigiendo.';
           setTimeout(() => this.router.navigate([destino]), 900);

@@ -1,105 +1,20 @@
-<section class="galeria" aria-labelledby="galeria-titulo">
-  <header class="galeria__cabecera">
-    <h2 id="galeria-titulo" class="galeria__titulo">Imágenes de las fincas</h2>
-    <p class="galeria__texto">
-      Elige una finca para administrar su galería. La portada es la primera foto que ven los clientes.
-      Cada finca admite hasta {{ maxImagenes }} imágenes (JPG, PNG o WebP de hasta 5 MB); se optimizan automáticamente.
-    </p>
-  </header>
+<div class="panel">
+	<p class="alert alert--error" role="alert" *ngIf="error">{{ error }}</p>
+	<p class="panel__loading" *ngIf="cargando" role="status"><span class="spinner" aria-hidden="true"></span> Cargando fincas…</p>
 
-  <div class="field galeria__selector">
-    <label class="field__label" for="finca-galeria">Finca</label>
-    <select id="finca-galeria" [disabled]="cargandoFincas" (change)="seleccionarFinca($any($event.target).value)">
-      <option value="">{{ cargandoFincas ? 'Cargando fincas…' : 'Selecciona una finca…' }}</option>
-      <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.nombre }}</option>
-    </select>
-  </div>
+	<ng-container *ngIf="!cargando && !error">
+		<p class="muted" *ngIf="!fincas.length">No hay fincas todavía. Crea una en la sección Fincas para poder subirle fotos.</p>
 
-  <p *ngIf="error" class="alert alert--error" role="alert">{{ error }}</p>
-  <p *ngIf="aviso" class="alert alert--success" role="status">{{ aviso }}</p>
+		<ng-container *ngIf="fincas.length">
+			<div class="field selector">
+				<label class="field__label" for="img-finca">Finca</label>
+				<select id="img-finca" [value]="idFinca" (change)="elegir($any($event.target).value)">
+					<option *ngFor="let f of fincas" [value]="f.IdFinca" [selected]="f.IdFinca === idFinca">{{ f.NombreFinca }} · {{ f.NombreMunicipio }}</option>
+				</select>
+				<small class="field__hint">Las fotos se alojan en Supabase Storage y se optimizan automáticamente a WebP.</small>
+			</div>
 
-  <ng-container *ngIf="fincaId">
-    <div class="card galeria__subida">
-      <div class="field">
-        <label class="field__label" for="texto-alternativo">Texto alternativo (opcional)</label>
-        <input id="texto-alternativo" type="text" maxlength="200" [(ngModel)]="textoAlternativo" placeholder="Ej. Piscina al atardecer" />
-        <small class="field__hint">Describe la foto para personas con lectores de pantalla.</small>
-      </div>
-
-      <label class="galeria__check">
-        <input type="checkbox" [(ngModel)]="esPortada" [disabled]="galeria.length === 0" />
-        <span>Usar como portada <small *ngIf="galeria.length === 0">(la primera imagen siempre es la portada)</small></span>
-      </label>
-
-      <div class="galeria__acciones">
-        <label class="btn btn--primary" [class.is-disabled]="lleno || subiendo" for="archivo-galeria">
-          {{ subiendo ? 'Subiendo…' : 'Agregar foto' }}
-        </label>
-        <input
-          id="archivo-galeria"
-          class="visually-hidden"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          [disabled]="lleno || subiendo"
-          (change)="onArchivoElegido($event)"
-        />
-        <span class="galeria__contador tabular">{{ galeria.length }} de {{ maxImagenes }} imágenes</span>
-      </div>
-
-      <p *ngIf="lleno" class="alert" role="status">
-        Alcanzaste el máximo de {{ maxImagenes }} imágenes. Elimina alguna para subir otra.
-      </p>
-    </div>
-
-    <p *ngIf="cargandoGaleria" class="galeria__estado" role="status">Cargando imágenes…</p>
-
-    <p *ngIf="!cargandoGaleria && galeria.length === 0" class="card galeria__vacia">
-      {{ nombreFincaActual }} todavía no tiene imágenes. Agrega una foto: la primera quedará como portada.
-    </p>
-
-    <ul class="galeria__lista" *ngIf="galeria.length > 0">
-      <li class="card galeria__item" *ngFor="let imagen of galeria; trackBy: trackById">
-        <img
-          class="galeria__img"
-          [src]="imagen.UrlImagen"
-          [alt]="imagen['TextoAlternativo'] || 'Imagen de ' + nombreFincaActual"
-          loading="lazy"
-        />
-        <div class="galeria__meta">
-          <span class="badge badge--success" *ngIf="imagen['EsPortada']">Portada</span>
-          <span class="badge" *ngIf="!imagen['EsPortada']">Posición {{ imagen['Orden'] }}</span>
-          <span class="galeria__dim tabular" *ngIf="imagen['Ancho'] && imagen['Alto']">{{ imagen['Ancho'] }} × {{ imagen['Alto'] }}</span>
-        </div>
-        <p class="galeria__alt" *ngIf="imagen['TextoAlternativo']">{{ imagen['TextoAlternativo'] }}</p>
-        <div class="galeria__acciones">
-          <button
-            type="button"
-            class="btn btn--secondary btn--sm"
-            *ngIf="!imagen['EsPortada']"
-            [disabled]="ocupada !== null"
-            (click)="hacerPortada(imagen)"
-          >
-            Hacer portada
-          </button>
-          <button type="button" class="btn btn--danger-ghost btn--sm" [disabled]="ocupada !== null" (click)="pedirEliminar(imagen)">
-            Eliminar
-          </button>
-        </div>
-      </li>
-    </ul>
-  </ng-container>
-
-  <div class="galeria__modal" *ngIf="porEliminar" role="dialog" aria-modal="true" aria-labelledby="eliminar-titulo">
-    <div class="card galeria__dialogo">
-      <h3 id="eliminar-titulo">¿Eliminar esta imagen?</h3>
-      <p>
-        <ng-container *ngIf="porEliminar['EsPortada']">Es la portada: la siguiente imagen de la galería pasará a serlo. </ng-container>
-        Esta acción no se puede deshacer.
-      </p>
-      <div class="galeria__acciones">
-        <button type="button" class="btn btn--secondary" (click)="cancelarEliminar()" [disabled]="ocupada !== null">Cancelar</button>
-        <button type="button" class="btn btn--danger" (click)="confirmarEliminar()" [disabled]="ocupada !== null">Eliminar</button>
-      </div>
-    </div>
-  </div>
-</section>
+			<app-galeria-finca *ngIf="idFinca" [idFinca]="idFinca"></app-galeria-finca>
+		</ng-container>
+	</ng-container>
+</div>

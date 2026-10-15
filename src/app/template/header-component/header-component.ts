@@ -12,11 +12,13 @@ import { UsuarioNormalizado } from '../services/auth.service';
 })
 export class HeaderComponent {
   readonly esAdmin$: Observable<boolean>;
+  readonly esDueno$: Observable<boolean>;
   readonly usuario$: Observable<UsuarioNormalizado | null>;
   menuAbierto = false;
 
   constructor(private router: Router, private authState: AuthStateService) {
     this.esAdmin$ = this.authState.esAdmin$;
+    this.esDueno$ = this.authState.esDueno$;
     this.usuario$ = this.authState.currentUser$;
   }
 

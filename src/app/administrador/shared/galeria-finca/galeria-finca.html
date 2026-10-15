@@ -1,0 +1,90 @@
+<section class="panel" aria-label="Fotos de la finca">
+	<label
+		class="drop"
+		[class.drop--activa]="arrastrando"
+		[class.drop--bloqueada]="cupo === 0 || subiendo"
+		(dragover)="alArrastrar($event, true)"
+		(dragleave)="alArrastrar($event, false)"
+		(drop)="alSoltar($event)"
+	>
+		<input
+			type="file"
+			class="visually-hidden"
+			accept="image/jpeg,image/png,image/webp"
+			multiple
+			[disabled]="cupo === 0 || subiendo"
+			(change)="alSeleccionar($event)"
+		/>
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+			<polyline points="17 8 12 3 7 8"></polyline>
+			<line x1="12" y1="3" x2="12" y2="15"></line>
+		</svg>
+		<span class="drop__titulo" *ngIf="!subiendo">{{ cupo === 0 ? 'Llegaste al máximo de fotos' : 'Arrastra tus fotos o haz clic para elegirlas' }}</span>
+		<span class="drop__titulo" *ngIf="subiendo"><span class="spinner" aria-hidden="true"></span> Subiendo y optimizando…</span>
+		<span class="drop__ayuda">JPG, PNG o WebP · hasta 5 MB cada una · {{ imagenes.length }} de {{ maxImagenes }} fotos</span>
+	</label>
+
+	<p class="alert alert--error" role="alert" *ngIf="error">{{ error }}</p>
+	<ul class="alert alert--warning avisos" role="status" *ngIf="avisos.length">
+		<li *ngFor="let aviso of avisos">{{ aviso }}</li>
+	</ul>
+
+	<p class="panel__loading" *ngIf="cargando && !imagenes.length" role="status">
+		<span class="spinner" aria-hidden="true"></span> Cargando fotos…
+	</p>
+
+	<p class="muted" *ngIf="!cargando && !imagenes.length">Aún no hay fotos. La primera que subas será la portada que ven los visitantes en el catálogo.</p>
+
+	<ul class="fotos" *ngIf="imagenes.length">
+		<li class="foto card" *ngFor="let imagen of imagenes; trackBy: trackImagen" [attr.aria-busy]="ocupadaId === imagen.IdImagen">
+			<div class="foto__marco">
+				<img [src]="imagen.UrlImagen" [alt]="imagen.TextoAlternativo || 'Foto de la finca'" loading="lazy" />
+				<span class="badge badge--primary foto__portada" *ngIf="imagen.EsPortada">Portada</span>
+			</div>
+
+			<div class="foto__cuerpo">
+				<label class="visually-hidden" [attr.for]="'alt-' + imagen.IdImagen">Descripción de la foto</label>
+				<input
+					[id]="'alt-' + imagen.IdImagen"
+					type="text"
+					maxlength="200"
+					placeholder="Describe la foto (ej. Piscina al atardecer)"
+					[value]="imagen.TextoAlternativo || ''"
+					(change)="guardarTexto(imagen, $any($event.target).value)"
+				/>
+
+				<div class="foto__acciones">
+					<button type="button" class="btn btn--secondary btn--sm" *ngIf="!imagen.EsPortada" (click)="hacerPortada(imagen)" [disabled]="ocupadaId !== null">
+						Hacer portada
+					</button>
+					<span class="foto__orden" *ngIf="!imagen.EsPortada">
+						<button type="button" class="icon-btn" aria-label="Mover antes" (click)="mover(imagen, -1)" [disabled]="ocupadaId !== null || !puedeSubir(imagen, -1)">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>
+						</button>
+						<button type="button" class="icon-btn" aria-label="Mover después" (click)="mover(imagen, 1)" [disabled]="ocupadaId !== null || !puedeSubir(imagen, 1)">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+						</button>
+					</span>
+					<button type="button" class="btn btn--danger-ghost btn--sm foto__borrar" (click)="pedirBorrado(imagen)" [disabled]="ocupadaId !== null">
+						Eliminar
+					</button>
+				</div>
+			</div>
+		</li>
+	</ul>
+</section>
+
+<div class="modal-backdrop" *ngIf="porBorrar" (click)="cancelarBorrado()">
+	<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="galeria-borrar" (click)="$event.stopPropagation()">
+		<h2 class="modal__title" id="galeria-borrar">¿Eliminar esta foto?</h2>
+		<p class="modal__text">
+			Se borrará de la galería de la finca.
+			<ng-container *ngIf="porBorrar.EsPortada && imagenes.length > 1">La siguiente foto pasará a ser la portada.</ng-container>
+		</p>
+		<div class="modal__actions">
+			<button type="button" class="btn btn--secondary" (click)="cancelarBorrado()">Cancelar</button>
+			<button type="button" class="btn btn--danger" (click)="confirmarBorrado()">Eliminar</button>
+		</div>
+	</div>
+</div>

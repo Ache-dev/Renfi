@@ -4,6 +4,8 @@ import { Observable, map } from 'rxjs';
 
 export interface RegistroUsuarioRequest {
   IdRol: number;
+  /** 'dueno' crea una cuenta de dueño de finca; por defecto, cliente. */
+  TipoCuenta?: 'cliente' | 'dueno';
   NombreUsuario: string;
   ApellidoUsuario: string;
   Telefono: string;
@@ -39,6 +41,7 @@ export interface UsuarioNormalizado {
   Correo?: string;
   Estado?: string;
   Rol?: string;
+  NombreRol?: string;
   IdRol?: number;
 }
 import { environment } from '../../../environments/environment';
@@ -93,7 +96,8 @@ export class AuthService {
       Telefono: this.pickString(usuario, ['Telefono', 'telefono', 'TelefonoUsuario']),
       Correo: this.pickString(usuario, ['Correo', 'correo', 'CorreoElectronico', 'correoElectronico']),
       Estado: this.pickString(usuario, ['Estado', 'estado']),
-      Rol: this.pickString(usuario, ['Rol', 'rol']),
+      Rol: this.pickString(usuario, ['Rol', 'rol', 'NombreRol']),
+      NombreRol: this.pickString(usuario, ['NombreRol', 'Rol', 'rol']),
       IdRol: this.pickNumber(usuario, ['IdRol', 'idRol'])
     };
   }

@@ -36,6 +36,7 @@ export class RegistrarseComponent implements OnDestroy {
         ],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]],
+        tipoCuenta: ['cliente', [Validators.required]],
         terminos: [false, [Validators.requiredTrue]]
       },
       { validators: this.passwordMatchValidator }
@@ -65,12 +66,13 @@ export class RegistrarseComponent implements OnDestroy {
       return;
     }
 
-    const { nombre, apellido, correo, telefono, password } = this.registroForm.getRawValue();
+    const { nombre, apellido, correo, telefono, password, tipoCuenta } = this.registroForm.getRawValue();
 
     const hashedPassword = await this.cryptoService.hashSHA512(password);
 
     const payload = {
       IdRol: 2,
+      TipoCuenta: tipoCuenta === 'dueno' ? ('dueno' as const) : ('cliente' as const),
       NombreUsuario: nombre.trim(),
       ApellidoUsuario: apellido.trim(),
       Telefono: telefono.trim(),
@@ -96,6 +98,7 @@ export class RegistrarseComponent implements OnDestroy {
             telefono: '',
             password: '',
             confirmPassword: '',
+            tipoCuenta: 'cliente',
             terminos: false
           });
         },

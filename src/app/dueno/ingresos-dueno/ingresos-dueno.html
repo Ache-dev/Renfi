@@ -1,0 +1,84 @@
+<div class="panel">
+	<p class="alert alert--error" role="alert" *ngIf="error">{{ error }}</p>
+	<p class="panel__loading" *ngIf="cargando" role="status"><span class="spinner" aria-hidden="true"></span> Cargando pagos…</p>
+
+	<div class="card empty" *ngIf="!cargando && !pagos.length && !error">
+		<span class="empty__icon" aria-hidden="true">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+		</span>
+		<h2>Aún no has recibido pagos</h2>
+		<p>Los pagos de las reservas de tus fincas aparecerán aquí apenas tus huéspedes paguen.</p>
+	</div>
+
+	<ng-container *ngIf="!cargando && pagos.length">
+		<ul class="totales">
+			<li class="card total">
+				<span class="total__label">Cobrado</span>
+				<strong class="total__valor tabular">{{ totalCobrado | currency: 'COP':'symbol-narrow':'1.0-0' }}</strong>
+			</li>
+			<li class="card total">
+				<span class="total__label">Por cobrar</span>
+				<strong class="total__valor tabular">{{ totalPendiente | currency: 'COP':'symbol-narrow':'1.0-0' }}</strong>
+			</li>
+			<li class="card total">
+				<span class="total__label">Pagos registrados</span>
+				<strong class="total__valor tabular">{{ pagos.length }}</strong>
+			</li>
+		</ul>
+
+		<section aria-labelledby="ing-fincas" *ngIf="resumen.length > 1">
+			<h2 id="ing-fincas">Por finca</h2>
+			<div class="table-wrap table-wrap--corta">
+				<table>
+					<thead>
+						<tr>
+							<th scope="col">Finca</th>
+							<th scope="col" class="num">Pagos</th>
+							<th scope="col" class="num">Cobrado</th>
+							<th scope="col" class="num">Por cobrar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let f of resumen">
+							<td><span class="cell-main">{{ f.nombre }}</span></td>
+							<td class="num">{{ f.pagos }}</td>
+							<td class="num">{{ f.cobrado | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+							<td class="num">{{ f.pendiente | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section aria-labelledby="ing-detalle">
+			<h2 id="ing-detalle">Detalle de pagos</h2>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th scope="col">Pago</th>
+							<th scope="col">Finca</th>
+							<th scope="col">Método</th>
+							<th scope="col">Fecha</th>
+							<th scope="col" class="num">Monto</th>
+							<th scope="col">Estado</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let p of pagos; trackBy: trackPago">
+							<td>
+								<span class="cell-main">#{{ p.IdPago }}</span>
+								<span class="cell-sub" *ngIf="p.IdReserva">Reserva #{{ p.IdReserva }}</span>
+							</td>
+							<td>{{ p.NombreFinca }}</td>
+							<td>{{ p.NombreMetodoDePago || '—' }}</td>
+							<td>{{ p.FechaPago | date: 'd MMM y' }}</td>
+							<td class="num">{{ p.Monto | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+							<td><span class="badge badge--dot" [class.badge--success]="esPagado(p)" [class.badge--warning]="!esPagado(p)">{{ p.EstadoPago || 'Pendiente' }}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</ng-container>
+</div>
