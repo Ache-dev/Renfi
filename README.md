@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
   <img src="https://img.shields.io/badge/RxJS-7.8-B7178C?style=for-the-badge&logo=reactivex&logoColor=white" alt="RxJS">
-  <img src="https://img.shields.io/badge/License-MIT-green.style=for-the-badge" alt="MIT License">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License">
 </p>
 
 ---
@@ -37,6 +37,8 @@
 
 **Renfi** es una plataforma web integral orientada a optimizar la búsqueda, exploración y reserva de fincas turísticas y vacacionales. Permite a los usuarios consultar propiedades, aplicar filtros dinámicos (ubicación/municipio, capacidad, rango de precios, servicios), gestionar sus reservas y realizar pagos de forma segura.
 
+Quien tiene una finca puede registrarse como **dueño** y, desde el panel **Mi finca**, publicarla, personalizar su ficha y galería, confirmar o cancelar las reservas que recibe y ver sus ingresos. La app móvil equivalente es [Renfi-ExpoGO](https://github.com/Resx1983/Renfi-ExpoGO).
+
 Asimismo, cuenta con un módulo de **Administración** con un CRUD dinámico y vistas analíticas de reportes para controlar fincas, usuarios, reservas, pagos, facturas, métodos de pago, municipios y roles.
 
 ---
@@ -46,12 +48,12 @@ Asimismo, cuenta con un módulo de **Administración** con un CRUD dinámico y v
 El frontend sigue las mejores prácticas de ingeniería de software y Clean Code:
 
 * **Separación de Responsabilidades (SoC):** Desacoplamiento estricto entre presentación (componentes), lógica de negocio y comunicación HTTP (servicios), y definición de tipos (modelos).
-* **Single Responsibility Principle (SRP):** Cada servicio se especializa en una entidad o dominio (`FincaService`, `UsuarioService`, `ImagenService`, `AuthService`, `ReservaService`, `AdminApiService`).
+* **Single Responsibility Principle (SRP):** Cada servicio se especializa en una entidad o dominio (`FincaService`, `UsuarioService`, `ImagenService`, `AuthService`, `ReservaService`, `GestionFincasService`, `AdminApiService`).
 * **Dependency Inversion & Injection (DI):** Inyección de dependencias modular a través de providers e interceptores Angular.
 * **Lazy Loading:** El módulo administrativo (`AdministradorModule`) se carga bajo demanda (on-demand), optimizando el bundle inicial y el tiempo de carga First Contentful Paint (FCP).
 * **Centralización de Configuración:** Endpoints parametrizados a través de `environment.ts` y `environment.development.ts`, eliminando URLs quemadas (*hardcoded*).
 * **Rendimiento de Recursos Web:** Centralización de tipografías Web (Google Fonts Montserrat) en `index.html` con `preconnect`, eliminando la inyección duplicada de fuentes en componentes.
-* **Control de Acceso Declarativo:** Guards de enrutamiento (`AdminGuard`) y estado de autenticación reactivo con RxJS `BehaviorSubject`.
+* **Control de Acceso Declarativo:** Guards de enrutamiento (`AdminGuard`, `DuenoGuard`) y estado de autenticación reactivo con RxJS `BehaviorSubject`.
 
 ---
 
@@ -71,11 +73,13 @@ Renfi/
 │   │   │   │   ├── pago.model.ts
 │   │   │   │   ├── factura.model.ts
 │   │   │   │   ├── imagen.model.ts
+│   │   │   │   ├── gestion-finca.model.ts
 │   │   │   │   └── index.ts
 │   │   │   └── services/       # Servicios singleton de consumo y negocio
 │   │   │       ├── finca.service.ts
 │   │   │       ├── usuario.service.ts
-│   │   │       └── imagen.service.ts
+│   │   │       ├── imagen.service.ts
+│   │   │       └── gestion-fincas.service.ts  # Fincas, galería, reservas y pagos (admin y dueño)
 │   │   │
 │   │   ├── template/           # Módulo público y vistas de navegación
 │   │   │   ├── header-component/
@@ -84,7 +88,7 @@ Renfi/
 │   │   │   ├── fincas-relevantes-component/ # Carrusel reactivo de fincas
 │   │   │   ├── detalle-finca-component/     # Ficha técnica, disponibilidad y reserva
 │   │   │   ├── iniciar-sesion-component/    # Login con hashing SHA-512
-│   │   │   ├── registrarse-component/       # Registro de nuevos usuarios
+│   │   │   ├── registrarse-component/       # Registro (cliente o dueño de finca)
 │   │   │   ├── sobre-nosotros-component/    # Información institucional y contacto
 │   │   │   ├── services/                    # Servicios de checkout y estado de sesión
 │   │   │   └── template-module.ts
@@ -114,7 +118,19 @@ Renfi/
 │   │   │   ├── municipio-administrador/
 │   │   │   ├── rol-administrador/
 │   │   │   ├── guards/                      # AdminGuard
-│   │   │   └── services/                    # AdminApiService
+│   │   │   ├── services/                    # AdminApiService
+│   │   │   └── shared/                      # Compartido con el dueño
+│   │   │       ├── fincas-gestion/          # Gestor de fincas (formulario de ficha completa)
+│   │   │       └── galeria-finca/           # Galería: subir, portada, orden y borrar
+│   │   │
+│   │   ├── dueno/              # Panel "Mi finca" (Lazy Loaded, rol Dueño de finca)
+│   │   │   ├── dueno-module.ts / dueno-routing-module.ts
+│   │   │   ├── dueno.ts / .html             # Carcasa con navegación lateral
+│   │   │   ├── inicio-dueno/                # Resumen y primeros pasos
+│   │   │   ├── mis-fincas-dueno/            # Reutiliza el gestor de fincas
+│   │   │   ├── reservas-dueno/              # Confirmar, finalizar o cancelar
+│   │   │   ├── ingresos-dueno/              # Pagos recibidos por finca
+│   │   │   └── guards/                      # DuenoGuard
 │   │   │
 │   │   ├── app.ts / app.html   # Componente raíz
 │   │   ├── app-module.ts       # Módulo principal de la aplicación
@@ -152,6 +168,7 @@ El enrutador (`AppRoutingModule`) aplica división de código (*code-splitting*)
 | `/reserva/pago` | `PasarelaPagoUsuario` | Autenticado | Eager |
 | `/reserva/comprobante` | `ComprovanteReservaUsuario` | Autenticado | Eager |
 | `/administrador/*` | `AdministradorModule` | Rol Administrador (`AdminGuard`) | **Lazy Loaded** |
+| `/mi-finca/*` | `DuenoModule` | Dueño de finca o administrador (`DuenoGuard`) | **Lazy Loaded** |
 
 ---
 
@@ -183,8 +200,8 @@ Intercepta todas las solicitudes salientes vía `HttpClient`:
 
 ## 🔐 Seguridad y Autenticación
 
-1. **Hashing de Contraseñas:** En el cliente, las contraseñas se procesan mediante la **Web Crypto API nativa del navegador** usando el algoritmo criptográfico SHA-512 antes de su transmisión.
-2. **Control de Acceso (Guards):** `AdminGuard` valida los permisos en tiempo de navegación mediante `canActivate` y `canMatch`, restringiendo el acceso no autorizado a `/administrador`.
+1. **Hashing de Contraseñas:** En el cliente, las contraseñas se procesan mediante la **Web Crypto API nativa del navegador** usando el algoritmo criptográfico SHA-512 antes de su transmisión (la API acepta también contraseña en claro y la guarda con bcrypt).
+2. **Control de Acceso (Guards):** `AdminGuard` valida los permisos en tiempo de navegación mediante `canActivate` y `canMatch`, restringiendo el acceso no autorizado a `/administrador`. `DuenoGuard` hace lo mismo con `/mi-finca`. El rol de dueño se reconoce por nombre ("Dueño de finca"), igual que en la API, que además valida rol y propiedad en cada petición.
 3. **Persistencia Segura de Sesión:** El token JWT y los datos del perfil se almacenan en `sessionStorage` (o `localStorage` si el usuario selecciona recordar sesión), sincronizados de forma reactiva con `AuthStateService`.
 
 ---
@@ -208,6 +225,7 @@ Para cambiar el host o puerto de la API REST, únicamente se modifica la propied
 ## 🚀 Instalación y Despliegue
 
 ### Requisitos previos
+- La API [API-Renfi](https://github.com/Ache-dev/API-Renfi) en marcha (`apiUrl`), con las migraciones `db/migraciones/001` a `004` aplicadas.
 - **Node.js** >= 18.x
 - **npm** >= 9.x
 - **Angular CLI** >= 20.x
