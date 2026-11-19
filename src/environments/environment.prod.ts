@@ -1,4 +1,4 @@
-export const environment = {
+﻿export const environment = {
   production: true,
-  apiUrl: 'http://localhost:3000/api'
+  apiUrl: 'https://api-renfi-z0a193.azurewebsites.net/api'
 };
